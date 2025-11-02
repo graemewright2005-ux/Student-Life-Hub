@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study Tab - Student Life Hub</title>
+    <title>Study Hub - Student Life</title>
     <style>
         * {
             margin: 0;
@@ -12,7 +12,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
@@ -23,57 +23,55 @@
             color: white;
             text-align: center;
             padding: 30px 20px;
-            border-radius: 20px 20px 0 0;
-            margin-bottom: -10px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
         .header h1 {
             font-size: 2.5em;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .header p {
-            font-size: 1.1em;
+            font-size: 1.2em;
             opacity: 0.95;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
             background: white;
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
-
-        .sub-tabs {
-            display: flex;
-            gap: 10px;
             padding: 20px;
-            background: #f8f9fa;
-            border-bottom: 2px solid #e0e0e0;
-            overflow-x: auto;
-            flex-wrap: wrap;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        .sub-tab-btn {
-            padding: 12px 24px;
+        .tab-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            background: #f8f9fa;
             border: 2px solid #e0e0e0;
-            background: white;
+            padding: 10px 20px;
             border-radius: 25px;
             cursor: pointer;
+            transition: all 0.3s;
             font-size: 1em;
             font-weight: 600;
-            transition: all 0.3s;
-            white-space: nowrap;
         }
 
-        .sub-tab-btn:hover {
+        .tab-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
         }
 
-        .sub-tab-btn.active {
+        .tab-btn.active {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border-color: #667eea;
@@ -81,7 +79,6 @@
 
         .tab-content {
             display: none;
-            padding: 30px;
             animation: fadeIn 0.3s;
         }
 
@@ -98,8 +95,8 @@
             background: white;
             border: 2px solid #e0e0e0;
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
             transition: all 0.3s;
         }
 
@@ -108,72 +105,88 @@
             box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
-        .card h3 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 1.4em;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
         .expandable-card {
-            cursor: pointer;
-            user-select: none;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
         }
 
-        .expandable-card .card-header {
+        .expandable-header {
+            padding: 15px;
+            cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: #f8f9fa;
+            transition: all 0.3s;
         }
 
-        .expandable-card .expand-icon {
-            font-size: 1.5em;
-            transition: transform 0.3s;
+        .expandable-header:hover {
+            background: #e9ecef;
         }
 
-        .expandable-card.expanded .expand-icon {
-            transform: rotate(180deg);
+        .expandable-header h3 {
+            font-size: 1.2em;
+            color: #333;
         }
 
-        .card-content {
+        .expandable-content {
+            padding: 0 15px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .expandable-content.open {
+            padding: 15px;
+            max-height: 2000px;
+            overflow-y: auto;
+        }
+
+        .landscape-hint {
             display: none;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 2px solid #f0f0f0;
-        }
-
-        .card-content.show {
-            display: block;
-        }
-
-        .pomodoro-timer {
-            text-align: center;
-            padding: 30px;
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+            border: 3px solid #ff9800;
+            padding: 15px;
             border-radius: 12px;
+            margin: 15px 0;
+            text-align: center;
+            font-size: 1em;
+            font-weight: 600;
+            color: #000;
+            box-shadow: 0 4px 10px rgba(255, 152, 0, 0.3);
+        }
+
+        .rotate-icon {
+            font-size: 2.5em;
+            display: inline-block;
+            animation: rotatePhone 2s infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes rotatePhone {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(90deg); }
+            50% { transform: rotate(90deg); }
+            75% { transform: rotate(0deg); }
+        }
+
+        @media (max-width: 768px) {
+            .landscape-hint {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            margin: 20px 0;
-        }
-
-        .timer-display {
-            font-size: 4em;
-            font-weight: bold;
-            margin: 20px 0;
-            font-family: 'Courier New', monospace;
-        }
-
-        .timer-controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 12px 28px;
             border: none;
+            padding: 12px 24px;
             border-radius: 25px;
             cursor: pointer;
             font-size: 1em;
@@ -181,119 +194,102 @@
             transition: all 0.3s;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
         .btn-primary:hover {
             transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
         }
 
         .btn-secondary {
             background: #f8f9fa;
-            color: #333;
             border: 2px solid #e0e0e0;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95em;
         }
 
         .btn-secondary:hover {
-            background: #e9ecef;
-            transform: scale(1.05);
+            transform: scale(1.02);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
 
-        .btn-danger {
-            background: #ff6b6b;
+        .pomodoro-timer {
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 15px 0;
         }
 
-        .btn-danger:hover {
-            background: #ff5252;
-            transform: scale(1.05);
+        .timer-display {
+            font-size: 4em;
+            font-weight: bold;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
         }
 
-        .btn-success {
-            background: #51cf66;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #40c057;
-            transform: scale(1.05);
-        }
-
-        .stats-container {
+        .timer-buttons {
             display: flex;
-            gap: 20px;
-            margin: 20px 0;
+            gap: 12px;
+            justify-content: center;
             flex-wrap: wrap;
         }
 
-        .stat-card {
-            flex: 1;
-            min-width: 200px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
+        .stats-display {
+            margin-top: 15px;
+            font-size: 1.2em;
         }
 
-        .stat-number {
-            font-size: 2.5em;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        .prompt-box {
+        .prompt-card {
             background: #f8f9fa;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 10px 0;
-            position: relative;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 8px 0;
         }
 
         .prompt-text {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 8px 0;
             font-family: 'Courier New', monospace;
-            color: #333;
-            margin-bottom: 10px;
+            font-size: 0.9em;
+            border-left: 4px solid #667eea;
         }
 
         .copy-btn {
-            padding: 6px 16px;
             background: #667eea;
             color: white;
             border: none;
-            border-radius: 5px;
+            padding: 8px 16px;
+            border-radius: 15px;
             cursor: pointer;
-            font-size: 0.9em;
+            font-size: 0.85em;
             transition: all 0.3s;
         }
 
         .copy-btn:hover {
             background: #764ba2;
+            transform: scale(1.05);
         }
 
         .warning-card {
             background: #fff3cd;
             border: 2px solid #ffc107;
             border-radius: 12px;
-            padding: 20px;
-            margin: 15px 0;
+            padding: 15px;
+            margin: 12px 0;
         }
 
         .success-card {
             background: #d4edda;
             border: 2px solid #28a745;
             border-radius: 12px;
-            padding: 20px;
-            margin: 15px 0;
-        }
-
-        .timetable {
-            overflow-x: auto;
-            margin: 20px 0;
+            padding: 15px;
+            margin: 12px 0;
         }
 
         .timetable-grid {
@@ -302,64 +298,83 @@
             gap: 1px;
             background: #e0e0e0;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
-            min-width: 600px;
-        }
-
-        .time-slot, .schedule-cell {
-            background: white;
-            padding: 10px;
-            min-height: 50px;
         }
 
         .time-slot {
+            background: white;
+            padding: 12px 8px;
+            text-align: center;
             font-weight: 600;
-            color: #667eea;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .schedule-cell {
+        .timetable-cell {
+            background: white;
+            padding: 8px;
+            min-height: 50px;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.2s;
             position: relative;
         }
 
-        .schedule-cell:hover {
+        .timetable-cell:hover {
             background: #f8f9fa;
         }
 
-        .schedule-cell.filled {
-            font-weight: 600;
-            font-size: 0.9em;
+        .timetable-cell.has-content {
+            background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
         }
 
-        .project-card {
+        .study-session {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            cursor: pointer;
+        }
+
+        .week-planner {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .day-card {
             background: white;
             border: 2px solid #e0e0e0;
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 15px;
+            transition: all 0.3s;
         }
 
-        .project-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
+        .day-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
-        .project-goal {
+        .day-header {
             font-size: 1.2em;
             font-weight: bold;
+            margin-bottom: 15px;
             color: #667eea;
+        }
+
+        .goal-text {
+            background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: 600;
         }
 
         .task-list {
             list-style: none;
-            margin: 15px 0;
         }
 
         .task-item {
@@ -378,7 +393,7 @@
             text-decoration: line-through;
         }
 
-        .task-checkbox {
+        .task-item input[type="checkbox"] {
             width: 20px;
             height: 20px;
             cursor: pointer;
@@ -390,18 +405,19 @@
             background: #e0e0e0;
             border-radius: 15px;
             overflow: hidden;
-            margin: 15px 0;
+            margin: 10px 0;
         }
 
         .progress-fill {
             height: 100%;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            transition: width 0.5s;
+            transition: width 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: 600;
+            font-size: 0.85em;
         }
 
         .modal {
@@ -411,23 +427,23 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.5);
             z-index: 1000;
             align-items: center;
             justify-content: center;
         }
 
-        .modal.show {
+        .modal.active {
             display: flex;
         }
 
         .modal-content {
             background: white;
-            border-radius: 20px;
             padding: 30px;
+            border-radius: 20px;
             max-width: 600px;
             width: 90%;
-            max-height: 90vh;
+            max-height: 80vh;
             overflow-y: auto;
             position: relative;
         }
@@ -439,35 +455,40 @@
             font-size: 2em;
             cursor: pointer;
             color: #999;
-            background: none;
-            border: none;
+            transition: all 0.3s;
         }
 
         .modal-close:hover {
             color: #333;
+            transform: scale(1.2);
         }
 
-        .form-group {
-            margin: 15px 0;
+        .citation-generator {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 12px 0;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
+        .citation-input {
             width: 100%;
             padding: 10px;
+            margin: 6px 0;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
             font-size: 1em;
-            font-family: inherit;
         }
 
-        .celebration-overlay {
+        .generated-citation {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
+            border-left: 4px solid #667eea;
+            font-family: 'Courier New', monospace;
+        }
+
+        .celebration {
             display: none;
             position: fixed;
             top: 0;
@@ -481,29 +502,25 @@
             flex-direction: column;
         }
 
-        .celebration-overlay.show {
+        .celebration.active {
             display: flex;
         }
 
-        .celebration-content {
-            text-align: center;
-            color: white;
-        }
-
-        .clapping-hands {
+        .clapping-animation {
             font-size: 8em;
             animation: clap 0.5s infinite;
         }
 
         @keyframes clap {
-            0%, 100% { transform: scale(1) rotate(-5deg); }
-            50% { transform: scale(1.2) rotate(5deg); }
+            0%, 100% { transform: scale(1) rotate(-10deg); }
+            50% { transform: scale(1.2) rotate(10deg); }
         }
 
         .celebration-text {
-            font-size: 3em;
+            color: white;
+            font-size: 2.5em;
             font-weight: bold;
-            margin: 20px 0;
+            margin-top: 20px;
             animation: pulse 1s infinite;
         }
 
@@ -523,81 +540,53 @@
         @keyframes confetti-fall {
             to {
                 transform: translateY(100vh) rotate(360deg);
-                opacity: 0;
             }
-        }
-
-        .citation-generator {
-            background: #f8f9fa;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 15px 0;
-        }
-
-        .citation-output {
-            background: white;
-            border: 2px solid #667eea;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 15px 0;
-            font-family: 'Courier New', monospace;
-            min-height: 60px;
         }
 
         .banner {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 15px 25px;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
             z-index: 1500;
-            animation: slideIn 0.5s, slideOut 0.5s 2.5s;
-            display: none;
-        }
-
-        .banner.show {
-            display: block;
+            animation: slideIn 0.3s;
         }
 
         @keyframes slideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+            from { transform: translateX(400px); }
+            to { transform: translateX(0); }
         }
 
-        @keyframes slideOut {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateX(400px);
-                opacity: 0;
-            }
+        .tips-list {
+            list-style: none;
+            padding: 0;
         }
 
-        .tip-box {
-            background: #e7f5ff;
-            border-left: 4px solid #667eea;
-            padding: 15px;
-            margin: 15px 0;
+        .tips-list li {
+            padding: 8px;
+            margin: 6px 0;
+            background: #f8f9fa;
             border-radius: 8px;
+            border-left: 4px solid #667eea;
         }
 
-        .use-case-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
+        .template-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .color-indicator {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-right: 5px;
         }
 
         @media (max-width: 768px) {
@@ -609,615 +598,564 @@
                 font-size: 2.5em;
             }
 
-            .sub-tabs {
-                flex-direction: column;
+            .timetable-grid {
+                grid-template-columns: 60px 1fr;
             }
 
-            .sub-tab-btn {
-                width: 100%;
-            }
-
-            .stats-container {
-                flex-direction: column;
+            .week-planner {
+                grid-template-columns: 1fr;
             }
 
             .celebration-text {
-                font-size: 2em;
+                font-size: 1.5em;
             }
 
-            .clapping-hands {
+            .clapping-animation {
                 font-size: 5em;
             }
         }
 
-        .deadline-badge {
-            display: inline-block;
-            background: #667eea;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: 600;
+        .ai-section {
+            margin: 20px 0;
         }
 
-        .micro-task-input {
+        .spacing-visual {
             display: flex;
-            gap: 10px;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 8px;
             margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
-        .micro-task-input input {
-            flex: 1;
+        @media (max-width: 768px) {
+            .spacing-visual {
+                margin: 10px -15px;
+                padding: 10px 5px;
+                gap: 5px;
+            }
+        }
+
+        .spacing-day {
+            text-align: center;
+            padding: 8px 6px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #667eea;
+            min-width: 70px;
+            flex-shrink: 0;
+            font-size: 0.9em;
+        }
+
+        .spacing-day > div:first-child {
+            font-size: 1.6em;
+            margin-bottom: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .spacing-day {
+                padding: 6px 4px;
+                min-width: 65px;
+                font-size: 0.85em;
+            }
+            
+            .spacing-day > div:first-child {
+                font-size: 1.4em;
+            }
+        }
+
+        .use-case-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            transition: all 0.3s;
+        }
+
+        .use-case-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
         }
 
         .tracker-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
+            padding: 12px;
             background: #f8f9fa;
             border-radius: 8px;
-            margin: 10px 0;
-            border: 2px solid #e0e0e0;
+            margin: 8px 0;
         }
 
-        .topic-schedule {
-            display: flex;
-            gap: 15px;
-            margin: 15px 0;
-            flex-wrap: wrap;
-        }
-
-        .review-date {
-            background: #667eea;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: 600;
-        }
-
-        .review-date.completed {
-            background: #51cf66;
-        }
-
-        .quick-add-buttons {
+        .add-task-form {
             display: flex;
             gap: 10px;
             margin: 15px 0;
-            flex-wrap: wrap;
         }
 
-        .color-legend {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin: 15px 0;
-        }
-
-        .color-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .color-box {
-            width: 30px;
-            height: 30px;
-            border-radius: 5px;
+        .add-task-form input {
+            flex: 1;
+            padding: 10px;
             border: 2px solid #e0e0e0;
+            border-radius: 8px;
+        }
+
+        .celebration-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 30px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: block;
+            margin: 30px auto;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .celebration-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .celebration-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📚 Study Hub</h1>
-            <p>Your complete guide to acing university! 🎓✨</p>
-        </div>
+    <div class="header">
+        <h1>📚 Study Hub</h1>
+        <p>Master your learning game - smart techniques, AI tools & exam prep!</p>
+    </div>
 
-        <div class="sub-tabs">
-            <button class="sub-tab-btn active" onclick="switchTab('techniques')">🍅 Study Techniques</button>
-            <button class="sub-tab-btn" onclick="switchTab('ai')">🤖 AI Learning Hub</button>
-            <button class="sub-tab-btn" onclick="switchTab('timetable')">📅 Study Timetable</button>
-            <button class="sub-tab-btn" onclick="switchTab('planner')">📊 Project Planner</button>
-            <button class="sub-tab-btn" onclick="switchTab('referencing')">📖 Referencing Guide</button>
+    <div class="container">
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="switchTab('techniques')">🍅 Study Techniques</button>
+            <button class="tab-btn" onclick="switchTab('ai')">🤖 AI Learning Hub</button>
+            <button class="tab-btn" onclick="switchTab('timetable')">📅 Study Timetable</button>
+            <button class="tab-btn" onclick="switchTab('planner')">📊 Weekly Planner</button>
+            <button class="tab-btn" onclick="switchTab('referencing')">📖 Referencing</button>
         </div>
 
         <!-- Study Techniques Tab -->
         <div id="techniques" class="tab-content active">
-            <h2 style="color: #667eea; margin-bottom: 20px;">Master These Study Techniques! 💪</h2>
-
-            <!-- Pomodoro Section -->
-            <div class="card">
-                <h3>🍅 Pomodoro Technique</h3>
-                <p style="font-size: 1.1em; margin-bottom: 15px;">25 mins focus + 5 min break = productivity magic! ✨</p>
-                
-                <div class="pomodoro-timer">
-                    <div class="timer-display" id="timerDisplay">25:00</div>
-                    <div class="timer-controls">
-                        <button class="btn btn-primary" onclick="startTimer()">▶ Start</button>
-                        <button class="btn btn-secondary" onclick="pauseTimer()">⏸ Pause</button>
-                        <button class="btn btn-secondary" onclick="resetTimer()">🔄 Reset</button>
-                    </div>
-                    <div style="margin-top: 20px; font-size: 1.2em;">
-                        <span id="pomodoroCount">🍅 0 pomodoros completed today!</span>
-                    </div>
-                    <label style="margin-top: 15px; display: block;">
-                        <input type="checkbox" id="soundToggle" checked> 🔔 Sound notification
-                    </label>
+            <div class="expandable-card">
+                <div class="expandable-header" onclick="toggleExpand(this)">
+                    <h3>🍅 Pomodoro Technique</h3>
+                    <span class="expand-icon">▼</span>
                 </div>
+                <div class="expandable-content">
+                    <p style="font-size: 1.1em; margin-bottom: 15px;">25 mins focus + 5 min break = productivity magic! ✨</p>
+                    
+                    <div class="pomodoro-timer">
+                        <h3>🍅 Pomodoro Timer</h3>
+                        <div class="timer-display" id="timerDisplay">25:00</div>
+                        <div class="timer-buttons">
+                            <button class="btn-primary" onclick="startTimer()">▶️ Start</button>
+                            <button class="btn-primary" onclick="pauseTimer()">⏸️ Pause</button>
+                            <button class="btn-primary" onclick="resetTimer()">🔄 Reset</button>
+                        </div>
+                        <div class="stats-display">
+                            <p id="pomodoroStats">🍅 0 pomodoros completed today!</p>
+                            <p>🔥 Study streak: <span id="streakCount">0</span> days</p>
+                        </div>
+                    </div>
 
-                <div class="tip-box">
-                    <strong>How it works:</strong> Focus intensely for 25 minutes, then reward yourself with a 5-minute break. After 4 pomodoros, take a longer 15-30 minute break. Your brain will thank you! 🧠
+                    <div style="margin-top: 15px;">
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="soundToggle" checked>
+                            <span>🔔 Sound notification when complete</span>
+                        </label>
+                    </div>
                 </div>
             </div>
 
-            <!-- Active Recall -->
-            <div class="card expandable-card" onclick="toggleCard(this)">
-                <div class="card-header">
+            <div class="expandable-card">
+                <div class="expandable-header" onclick="toggleExpand(this)">
                     <h3>🧠 Active Recall</h3>
                     <span class="expand-icon">▼</span>
                 </div>
-                <div class="card-content">
-                    <p style="font-size: 1.1em; margin-bottom: 15px;"><strong>Test yourself instead of re-reading - way more effective!</strong></p>
+                <div class="expandable-content">
+                    <p style="font-size: 1.1em; margin-bottom: 15px;">Test yourself instead of re-reading - way more effective! 💪</p>
                     
-                    <h4 style="color: #667eea; margin: 20px 0 10px 0;">Key Strategies:</h4>
-                    <ul style="line-height: 1.8; margin-left: 20px;">
-                        <li>📇 Flashcards (physical or digital like Anki)</li>
-                        <li>❓ Practice questions after each study session</li>
-                        <li>👥 Teach someone else (or pretend to!)</li>
-                        <li>📝 Quiz yourself without looking at notes</li>
+                    <h4>Key Strategies:</h4>
+                    <ul class="tips-list">
+                        <li>📇 Flashcards (physical or digital)</li>
+                        <li>❓ Practice questions</li>
+                        <li>👥 Teach someone else</li>
+                        <li>✍️ Quiz yourself without notes</li>
                     </ul>
 
-                    <div class="tip-box">
-                        <strong>Quick Tips to Try Now:</strong>
-                        <ul style="line-height: 1.8; margin: 10px 0 0 20px;">
-                            <li>Close your notes and write everything you remember</li>
-                            <li>Turn chapter headings into questions</li>
-                            <li>Explain concepts out loud to your rubber duck 🦆</li>
-                            <li>Create a blank diagram and fill it in from memory</li>
-                        </ul>
-                    </div>
+                    <h4 style="margin-top: 15px;">Quick Tips:</h4>
+                    <ul class="tips-list">
+                        <li>"Close your notes and write everything you remember"</li>
+                        <li>"Turn headings into questions"</li>
+                        <li>"Explain concepts out loud"</li>
+                        <li>"If you can't explain it simply, you don't understand it yet"</li>
+                    </ul>
                 </div>
             </div>
 
-            <!-- Spaced Learning -->
-            <div class="card expandable-card" onclick="toggleCard(this)">
-                <div class="card-header">
-                    <h3>📅 Spaced Repetition</h3>
+            <div class="expandable-card">
+                <div class="expandable-header" onclick="toggleExpand(this)">
+                    <h3>📅 Spaced Learning</h3>
                     <span class="expand-icon">▼</span>
                 </div>
-                <div class="card-content">
-                    <p style="font-size: 1.1em; margin-bottom: 15px;"><strong>Spreading study over time = better memory retention! 🧠✨</strong></p>
+                <div class="expandable-content">
+                    <p style="font-size: 1.1em; margin-bottom: 12px;">Spreading study over time = better memory retention! 🧠</p>
                     
-                    <h4 style="color: #667eea; margin: 20px 0 10px 0;">The Magic Schedule:</h4>
-                    <div class="topic-schedule">
-                        <span class="review-date">Day 1: Learn it 📖</span>
-                        <span style="font-size: 1.5em;">→</span>
-                        <span class="review-date">Day 3: Review 🔄</span>
-                        <span style="font-size: 1.5em;">→</span>
-                        <span class="review-date">Day 7: Review 🔄</span>
-                        <span style="font-size: 1.5em;">→</span>
-                        <span class="review-date">Day 14: Review 🔄</span>
+                    <div class="landscape-hint">
+                        <span class="rotate-icon">📱</span>
+                        <span>Rotate your phone to landscape for better view!</span>
+                    </div>
+                    
+                    <div class="spacing-visual">
+                        <div class="spacing-day">
+                            <div style="font-size: 1.6em;">📖</div>
+                            <div><strong>Day 1</strong></div>
+                            <div>First Study</div>
+                        </div>
+                        <div style="font-size: 1.5em; padding: 0 3px;">→</div>
+                        <div class="spacing-day">
+                            <div style="font-size: 1.6em;">📝</div>
+                            <div><strong>Day 3</strong></div>
+                            <div>Review</div>
+                        </div>
+                        <div style="font-size: 1.5em; padding: 0 3px;">→</div>
+                        <div class="spacing-day">
+                            <div style="font-size: 1.6em;">✅</div>
+                            <div><strong>Day 7</strong></div>
+                            <div>Review</div>
+                        </div>
+                        <div style="font-size: 1.5em; padding: 0 3px;">→</div>
+                        <div class="spacing-day">
+                            <div style="font-size: 1.6em;">🎯</div>
+                            <div><strong>Day 14</strong></div>
+                            <div>Review</div>
+                        </div>
                     </div>
 
-                    <h4 style="color: #667eea; margin: 20px 0 10px 0;">Practical Strategies:</h4>
-                    <ul style="line-height: 1.8; margin-left: 20px;">
-                        <li>Review notes 24 hours after the lecture</li>
-                        <li>Weekly recap sessions every Sunday</li>
-                        <li>Monthly revision of older topics</li>
-                        <li>Use calendar reminders (set them now!)</li>
+                    <h4 style="margin-top: 15px;">Practical Strategies:</h4>
+                    <ul class="tips-list">
+                        <li>Review notes 24 hours after lecture</li>
+                        <li>Weekly recap sessions</li>
+                        <li>Monthly revision of old topics</li>
+                        <li>Use calendar reminders</li>
                     </ul>
 
-                    <div style="margin-top: 20px;">
-                        <h4 style="color: #667eea;">📝 Spaced Repetition Tracker</h4>
-                        <button class="btn btn-primary" onclick="addSpacedTopic()" style="margin: 10px 0;">+ Add Topic to Track</button>
-                        <div id="spacedTopicsList"></div>
+                    <div style="margin-top: 15px;">
+                        <h4>📋 Spaced Repetition Tracker</h4>
+                        <div class="add-task-form">
+                            <input type="text" id="spacedTopic" placeholder="Topic to review">
+                            <input type="date" id="spacedDate">
+                            <button class="btn-primary" onclick="addSpacedItem()">➕ Add</button>
+                        </div>
+                        <div id="spacedList"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Time Management -->
-            <div class="card expandable-card" onclick="toggleCard(this)">
-                <div class="card-header">
+            <div class="expandable-card">
+                <div class="expandable-header" onclick="toggleExpand(this)">
                     <h3>⏰ Time Management Tips</h3>
                     <span class="expand-icon">▼</span>
                 </div>
-                <div class="card-content">
-                    <p style="font-size: 1.1em; margin-bottom: 15px;"><strong>Work smarter, not just harder! ⚡</strong></p>
-                    
-                    <div style="line-height: 2; font-size: 1.05em;">
-                        <div style="margin: 10px 0;">🔹 Break big tasks into tiny chunks</div>
-                        <div style="margin: 10px 0;">🔹 2-minute rule: If it takes less than 2 mins, do it now</div>
-                        <div style="margin: 10px 0;">🔹 Plan tomorrow tonight (saves morning brain fog!)</div>
-                        <div style="margin: 10px 0;">🔹 Time-block your day (check out the Timetable tab!)</div>
-                        <div style="margin: 10px 0;">🔹 Use a planner (we made you one below! 👇)</div>
-                        <div style="margin: 10px 0;">🔹 Kill notifications during focus time 📵</div>
-                        <div style="margin: 10px 0;">🔹 Study hardest subject when most alert</div>
-                        <div style="margin: 10px 0;">🔹 Batch similar tasks together</div>
-                    </div>
-
-                    <div class="tip-box" style="margin-top: 20px;">
-                        <strong>Pro Tip:</strong> Your brain has ~90-minute attention cycles. Take a proper break every 90 mins for peak performance! 🎯
-                    </div>
+                <div class="expandable-content">
+                    <ul class="tips-list">
+                        <li>🧩 Break big tasks into tiny chunks</li>
+                        <li>⏱️ 2-minute rule: If it takes less than 2 mins, do it now</li>
+                        <li>🌙 Plan tomorrow tonight</li>
+                        <li>📦 Time-block your day</li>
+                        <li>📅 Use a planner (we made you one below!)</li>
+                        <li>📵 Kill notifications during focus time</li>
+                        <li>🧠 Study hardest subject when most alert</li>
+                        <li>🎯 Set 3 MITs (Most Important Tasks) daily</li>
+                    </ul>
                 </div>
             </div>
 
-            <!-- Study Environment -->
-            <div class="card expandable-card" onclick="toggleCard(this)">
-                <div class="card-header">
+            <div class="expandable-card">
+                <div class="expandable-header" onclick="toggleExpand(this)">
                     <h3>🎧 Study Environment Hacks</h3>
                     <span class="expand-icon">▼</span>
                 </div>
-                <div class="card-content">
-                    <p style="font-size: 1.1em; margin-bottom: 15px;"><strong>Quick wins for better focus! 🎯</strong></p>
-                    
-                    <div style="line-height: 2; font-size: 1.05em;">
-                        <div style="margin: 10px 0;">✨ Clean desk = clear mind</div>
-                        <div style="margin: 10px 0;">☀️ Natural light > fluorescent (sit by a window!)</div>
-                        <div style="margin: 10px 0;">🎵 Background noise: library sounds, lo-fi beats, brown noise</div>
-                        <div style="margin: 10px 0;">📱 Phone in another room (seriously, do it!)</div>
-                        <div style="margin: 10px 0;">🥤 Snacks + water within reach</div>
-                        <div style="margin: 10px 0;">🌡️ Temperature: slightly cool (18-21°C is ideal)</div>
-                        <div style="margin: 10px 0;">🪴 Add a plant (boosts concentration by 15%!)</div>
-                        <div style="margin: 10px 0;">👔 Get dressed (PJs = brain thinks it's sleep time)</div>
-                    </div>
-
-                    <div class="success-card" style="margin-top: 20px;">
-                        <strong>🎧 Playlist Recommendations:</strong>
-                        <ul style="line-height: 1.8; margin: 10px 0 0 20px;">
-                            <li>Lofi Girl (YouTube)</li>
-                            <li>Brain.fm (scientifically designed focus music)</li>
-                            <li>Coffitivity (coffee shop ambience)</li>
-                            <li>mynoise.net (customizable soundscapes)</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stats-container">
-                <div class="stat-card">
-                    <div>🍅 Pomodoros Today</div>
-                    <div class="stat-number" id="statPomodoros">0</div>
-                </div>
-                <div class="stat-card">
-                    <div>📚 Study Hours This Week</div>
-                    <div class="stat-number" id="statHours">0.0</div>
-                </div>
-                <div class="stat-card">
-                    <div>🔥 Study Streak</div>
-                    <div class="stat-number" id="statStreak">0</div>
+                <div class="expandable-content">
+                    <p style="font-size: 1.1em; margin-bottom: 15px;">Quick wins for better focus! 🚀</p>
+                    <ul class="tips-list">
+                        <li>🧹 Clean desk = clear mind</li>
+                        <li>☀️ Natural light > fluorescent</li>
+                        <li>🎵 Background noise: library sounds, lo-fi beats</li>
+                        <li>📱 Phone in another room (seriously!)</li>
+                        <li>🍎 Snacks + water within reach</li>
+                        <li>🌡️ Temperature: slightly cool (18-21°C)</li>
+                        <li>🪴 Add a plant for better air quality</li>
+                        <li>🪑 Good posture = better focus</li>
+                    </ul>
                 </div>
             </div>
         </div>
 
         <!-- AI Learning Hub Tab -->
         <div id="ai" class="tab-content">
-            <h2 style="color: #667eea; margin-bottom: 20px;">🤖 AI Learning Hub - Use It Smart!</h2>
+            <div class="ai-section">
+                <h2 style="text-align: center; margin-bottom: 12px;">🤖 How to USE AI for Learning ✅</h2>
+                <p style="text-align: center; margin-bottom: 20px; font-size: 1.1em;">AI is your study buddy, not your ghostwriter - use it smart! Click each section to expand.</p>
 
-            <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
-                <button class="btn btn-primary" onclick="toggleAISection('use')" id="aiUseBtn">✅ How to USE AI</button>
-                <button class="btn btn-secondary" onclick="toggleAISection('ethics')" id="aiEthicsBtn">⚠️ Ethics & Limitations</button>
-            </div>
-
-            <!-- How to USE AI Section -->
-            <div id="aiUseSection">
-                <div class="success-card">
-                    <h3 style="margin-bottom: 10px;">AI is your study buddy, not your ghostwriter! 🤝</h3>
-                    <p>Use it to learn faster, understand deeper, and think better - but always keep YOUR brain in the driver's seat! 🧠</p>
-                </div>
-
-                <!-- Research Assistant -->
-                <div class="card expandable-card" onclick="toggleCard(this)">
-                    <div class="card-header">
+                <div class="expandable-card">
+                    <div class="expandable-header" onclick="toggleExpand(this)">
                         <h3>📚 Research Assistant</h3>
                         <span class="expand-icon">▼</span>
                     </div>
-                    <p style="margin-top: 10px;"><strong>Use for:</strong> Understanding complex topics</p>
-                    <div class="card-content">
-                        <div class="prompt-box">
-                            <div class="prompt-text">"Explain [topic] like I'm 5, then gradually increase complexity"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy Prompt</button>
+                    <div class="expandable-content">
+                        <p><strong>Use:</strong> "Help me understand complex topics"</p>
+                        <div class="prompt-card">
+                            <strong>Example Prompts:</strong>
+                            <div class="prompt-text" id="prompt1">Explain [topic] like I'm 5, then gradually increase complexity</div>
+                            <button class="copy-btn" onclick="copyPrompt('prompt1')">📋 Copy</button>
                         </div>
-
-                        <div class="prompt-box">
-                            <div class="prompt-text">"What are the key debates around [topic]?"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy Prompt</button>
+                        <div class="prompt-card">
+                            <div class="prompt-text" id="prompt2">What are the key debates around [topic]?</div>
+                            <button class="copy-btn" onclick="copyPrompt('prompt2')">📋 Copy</button>
                         </div>
-
-                        <div class="prompt-box">
-                            <div class="prompt-text">"Give me 5 reliable sources on [topic] with brief summaries"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy Prompt</button>
+                        <div class="prompt-card">
+                            <div class="prompt-text" id="prompt3">Give me 5 reliable sources on [topic] with brief summaries</div>
+                            <button class="copy-btn" onclick="copyPrompt('prompt3')">📋 Copy</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Essay Coach -->
-                <div class="card expandable-card" onclick="toggleCard(this)">
-                    <div class="card-header">
+                <div class="expandable-card">
+                    <div class="expandable-header" onclick="toggleExpand(this)">
                         <h3>✍️ Essay Coach</h3>
                         <span class="expand-icon">▼</span>
                     </div>
-                    <p style="margin-top: 10px;"><strong>Use for:</strong> Improving YOUR writing</p>
-                    <div class="card-content">
-                        <div class="prompt-box">
-                            <div class="prompt-text">"Review my essay plan and suggest improvements: [paste YOUR plan]"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy Prompt</button>
+                    <div class="expandable-content">
+                        <p><strong>Use:</strong> "Improve my writing and structure"</p>
+                        <div class="prompt-card">
+                            <div class="prompt-text" id="prompt4">Review my essay plan and suggest improvements</div>
+                            <button class="copy-btn" onclick="copyPrompt('prompt4')">📋 Copy</button>
                         </div>
-
-                        <div class="prompt-box">
-                            <div class="prompt-text">"Help me create an outline for an essay on [topic]"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy Prompt</button>
+                        <div class="prompt-card">
+                            <div class="prompt-text" id="prompt5">Help me create an outline for an essay on [topic]</div>
+                            <button class="copy-btn" onclick="copyPrompt('prompt5')">📋 Copy</button>
                         </div>
-
-                        <div class="prompt-box">
-                            <div class="prompt-text">"What counter-arguments should I address for [your argument]?"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy Prompt</button>
+                        <div class="prompt-card">
+                            <div class="prompt-text" id="prompt6">What counter-arguments should I address for [argument]?</div>
+                            <button class="copy-btn" onclick="copyPrompt('prompt6')">📋 Copy</button>
                         </div>
-
-                        <div class="prompt-box">
-                            <div class="prompt-text">"Check my argument structure - does this make logical sense?: [paste YOUR structure]"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy Prompt</button>
+                        <div class="prompt-card">
+                            <div class="prompt-text" id="prompt7">Check my argument structure - does this make logical sense?</div>
+                            <button class="copy-btn" onclick="copyPrompt('prompt7')">📋 Copy</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Exam Practice -->
-                <div class="card expandable-card" onclick="toggleCard(this)">
-                    <div class="card-header">
+                <div class="expandable-card">
+                    <div class="expandable-header" onclick="toggleExpand(this)">
                         <h3>📝 Exam Practice Partner</h3>
                         <span class="expand-icon">▼</span>
                     </div>
-                    <p style="margin-top: 10px;"><strong>Use for:</strong> Testing YOUR knowledge</p>
-                    <div class="card-content">
-                        <div class="prompt-box">
-                            <div class="prompt-text">"Quiz me on [topic] with 10 questions, one at a time"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy Prompt</button>
+                    <div class="expandable-content">
+                        <p><strong>Use:</strong> "Test my knowledge"</p>
+                        <div class="prompt-card">
+                            <div class="prompt-text" id="prompt8">Quiz me on [topic] with 10 questions</div>
+                            <button class="copy-btn" onclick="copyPrompt('prompt8')">📋 Copy</button>
                         </div>
-
-                        <div class="prompt-box">
-                            <div class="prompt-text">"Create a mock exam for [module] with marking criteria"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy Prompt</button>
+                        <div class="prompt-card">
+                            <div class="prompt-text" id="prompt9">Create a mock exam for [module]</div>
+                            <button class="copy-btn" onclick="copyPrompt('prompt9')">📋 Copy</button>
                         </div>
-
-                        <div class="prompt-box">
-                            <div class="prompt-text">"Explain where I went wrong in this answer: [paste YOUR answer]"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy Prompt</button>
+                        <div class="prompt-card">
+                            <div class="prompt-text" id="prompt10">Explain where I went wrong in this answer: [paste answer]</div>
+                            <button class="copy-btn" onclick="copyPrompt('prompt10')">📋 Copy</button>
                         </div>
-
-                        <div class="prompt-box">
-                            <div class="prompt-text">"Give me feedback on my practice essay: [paste YOUR essay]"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy Prompt</button>
+                        <div class="prompt-card">
+                            <div class="prompt-text" id="prompt11">Give me feedback on my practice essay</div>
+                            <button class="copy-btn" onclick="copyPrompt('prompt11')">📋 Copy</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Summarization -->
-                <div class="card expandable-card" onclick="toggleCard(this)">
-                    <div class="card-header">
+                <div class="expandable-card">
+                    <div class="expandable-header" onclick="toggleExpand(this)">
                         <h3>📋 Summarization Tool</h3>
                         <span class="expand-icon">▼</span>
                     </div>
-                    <p style="margin-top: 10px;"><strong>Use for:</strong> Condensing info YOU read</p>
-                    <div class="card-content">
-                        <div class="prompt-box">
-                            <div class="prompt-text">"Summarize this article in bullet points: [paste text YOU read]"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy Prompt</button>
+                    <div class="expandable-content">
+                        <p><strong>Use:</strong> "Condense large amounts of info"</p>
+                        <div class="prompt-card">
+                            <div class="prompt-text" id="prompt12">Summarize this article in bullet points: [paste text]</div>
+                            <button class="copy-btn" onclick="copyPrompt('prompt12')">📋 Copy</button>
                         </div>
-
-                        <div class="prompt-box">
-                            <div class="prompt-text">"Create flashcards from these lecture notes: [paste YOUR notes]"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy Prompt</button>
+                        <div class="prompt-card">
+                            <div class="prompt-text" id="prompt13">Create flashcards from these lecture notes: [paste notes]</div>
+                            <button class="copy-btn" onclick="copyPrompt('prompt13')">📋 Copy</button>
                         </div>
-
-                        <div class="prompt-box">
-                            <div class="prompt-text">"Extract key concepts from: [paste content]"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy Prompt</button>
+                        <div class="prompt-card">
+                            <div class="prompt-text" id="prompt14">Extract key concepts from: [paste content]</div>
+                            <button class="copy-btn" onclick="copyPrompt('prompt14')">📋 Copy</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Strategy Coach -->
-                <div class="card expandable-card" onclick="toggleCard(this)">
-                    <div class="card-header">
+                <div class="expandable-card">
+                    <div class="expandable-header" onclick="toggleExpand(this)">
                         <h3>🎯 Learning Strategy Coach</h3>
                         <span class="expand-icon">▼</span>
                     </div>
-                    <p style="margin-top: 10px;"><strong>Use for:</strong> Optimizing YOUR approach</p>
-                    <div class="card-content">
-                        <div class="prompt-box">
-                            <div class="prompt-text">"Create a study plan for [exam] in [timeframe]"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy Prompt</button>
+                    <div class="expandable-content">
+                        <p><strong>Use:</strong> "Optimize your study approach"</p>
+                        <div class="prompt-card">
+                            <div class="prompt-text" id="prompt15">Create a study plan for [exam] in [timeframe]</div>
+                            <button class="copy-btn" onclick="copyPrompt('prompt15')">📋 Copy</button>
                         </div>
-
-                        <div class="prompt-box">
-                            <div class="prompt-text">"What's the most efficient way to learn [topic]?"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy Prompt</button>
+                        <div class="prompt-card">
+                            <div class="prompt-text" id="prompt16">What's the most efficient way to learn [topic]?</div>
+                            <button class="copy-btn" onclick="copyPrompt('prompt16')">📋 Copy</button>
                         </div>
-
-                        <div class="prompt-box">
-                            <div class="prompt-text">"Help me break down [large topic] into manageable study chunks"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy Prompt</button>
+                        <div class="prompt-card">
+                            <div class="prompt-text" id="prompt17">Help me break down [large topic] into manageable chunks</div>
+                            <button class="copy-btn" onclick="copyPrompt('prompt17')">📋 Copy</button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Feedback Generator -->
-                <div class="card expandable-card" onclick="toggleCard(this)">
-                    <div class="card-header">
+                <div class="expandable-card">
+                    <div class="expandable-header" onclick="toggleExpand(this)">
                         <h3>💬 Feedback Generator</h3>
                         <span class="expand-icon">▼</span>
                     </div>
-                    <p style="margin-top: 10px;"><strong>Use for:</strong> Constructive criticism on YOUR work</p>
-                    <div class="card-content">
-                        <div class="prompt-box">
-                            <div class="prompt-text">"Rate this introduction and suggest improvements: [paste YOUR intro]"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy Prompt</button>
+                    <div class="expandable-content">
+                        <p><strong>Use:</strong> "Get constructive criticism"</p>
+                        <div class="prompt-card">
+                            <div class="prompt-text" id="prompt18">Rate this introduction and suggest improvements: [paste text]</div>
+                            <button class="copy-btn" onclick="copyPrompt('prompt18')">📋 Copy</button>
                         </div>
-
-                        <div class="prompt-box">
-                            <div class="prompt-text">"What's missing from MY argument?: [paste YOUR argument]"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy Prompt</button>
+                        <div class="prompt-card">
+                            <div class="prompt-text" id="prompt19">What's missing from my argument?</div>
+                            <button class="copy-btn" onclick="copyPrompt('prompt19')">📋 Copy</button>
                         </div>
-
-                        <div class="prompt-box">
-                            <div class="prompt-text">"How can I make this paragraph clearer?: [paste YOUR paragraph]"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy Prompt</button>
+                        <div class="prompt-card">
+                            <div class="prompt-text" id="prompt20">How can I make this paragraph clearer?</div>
+                            <button class="copy-btn" onclick="copyPrompt('prompt20')">📋 Copy</button>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Ethics & Limitations Section -->
-            <div id="aiEthicsSection" style="display: none;">
+                <h2 style="text-align: center; margin: 30px 0 12px 0;">⚠️ AI Ethics & Limitations</h2>
+                <p style="text-align: center; margin-bottom: 20px; font-size: 1.1em;">Know the boundaries - stay smart, stay ethical!</p>
+
                 <div class="warning-card">
-                    <h3 style="margin-bottom: 10px;">⚠️ Remember: AI is a tool, YOU are the thinker! 🧠</h3>
-                    <p>Using AI smartly helps you learn. Using it lazily means you're cheating yourself out of an education! </p>
-                </div>
-
-                <!-- Where AI Crosses the Line -->
-                <div class="card" style="border: 3px solid #ff6b6b;">
                     <h3>🚫 Where AI Crosses the Line</h3>
-                    
-                    <div style="background: #ffe0e0; padding: 20px; border-radius: 8px; margin: 15px 0;">
-                        <h4 style="color: #ff6b6b;">DON'T:</h4>
-                        <ul style="line-height: 2; margin: 10px 0 0 20px; font-weight: 600;">
-                            <li>❌ Submit AI-generated essays as your own</li>
-                            <li>❌ Use AI to write your assignments</li>
-                            <li>❌ Copy-paste AI outputs without citation</li>
-                            <li>❌ Let AI do the thinking for you</li>
-                            <li>❌ Use AI during closed-book exams</li>
-                        </ul>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 15px;">
+                        <div>
+                            <h4 style="color: #dc3545;">❌ DON'T:</h4>
+                            <ul>
+                                <li>Submit AI-generated essays as your own</li>
+                                <li>Use AI to write your assignments</li>
+                                <li>Copy-paste AI outputs without citation</li>
+                                <li>Let AI do the thinking for you</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: #28a745;">✅ DO:</h4>
+                            <ul>
+                                <li>Use AI to understand concepts</li>
+                                <li>Get feedback on YOUR work</li>
+                                <li>Generate ideas to develop yourself</li>
+                                <li>Learn faster, not cheat</li>
+                            </ul>
+                        </div>
                     </div>
-
-                    <div style="background: #d4edda; padding: 20px; border-radius: 8px; margin: 15px 0;">
-                        <h4 style="color: #28a745;">DO:</h4>
-                        <ul style="line-height: 2; margin: 10px 0 0 20px; font-weight: 600;">
-                            <li>✅ Use AI to understand concepts</li>
-                            <li>✅ Get feedback on YOUR work</li>
-                            <li>✅ Generate ideas to develop yourself</li>
-                            <li>✅ Learn faster, not cheat</li>
-                            <li>✅ Always cite when you use AI</li>
-                        </ul>
-                    </div>
-
-                    <div class="warning-card" style="margin-top: 20px;">
-                        <strong>🏛️ Check Your University's AI Policy!</strong>
-                        <p style="margin-top: 10px;">Every uni has different rules. Find yours in your student handbook or ask your professor. When in doubt, ask before you submit! 📧</p>
+                    <div style="margin-top: 20px; padding: 15px; background: #fff; border-radius: 8px; border: 2px solid #ffc107;">
+                        <strong>⚠️ Check Your University's AI Policy!</strong>
+                        <p>Every uni has different rules - know them before you use AI!</p>
                     </div>
                 </div>
 
-                <!-- AI Hallucinations -->
-                <div class="card">
-                    <h3>🤔 AI Hallucinations - When AI Makes Stuff Up</h3>
-                    <p><strong>Explanation:</strong> AI can confidently lie to you! It makes up facts, sources, and quotes that sound real but aren't. 🎭</p>
-
-                    <div class="tip-box">
-                        <h4 style="color: #667eea;">How to Spot BS:</h4>
-                        <ul style="line-height: 1.8; margin: 10px 0 0 20px;">
-                            <li>Too-good-to-be-true "facts"</li>
-                            <li>Suspiciously specific details</li>
-                            <li>Sources that don't exist when you Google them</li>
-                            <li>Statistics without citations</li>
-                        </ul>
+                <div class="warning-card">
+                    <h3>🤔 AI Hallucinations</h3>
+                    <p><strong>AI can confidently make stuff up!</strong></p>
+                    <h4>How to spot:</h4>
+                    <ul class="tips-list">
+                        <li>Too-good-to-be-true facts</li>
+                        <li>Suspiciously specific details</li>
+                        <li>Missing sources</li>
+                    </ul>
+                    <h4>Always verify with:</h4>
+                    <ul class="tips-list">
+                        <li>✅ Original academic sources</li>
+                        <li>✅ University library databases</li>
+                        <li>✅ Peer-reviewed journals</li>
+                    </ul>
+                    <div class="prompt-card">
+                        <strong>Prompts to check:</strong>
+                        <div class="prompt-text" id="prompt21">Provide sources for each claim you made</div>
+                        <button class="copy-btn" onclick="copyPrompt('prompt21')">📋 Copy</button>
                     </div>
-
-                    <div style="margin-top: 20px;">
-                        <h4 style="color: #667eea;">Always Verify With:</h4>
-                        <div style="line-height: 2; margin-top: 10px;">
-                            ✅ Original academic sources<br>
-                            ✅ University library databases<br>
-                            ✅ Peer-reviewed journals<br>
-                            ✅ Official .gov or .edu websites<br>
-                            ✅ Your course textbooks
-                        </div>
-                    </div>
-
-                    <div class="prompt-box" style="margin-top: 20px;">
-                        <strong>Prompts to Check Facts:</strong>
-                        <div class="prompt-text">"Provide sources for each claim you made"</div>
-                        <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy</button>
-                    </div>
-
-                    <div class="prompt-box">
-                        <div class="prompt-text">"Are you certain about these facts? Double-check and admit if you're unsure."</div>
-                        <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy</button>
+                    <div class="prompt-card">
+                        <div class="prompt-text" id="prompt22">Are you certain about these facts? Double-check.</div>
+                        <button class="copy-btn" onclick="copyPrompt('prompt22')">📋 Copy</button>
                     </div>
                 </div>
 
-                <!-- AI Bias -->
-                <div class="card">
-                    <h3>⚖️ AI Bias - It's Not Neutral</h3>
-                    <p><strong>Explanation:</strong> AI learns from the internet = it inherits all of humanity's biases, stereotypes, and blind spots! 🌍</p>
-
-                    <div class="warning-card">
-                        <h4>Be Critical Of:</h4>
-                        <ul style="line-height: 1.8; margin: 10px 0 0 20px;">
-                            <li>Stereotyped perspectives</li>
-                            <li>Western-centric viewpoints</li>
-                            <li>Historical biases</li>
-                            <li>Oversimplified cultural topics</li>
-                            <li>Gender and racial stereotypes</li>
-                        </ul>
+                <div class="warning-card">
+                    <h3>⚖️ AI Bias</h3>
+                    <p><strong>AI learns from internet = inherits biases</strong></p>
+                    <h4>Be critical of:</h4>
+                    <ul class="tips-list">
+                        <li>Stereotyped perspectives</li>
+                        <li>Western-centric views</li>
+                        <li>Historical biases</li>
+                        <li>Oversimplified cultural topics</li>
+                    </ul>
+                    <div class="prompt-card">
+                        <strong>Prompts to challenge bias:</strong>
+                        <div class="prompt-text" id="prompt23">What perspectives are missing from this explanation?</div>
+                        <button class="copy-btn" onclick="copyPrompt('prompt23')">📋 Copy</button>
                     </div>
-
-                    <div style="margin-top: 20px;">
-                        <h4 style="color: #667eea;">Prompts to Challenge Bias:</h4>
-                        
-                        <div class="prompt-box">
-                            <div class="prompt-text">"What perspectives are missing from this explanation?"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy</button>
-                        </div>
-
-                        <div class="prompt-box">
-                            <div class="prompt-text">"What are alternative viewpoints on [topic]?"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy</button>
-                        </div>
-
-                        <div class="prompt-box">
-                            <div class="prompt-text">"How might someone from [culture/background] view this differently?"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy</button>
-                        </div>
+                    <div class="prompt-card">
+                        <div class="prompt-text" id="prompt24">What are alternative viewpoints on [topic]?</div>
+                        <button class="copy-btn" onclick="copyPrompt('prompt24')">📋 Copy</button>
+                    </div>
+                    <div class="prompt-card">
+                        <div class="prompt-text" id="prompt25">How might someone from [culture/background] view this differently?</div>
+                        <button class="copy-btn" onclick="copyPrompt('prompt25')">📋 Copy</button>
                     </div>
                 </div>
 
-                <!-- Critical Thinking -->
-                <div class="card" style="border: 3px solid #667eea;">
+                <div class="success-card">
                     <h3>🧠 Critical Thinking > AI</h3>
-                    <p style="font-size: 1.2em; font-weight: 600; color: #667eea;">AI is a tool, YOU are the thinker! 🎯</p>
-
-                    <div style="margin: 20px 0; line-height: 2;">
-                        <h4>Always Ask:</h4>
-                        <div style="margin-left: 20px;">
-                            🤔 Does this make sense?<br>
-                            📊 What's the evidence?<br>
-                            ⚖️ What's the opposing view?<br>
-                            🧩 What am I not considering?<br>
-                            🎓 Am I actually learning or just copying?
-                        </div>
+                    <p style="font-size: 1.2em; margin-bottom: 15px;"><strong>"AI is a tool, YOU are the thinker"</strong></p>
+                    <h4>Always ask:</h4>
+                    <ul class="tips-list">
+                        <li>Does this make sense?</li>
+                        <li>What's the evidence?</li>
+                        <li>What's the opposing view?</li>
+                        <li>Am I actually learning or just copying?</li>
+                    </ul>
+                    <div class="prompt-card">
+                        <strong>Prompts for critical thinking:</strong>
+                        <div class="prompt-text" id="prompt26">Play devil's advocate against this argument</div>
+                        <button class="copy-btn" onclick="copyPrompt('prompt26')">📋 Copy</button>
                     </div>
-
-                    <div>
-                        <h4 style="color: #667eea;">Prompts for Critical Thinking:</h4>
-                        
-                        <div class="prompt-box">
-                            <div class="prompt-text">"Play devil's advocate against this argument: [paste argument]"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy</button>
-                        </div>
-
-                        <div class="prompt-box">
-                            <div class="prompt-text">"What are the weaknesses in this reasoning?: [paste reasoning]"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy</button>
-                        </div>
-
-                        <div class="prompt-box">
-                            <div class="prompt-text">"What counterarguments and limitations am I not considering?"</div>
-                            <button class="copy-btn" onclick="copyPrompt(this)">📋 Copy</button>
-                        </div>
+                    <div class="prompt-card">
+                        <div class="prompt-text" id="prompt27">What are the weaknesses in this reasoning?</div>
+                        <button class="copy-btn" onclick="copyPrompt('prompt27')">📋 Copy</button>
                     </div>
-
-                    <div class="success-card" style="margin-top: 20px;">
-                        <strong>🎓 The Golden Rule:</strong> If you can't explain it without AI, you don't understand it yet! Keep learning! 💪
+                    <div class="prompt-card">
+                        <div class="prompt-text" id="prompt28">What am I not considering?</div>
+                        <button class="copy-btn" onclick="copyPrompt('prompt28')">📋 Copy</button>
                     </div>
                 </div>
             </div>
@@ -1225,445 +1163,342 @@
 
         <!-- Study Timetable Tab -->
         <div id="timetable" class="tab-content">
-            <h2 style="color: #667eea; margin-bottom: 20px;">📅 Study Timetable Builder</h2>
-
+            <h2 style="text-align: center; margin-bottom: 15px;">📅 Study Timetable</h2>
+            
+            <div class="landscape-hint">
+                <span class="rotate-icon">📱</span>
+                <span>Rotate to landscape for full week view!</span>
+            </div>
+            
             <div class="card">
-                <p style="font-size: 1.1em; margin-bottom: 20px;">Click any time slot to add a study session! 🎯</p>
-
-                <div class="quick-add-buttons">
-                    <button class="btn btn-primary" onclick="quickAddSession(60)">⏰ Add 1 Hour Block</button>
-                    <button class="btn btn-primary" onclick="quickAddSession(25)">⏰ Add Pomodoro (25 min)</button>
-                    <button class="btn btn-primary" onclick="quickAddSession(15)">⏰ Add Break (15 min)</button>
-                    <button class="btn btn-primary" onclick="openSessionModal(null)">+ Custom Session</button>
-                    <button class="btn btn-secondary" onclick="saveTimetable()">💾 Save Timetable</button>
-                    <button class="btn btn-danger" onclick="clearTimetable()">🗑️ Clear All</button>
-                </div>
-
-                <div class="color-legend">
-                    <div class="color-item">
-                        <div class="color-box" style="background: #e7f5ff;"></div>
-                        <span>Lecture</span>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <h3>Your Schedule</h3>
+                        <button class="btn-secondary" id="dayViewBtn" onclick="switchToDay()">📅 Day View</button>
+                        <button class="btn-secondary" id="weekViewBtn" onclick="switchToWeek()">📊 Week View</button>
                     </div>
-                    <div class="color-item">
-                        <div class="color-box" style="background: #fff3cd;"></div>
-                        <span>Reading</span>
-                    </div>
-                    <div class="color-item">
-                        <div class="color-box" style="background: #d4edda;"></div>
-                        <span>Practice</span>
-                    </div>
-                    <div class="color-item">
-                        <div class="color-box" style="background: #f8d7da;"></div>
-                        <span>Review</span>
-                    </div>
-                    <div class="color-item">
-                        <div class="color-box" style="background: #e2d5f5;"></div>
-                        <span>Break</span>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn-primary" onclick="openStudyBlockModal()">➕ Add Study Block</button>
+                        <button class="btn-secondary" id="clearDayBtn" onclick="clearCurrentDay()">🗑️ Clear Your Day</button>
+                        <button class="btn-secondary" id="clearWeekBtn" onclick="clearEntireWeek()" style="display: none;">🗑️ Clear Your Week</button>
                     </div>
                 </div>
 
-                <div style="margin: 20px 0;">
-                    <strong>Total Study Time Today:</strong> <span id="totalStudyTime" style="color: #667eea; font-size: 1.2em;">0.0 hours</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="timetableProgress" style="width: 0%;">0 hours this week</div>
                 </div>
 
-                <div class="timetable">
-                    <div class="timetable-grid" id="timetableGrid">
-                        <!-- Generated by JavaScript -->
-                    </div>
+                <div id="timetableContainer" style="margin-top: 15px;">
+                    <!-- Timetable grid will be generated by JavaScript -->
                 </div>
             </div>
         </div>
 
-        <!-- Project Planner Tab -->
+        <!-- Weekly Planner Tab -->
         <div id="planner" class="tab-content">
-            <h2 style="color: #667eea; margin-bottom: 20px;">📊 Project Planner - Crush Your Goals!</h2>
-
-            <div class="card">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 20px;">
-                    <div>
-                        <p style="font-size: 1.1em;">Break big goals into tiny wins! 🎯</p>
-                    </div>
-                    <button class="btn btn-primary" onclick="openGoalModal()">+ Set New Goal</button>
+            <h2 style="text-align: center; margin-bottom: 12px;">📊 Weekly Planner</h2>
+            
+            <div style="text-align: center; margin-bottom: 15px;">
+                <div class="progress-bar" style="max-width: 600px; margin: 0 auto;">
+                    <div class="progress-fill" id="weeklyProgress" style="width: 0%;">0% complete</div>
                 </div>
-
-                <div class="stats-container">
-                    <div class="stat-card">
-                        <div>📋 Total Projects</div>
-                        <div class="stat-number" id="totalProjects">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div>✅ Tasks Completed</div>
-                        <div class="stat-number" id="completedTasks">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div>📈 Overall Progress</div>
-                        <div class="stat-number" id="overallProgress">0%</div>
-                    </div>
-                </div>
-
-                <div style="margin: 20px 0;">
-                    <button class="btn btn-secondary" onclick="clearCompletedTasks()">✨ Clear Completed Tasks</button>
-                    <button class="btn btn-danger" onclick="resetPlannerData()">🔄 Reset All Data</button>
-                </div>
+                <p id="weeklyStats" style="margin-top: 8px; font-size: 1.1em;">This week: 0/0 tasks complete</p>
+                <p style="margin-top: 8px; font-size: 0.9em; color: #666;">💡 Tip: To delete a goal, click "Edit Goal", clear all text, and save.</p>
             </div>
 
-            <div id="projectsList">
-                <!-- Projects loaded here -->
+            <div class="week-planner" id="weekPlanner">
+                <!-- Days will be generated by JavaScript -->
             </div>
 
-            <div class="card" style="text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; margin-top: 30px;">
-                <h3>🎉 Finished Everything?</h3>
-                <p style="margin: 15px 0;">You absolute legend! Hit this button to celebrate! 🏆</p>
-                <button class="btn" style="background: white; color: #667eea;" onclick="celebrateCompletion()">🎊 CELEBRATE! 👏</button>
+            <button class="celebration-button" id="celebrateBtn" onclick="triggerCelebration()" disabled>
+                🎉 All Week Complete! Click to Celebrate! 🎉
+            </button>
+
+            <div style="text-align: center; margin-top: 15px;">
+                <button class="btn-secondary" onclick="resetCelebration()">🔄 Reset Celebration Button</button>
             </div>
         </div>
 
         <!-- Referencing Guide Tab -->
         <div id="referencing" class="tab-content">
-            <h2 style="color: #667eea; margin-bottom: 20px;">📖 Harvard Referencing Guide</h2>
+            <h2 style="text-align: center; margin-bottom: 20px;">📖 Harvard Referencing Guide</h2>
 
-            <div class="success-card">
-                <h3>Quick Harvard Referencing - Never Lose Marks Again! ✍️</h3>
-                <p>Generate perfect citations in seconds! Just fill in the boxes and hit generate. 🎯</p>
+            <div class="expandable-card">
+                <div class="expandable-header" onclick="toggleExpand(this)">
+                    <h3>📚 Books</h3>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="expandable-content">
+                    <p><strong>Format:</strong> Author(s) (Year) <em>Title</em>. Edition (if not 1st). Place: Publisher.</p>
+                    <p><strong>Example:</strong> Smith, J. (2020) <em>Study Skills for Success</em>. 3rd edn. London: Academic Press.</p>
+                    
+                    <div class="citation-generator">
+                        <h4>Generate Book Citation:</h4>
+                        <input type="text" class="citation-input" id="bookAuthor" placeholder="Author(s) - e.g., Smith, J.">
+                        <input type="text" class="citation-input" id="bookYear" placeholder="Year - e.g., 2020">
+                        <input type="text" class="citation-input" id="bookTitle" placeholder="Title">
+                        <input type="text" class="citation-input" id="bookEdition" placeholder="Edition (optional) - e.g., 3rd edn">
+                        <input type="text" class="citation-input" id="bookPlace" placeholder="Place - e.g., London">
+                        <input type="text" class="citation-input" id="bookPublisher" placeholder="Publisher">
+                        <button class="btn-primary" onclick="generateBookCitation()">Generate Citation</button>
+                        <div id="bookCitation" class="generated-citation" style="display: none;">
+                            <div id="bookCitationText"></div>
+                            <button class="copy-btn" onclick="copyCitation('bookCitationText')">📋 Copy</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Books -->
+            <div class="expandable-card">
+                <div class="expandable-header" onclick="toggleExpand(this)">
+                    <h3>📰 Journal Articles</h3>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="expandable-content">
+                    <p><strong>Format:</strong> Author(s) (Year) 'Article title', <em>Journal Title</em>, Volume(Issue), pp. page range.</p>
+                    <p><strong>Example:</strong> Brown, A. and Green, B. (2021) 'Effective learning strategies', <em>Education Journal</em>, 15(3), pp. 45-67.</p>
+                    
+                    <div class="citation-generator">
+                        <h4>Generate Journal Citation:</h4>
+                        <input type="text" class="citation-input" id="journalAuthor" placeholder="Author(s)">
+                        <input type="text" class="citation-input" id="journalYear" placeholder="Year">
+                        <input type="text" class="citation-input" id="journalArticle" placeholder="Article title">
+                        <input type="text" class="citation-input" id="journalTitle" placeholder="Journal Title">
+                        <input type="text" class="citation-input" id="journalVolume" placeholder="Volume">
+                        <input type="text" class="citation-input" id="journalIssue" placeholder="Issue">
+                        <input type="text" class="citation-input" id="journalPages" placeholder="Pages - e.g., 45-67">
+                        <button class="btn-primary" onclick="generateJournalCitation()">Generate Citation</button>
+                        <div id="journalCitation" class="generated-citation" style="display: none;">
+                            <div id="journalCitationText"></div>
+                            <button class="copy-btn" onclick="copyCitation('journalCitationText')">📋 Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="expandable-card">
+                <div class="expandable-header" onclick="toggleExpand(this)">
+                    <h3>🌐 Websites</h3>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="expandable-content">
+                    <p><strong>Format:</strong> Author(s) (Year) <em>Title</em>. Available at: URL (Accessed: date).</p>
+                    <p><strong>Example:</strong> Jones, C. (2023) <em>The Ultimate Study Guide</em>. Available at: https://example.com (Accessed: 15 March 2023).</p>
+                    
+                    <div class="citation-generator">
+                        <h4>Generate Website Citation:</h4>
+                        <input type="text" class="citation-input" id="webAuthor" placeholder="Author(s)">
+                        <input type="text" class="citation-input" id="webYear" placeholder="Year">
+                        <input type="text" class="citation-input" id="webTitle" placeholder="Title">
+                        <input type="text" class="citation-input" id="webURL" placeholder="URL">
+                        <input type="date" class="citation-input" id="webAccessed">
+                        <button class="btn-primary" onclick="generateWebCitation()">Generate Citation</button>
+                        <div id="webCitation" class="generated-citation" style="display: none;">
+                            <div id="webCitationText"></div>
+                            <button class="copy-btn" onclick="copyCitation('webCitationText')">📋 Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="expandable-card">
+                <div class="expandable-header" onclick="toggleExpand(this)">
+                    <h3>📕 Edited Books (Chapters)</h3>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="expandable-content">
+                    <p><strong>Format:</strong> Author(s) (Year) 'Chapter title', in Editor(s) (ed.) <em>Book Title</em>. Place: Publisher, pp. page range.</p>
+                    <p><strong>Example:</strong> Wilson, D. (2019) 'Memory techniques', in Smith, A. (ed.) <em>Learning Psychology</em>. Oxford: University Press, pp. 120-145.</p>
+                    
+                    <div class="citation-generator">
+                        <h4>Generate Chapter Citation:</h4>
+                        <input type="text" class="citation-input" id="chapterAuthor" placeholder="Chapter Author(s)">
+                        <input type="text" class="citation-input" id="chapterYear" placeholder="Year">
+                        <input type="text" class="citation-input" id="chapterTitle" placeholder="Chapter title">
+                        <input type="text" class="citation-input" id="chapterEditor" placeholder="Editor(s)">
+                        <input type="text" class="citation-input" id="chapterBook" placeholder="Book Title">
+                        <input type="text" class="citation-input" id="chapterPlace" placeholder="Place">
+                        <input type="text" class="citation-input" id="chapterPublisher" placeholder="Publisher">
+                        <input type="text" class="citation-input" id="chapterPages" placeholder="Pages">
+                        <button class="btn-primary" onclick="generateChapterCitation()">Generate Citation</button>
+                        <div id="chapterCitation" class="generated-citation" style="display: none;">
+                            <div id="chapterCitationText"></div>
+                            <button class="copy-btn" onclick="copyCitation('chapterCitationText')">📋 Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="card">
-                <h3>📚 Books</h3>
-                <p><strong>Format:</strong> Author(s) (Year) <em>Title</em>. Edition (if not 1st). Place: Publisher.</p>
-                <div class="tip-box">
-                    <strong>Example:</strong> Smith, J. (2020) <em>Study Skills for Success</em>. 3rd edn. London: Academic Press.
-                </div>
-
-                <div class="citation-generator">
-                    <h4>Generate Book Citation</h4>
-                    <div class="form-group">
-                        <label>Author(s) - Last name, First initial(s)</label>
-                        <input type="text" id="bookAuthor" placeholder="e.g., Smith, J.">
-                    </div>
-                    <div class="form-group">
-                        <label>Year</label>
-                        <input type="text" id="bookYear" placeholder="e.g., 2020">
-                    </div>
-                    <div class="form-group">
-                        <label>Title</label>
-                        <input type="text" id="bookTitle" placeholder="e.g., Study Skills for Success">
-                    </div>
-                    <div class="form-group">
-                        <label>Edition (leave blank if 1st)</label>
-                        <input type="text" id="bookEdition" placeholder="e.g., 3rd edn">
-                    </div>
-                    <div class="form-group">
-                        <label>Place</label>
-                        <input type="text" id="bookPlace" placeholder="e.g., London">
-                    </div>
-                    <div class="form-group">
-                        <label>Publisher</label>
-                        <input type="text" id="bookPublisher" placeholder="e.g., Academic Press">
-                    </div>
-                    <button class="btn btn-primary" onclick="generateBookCitation()">Generate Citation</button>
-                    <div class="citation-output" id="bookOutput">Your citation will appear here...</div>
-                    <button class="copy-btn" onclick="copyCitation('bookOutput')">📋 Copy Citation</button>
-                </div>
-            </div>
-
-            <!-- Journal Articles -->
-            <div class="card">
-                <h3>📰 Journal Articles</h3>
-                <p><strong>Format:</strong> Author(s) (Year) 'Article title', <em>Journal Title</em>, Volume(Issue), pp. page range.</p>
-                <div class="tip-box">
-                    <strong>Example:</strong> Brown, A. and Green, B. (2021) 'Effective learning strategies', <em>Education Journal</em>, 15(3), pp. 45-67.
-                </div>
-
-                <div class="citation-generator">
-                    <h4>Generate Journal Citation</h4>
-                    <div class="form-group">
-                        <label>Author(s)</label>
-                        <input type="text" id="journalAuthor" placeholder="e.g., Brown, A. and Green, B.">
-                    </div>
-                    <div class="form-group">
-                        <label>Year</label>
-                        <input type="text" id="journalYear" placeholder="e.g., 2021">
-                    </div>
-                    <div class="form-group">
-                        <label>Article Title</label>
-                        <input type="text" id="journalArticle" placeholder="e.g., Effective learning strategies">
-                    </div>
-                    <div class="form-group">
-                        <label>Journal Title</label>
-                        <input type="text" id="journalTitle" placeholder="e.g., Education Journal">
-                    </div>
-                    <div class="form-group">
-                        <label>Volume(Issue)</label>
-                        <input type="text" id="journalVolume" placeholder="e.g., 15(3)">
-                    </div>
-                    <div class="form-group">
-                        <label>Page Range</label>
-                        <input type="text" id="journalPages" placeholder="e.g., 45-67">
-                    </div>
-                    <button class="btn btn-primary" onclick="generateJournalCitation()">Generate Citation</button>
-                    <div class="citation-output" id="journalOutput">Your citation will appear here...</div>
-                    <button class="copy-btn" onclick="copyCitation('journalOutput')">📋 Copy Citation</button>
-                </div>
-            </div>
-
-            <!-- Websites -->
-            <div class="card">
-                <h3>🌐 Websites</h3>
-                <p><strong>Format:</strong> Author(s) (Year) <em>Title</em>. Available at: URL (Accessed: date).</p>
-                <div class="tip-box">
-                    <strong>Example:</strong> Jones, C. (2023) <em>The Ultimate Study Guide</em>. Available at: https://example.com (Accessed: 15 March 2023).
-                </div>
-
-                <div class="citation-generator">
-                    <h4>Generate Website Citation</h4>
-                    <div class="form-group">
-                        <label>Author(s) - or website name if no author</label>
-                        <input type="text" id="webAuthor" placeholder="e.g., Jones, C. or BBC News">
-                    </div>
-                    <div class="form-group">
-                        <label>Year Published</label>
-                        <input type="text" id="webYear" placeholder="e.g., 2023">
-                    </div>
-                    <div class="form-group">
-                        <label>Page Title</label>
-                        <input type="text" id="webTitle" placeholder="e.g., The Ultimate Study Guide">
-                    </div>
-                    <div class="form-group">
-                        <label>URL</label>
-                        <input type="text" id="webURL" placeholder="e.g., https://example.com">
-                    </div>
-                    <div class="form-group">
-                        <label>Date Accessed</label>
-                        <input type="text" id="webAccessed" placeholder="e.g., 15 March 2023">
-                    </div>
-                    <button class="btn btn-primary" onclick="generateWebCitation()">Generate Citation</button>
-                    <div class="citation-output" id="webOutput">Your citation will appear here...</div>
-                    <button class="copy-btn" onclick="copyCitation('webOutput')">📋 Copy Citation</button>
-                </div>
-            </div>
-
-            <!-- Edited Books -->
-            <div class="card">
-                <h3>📕 Edited Books (Chapters)</h3>
-                <p><strong>Format:</strong> Author(s) (Year) 'Chapter title', in Editor(s) (ed.) <em>Book Title</em>. Place: Publisher, pp. page range.</p>
-                <div class="tip-box">
-                    <strong>Example:</strong> Taylor, M. (2022) 'Modern study techniques', in Wilson, R. (ed.) <em>Student Success Handbook</em>. Oxford: University Press, pp. 120-145.
-                </div>
-
-                <div class="citation-generator">
-                    <h4>Generate Chapter Citation</h4>
-                    <div class="form-group">
-                        <label>Chapter Author(s)</label>
-                        <input type="text" id="chapterAuthor" placeholder="e.g., Taylor, M.">
-                    </div>
-                    <div class="form-group">
-                        <label>Year</label>
-                        <input type="text" id="chapterYear" placeholder="e.g., 2022">
-                    </div>
-                    <div class="form-group">
-                        <label>Chapter Title</label>
-                        <input type="text" id="chapterTitle" placeholder="e.g., Modern study techniques">
-                    </div>
-                    <div class="form-group">
-                        <label>Editor(s)</label>
-                        <input type="text" id="chapterEditor" placeholder="e.g., Wilson, R.">
-                    </div>
-                    <div class="form-group">
-                        <label>Book Title</label>
-                        <input type="text" id="chapterBook" placeholder="e.g., Student Success Handbook">
-                    </div>
-                    <div class="form-group">
-                        <label>Place</label>
-                        <input type="text" id="chapterPlace" placeholder="e.g., Oxford">
-                    </div>
-                    <div class="form-group">
-                        <label>Publisher</label>
-                        <input type="text" id="chapterPublisher" placeholder="e.g., University Press">
-                    </div>
-                    <div class="form-group">
-                        <label>Page Range</label>
-                        <input type="text" id="chapterPages" placeholder="e.g., 120-145">
-                    </div>
-                    <button class="btn btn-primary" onclick="generateChapterCitation()">Generate Citation</button>
-                    <div class="citation-output" id="chapterOutput">Your citation will appear here...</div>
-                    <button class="copy-btn" onclick="copyCitation('chapterOutput')">📋 Copy Citation</button>
-                </div>
-            </div>
-
-            <!-- In-Text Citations -->
-            <div class="card">
-                <h3>✍️ In-Text Citations - Quick Reference</h3>
-                <div style="line-height: 2.5; font-size: 1.1em; margin: 20px 0;">
-                    <div><strong>Single author:</strong> (Smith, 2020)</div>
-                    <div><strong>Two authors:</strong> (Smith and Jones, 2020)</div>
-                    <div><strong>Three or more:</strong> (Smith et al., 2020)</div>
-                    <div><strong>Direct quote:</strong> (Smith, 2020, p. 45)</div>
-                    <div><strong>Secondary source:</strong> Brown (cited in Smith, 2020)</div>
-                    <div><strong>No date:</strong> (Smith, n.d.)</div>
-                </div>
-            </div>
-
-            <!-- Common Mistakes -->
-            <div class="warning-card">
-                <h3>⚠️ Common Mistakes to Avoid</h3>
-                <ul style="line-height: 2; margin: 15px 0 0 20px;">
-                    <li>❌ Forgetting to italicize book/journal titles</li>
-                    <li>❌ Incorrect punctuation (commas, full stops)</li>
-                    <li>❌ Missing page numbers for direct quotes</li>
-                    <li>❌ Wrong date format (should be: Day Month Year)</li>
-                    <li>❌ Not including access dates for websites</li>
-                    <li>❌ Forgetting 'et al.' for 3+ authors</li>
-                    <li>❌ Mixing up reference list and bibliography</li>
+                <h3>✍️ In-Text Citations</h3>
+                <ul class="tips-list">
+                    <li><strong>Single author:</strong> (Smith, 2020)</li>
+                    <li><strong>Two authors:</strong> (Smith and Jones, 2020)</li>
+                    <li><strong>Three or more:</strong> (Smith et al., 2020)</li>
+                    <li><strong>Direct quote:</strong> (Smith, 2020, p. 45)</li>
+                    <li><strong>Page range:</strong> (Smith, 2020, pp. 45-50)</li>
                 </ul>
             </div>
 
-            <!-- Quick Tips -->
+            <div class="warning-card">
+                <h3>⚠️ Common Mistakes</h3>
+                <ul class="tips-list">
+                    <li>Forgetting to italicize titles</li>
+                    <li>Incorrect punctuation</li>
+                    <li>Missing page numbers</li>
+                    <li>Wrong date formats</li>
+                    <li>Not including access dates for websites</li>
+                    <li>Inconsistent formatting throughout</li>
+                </ul>
+            </div>
+
             <div class="success-card">
-                <h3>💡 Quick Referencing Tips</h3>
-                <ul style="line-height: 2; margin: 15px 0 0 20px;">
-                    <li>✅ Use reference managers (Zotero, Mendeley, EndNote)</li>
-                    <li>✅ Check your uni's specific Harvard guide (they vary!)</li>
-                    <li>✅ Cite as you write - don't save it for the end!</li>
-                    <li>✅ When in doubt, over-cite rather than under-cite</li>
-                    <li>✅ Double-check your reference list before submitting</li>
-                    <li>✅ Alphabetize your reference list by author surname</li>
+                <h3>💡 Quick Tips</h3>
+                <ul class="tips-list">
+                    <li>Use reference managers (Zotero, Mendeley) - they're free!</li>
+                    <li>Check your uni's specific Harvard guide</li>
+                    <li>Cite as you write, don't save for the end</li>
+                    <li>When in doubt, over-cite</li>
+                    <li>Keep a running reference list</li>
+                    <li>Double-check everything before submission</li>
                 </ul>
             </div>
         </div>
     </div>
 
-    <!-- Modals -->
     <!-- Goal Setting Modal -->
     <div id="goalModal" class="modal">
         <div class="modal-content">
-            <button class="modal-close" onclick="closeGoalModal()">×</button>
-            <h2 style="color: #667eea; margin-bottom: 20px;">Set New Goal 🎯</h2>
-            
-            <div class="form-group">
-                <label>Deadline Date 📅</label>
-                <input type="text" id="goalDeadline" placeholder="e.g., MONDAY or 15th March">
-            </div>
-
-            <div class="form-group">
-                <label>Big Goal (What do you want to achieve?) 🎯</label>
-                <input type="text" id="goalText" placeholder="e.g., Complete Chapter 3 Psychology Notes">
-            </div>
-
-            <div class="form-group">
-                <label>Micro Tasks (Break it down into small steps!) ☑️</label>
-                <div id="microTasksContainer">
-                    <div class="micro-task-input">
-                        <input type="text" class="micro-task" placeholder="e.g., Read pages 45-60">
-                    </div>
-                </div>
-                <button class="btn btn-secondary" onclick="addMicroTaskInput()" style="margin-top: 10px;">+ Add Another Task</button>
-            </div>
-
-            <button class="btn btn-primary" onclick="saveGoal()">💾 Save Goal</button>
+            <span class="modal-close" onclick="closeGoalModal()">&times;</span>
+            <h2>Set Daily Goal 🎯</h2>
+            <p>Day: <strong id="modalDay"></strong></p>
+            <input type="text" id="goalInput" class="citation-input" placeholder="What's your main goal today?">
+            <h3 style="margin-top: 20px;">Micro Tasks:</h3>
+            <div id="microTasksContainer"></div>
+            <button class="btn-secondary" onclick="addMicroTaskInput()" style="margin: 10px 0;">➕ Add Task</button>
+            <br>
+            <button class="btn-primary" onclick="saveGoal()">Save Goal</button>
         </div>
     </div>
 
-    <!-- Timetable Session Modal -->
-    <div id="sessionModal" class="modal">
+    <!-- Study Block Modal -->
+    <div id="studyBlockModal" class="modal">
         <div class="modal-content">
-            <button class="modal-close" onclick="closeSessionModal()">×</button>
-            <h2 style="color: #667eea; margin-bottom: 20px;">Add Study Session 📚</h2>
+            <span class="modal-close" onclick="closeStudyBlockModal()">&times;</span>
+            <h2>➕ Add Study Block</h2>
             
-            <div class="form-group">
-                <label>Time ⏰</label>
-                <input type="time" id="sessionTime" required>
-            </div>
-
-            <div class="form-group">
-                <label>Subject/Module Name</label>
-                <input type="text" id="sessionSubject" placeholder="e.g., Psychology 101">
-            </div>
-
-            <div class="form-group">
-                <label>Study Type</label>
-                <select id="sessionType">
-                    <option value="Lecture">Lecture</option>
-                    <option value="Reading">Reading</option>
-                    <option value="Practice">Practice</option>
-                    <option value="Review">Review</option>
-                    <option value="Break">Break</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>Duration (minutes)</label>
-                <input type="number" id="sessionDuration" value="60" min="15" max="180" step="15">
-            </div>
-
-            <button class="btn btn-primary" onclick="saveSession()">💾 Add Session</button>
-        </div>
-    </div>
-
-    <!-- Spaced Topic Modal -->
-    <div id="spacedModal" class="modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeSpacedModal()">×</button>
-            <h2 style="color: #667eea; margin-bottom: 20px;">Add Topic to Track 📝</h2>
+            <label style="display: block; margin-top: 15px; font-weight: 600;">Title / Subject:</label>
+            <input type="text" id="blockTitle" class="citation-input" placeholder="e.g., Psychology Lecture, Math Practice">
             
-            <div class="form-group">
-                <label>Topic Name</label>
-                <input type="text" id="spacedTopic" placeholder="e.g., Cell Biology Chapter 5">
-            </div>
-
-            <div class="form-group">
-                <label>First Study Date</label>
-                <input type="date" id="spacedDate">
-            </div>
-
-            <button class="btn btn-primary" onclick="saveSpacedTopic()">💾 Add Topic</button>
+            <label style="display: block; margin-top: 15px; font-weight: 600;">Type of Study:</label>
+            <select id="blockType" class="citation-input">
+                <option value="Lecture">📖 Lecture</option>
+                <option value="Reading">📚 Reading</option>
+                <option value="Practice">✍️ Practice</option>
+                <option value="Review">🔄 Review</option>
+                <option value="Break">☕ Break</option>
+            </select>
+            
+            <label style="display: block; margin-top: 15px; font-weight: 600;">Day:</label>
+            <select id="blockDay" class="citation-input">
+                <option value="Monday">Monday</option>
+                <option value="Tuesday">Tuesday</option>
+                <option value="Wednesday">Wednesday</option>
+                <option value="Thursday">Thursday</option>
+                <option value="Friday">Friday</option>
+                <option value="Saturday">Saturday</option>
+                <option value="Sunday">Sunday</option>
+            </select>
+            
+            <label style="display: block; margin-top: 15px; font-weight: 600;">Start Time:</label>
+            <select id="blockTime" class="citation-input">
+                <option value="6">6:00 AM</option>
+                <option value="7">7:00 AM</option>
+                <option value="8">8:00 AM</option>
+                <option value="9">9:00 AM</option>
+                <option value="10">10:00 AM</option>
+                <option value="11">11:00 AM</option>
+                <option value="12">12:00 PM</option>
+                <option value="13">1:00 PM</option>
+                <option value="14">2:00 PM</option>
+                <option value="15">3:00 PM</option>
+                <option value="16">4:00 PM</option>
+                <option value="17">5:00 PM</option>
+                <option value="18">6:00 PM</option>
+                <option value="19">7:00 PM</option>
+                <option value="20">8:00 PM</option>
+                <option value="21">9:00 PM</option>
+                <option value="22">10:00 PM</option>
+                <option value="23">11:00 PM</option>
+            </select>
+            
+            <label style="display: block; margin-top: 15px; font-weight: 600;">Duration:</label>
+            <select id="blockDuration" class="citation-input">
+                <option value="0.5">30 minutes</option>
+                <option value="1" selected>1 hour</option>
+                <option value="1.5">1.5 hours</option>
+                <option value="2">2 hours</option>
+                <option value="2.5">2.5 hours</option>
+                <option value="3">3 hours</option>
+            </select>
+            
+            <button class="btn-primary" onclick="addStudyBlock()" style="margin-top: 20px; width: 100%;">Add to Timetable</button>
         </div>
     </div>
 
-    <!-- Celebration Overlay -->
-    <div id="celebrationOverlay" class="celebration-overlay">
-        <div class="celebration-content">
-            <div class="clapping-hands">👏</div>
-            <div class="celebration-text">Amazing Work!</div>
-            <div style="font-size: 1.5em; margin-top: 20px;">You're absolutely smashing it! 🏆</div>
-        </div>
-    </div>
-
-    <!-- Success Banner -->
-    <div id="successBanner" class="banner">
-        <strong id="bannerText">Success!</strong>
+    <!-- Celebration Modal -->
+    <div id="celebrationModal" class="celebration">
+        <div class="clapping-animation">👏</div>
+        <div class="celebration-text">Amazing work this week!</div>
+        <div class="celebration-text" style="font-size: 1.5em; margin-top: 10px;">You crushed it! 🔥</div>
     </div>
 
     <script>
-        // ========== TAB SWITCHING ==========
+        // Tab Switching
         function switchTab(tabName) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
+            const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-btn');
             
-            // Remove active from all buttons
-            document.querySelectorAll('.sub-tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+            tabs.forEach(tab => tab.classList.remove('active'));
+            buttons.forEach(btn => btn.classList.remove('active'));
             
-            // Show selected tab
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
+            
+            if (tabName === 'timetable') {
+                initTimetable();
+            } else if (tabName === 'planner') {
+                initWeeklyPlanner();
+            }
         }
 
-        // ========== EXPANDABLE CARDS ==========
-        function toggleCard(card) {
-            card.classList.toggle('expanded');
-            const content = card.querySelector('.card-content');
-            content.classList.toggle('show');
+        // Expandable Cards
+        function toggleExpand(header) {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('.expand-icon');
+            
+            content.classList.toggle('open');
+            icon.textContent = content.classList.contains('open') ? '▲' : '▼';
         }
 
-        // ========== POMODORO TIMER ==========
-        let timerInterval = null;
-        let timeLeft = 25 * 60; // 25 minutes in seconds
+        // Pomodoro Timer
+        let timerInterval;
+        let timeLeft = 1500; // 25 minutes in seconds
         let isRunning = false;
-        let pomodorosToday = 0;
+        let pomodorosToday = parseInt(localStorage.getItem('pomodorosToday') || '0');
+        let lastPomodoroDate = localStorage.getItem('lastPomodoroDate');
+        let studyStreak = parseInt(localStorage.getItem('studyStreak') || '0');
+
+        // Reset pomodoro count if it's a new day
+        const today = new Date().toDateString();
+        if (lastPomodoroDate !== today) {
+            pomodorosToday = 0;
+            localStorage.setItem('pomodorosToday', '0');
+            localStorage.setItem('lastPomodoroDate', today);
+        }
+
+        updatePomodoroStats();
+        updateStreakDisplay();
 
         function updateTimerDisplay() {
             const minutes = Math.floor(timeLeft / 60);
@@ -1673,18 +1508,18 @@
         }
 
         function startTimer() {
-            if (isRunning) return;
-            isRunning = true;
-            
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                updateTimerDisplay();
-                
-                if (timeLeft <= 0) {
-                    pauseTimer();
-                    pomodoroComplete();
-                }
-            }, 1000);
+            if (!isRunning) {
+                isRunning = true;
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    updateTimerDisplay();
+                    
+                    if (timeLeft <= 0) {
+                        pauseTimer();
+                        completePomodoroSession();
+                    }
+                }, 1000);
+            }
         }
 
         function pauseTimer() {
@@ -1694,27 +1529,53 @@
 
         function resetTimer() {
             pauseTimer();
-            timeLeft = 25 * 60;
+            timeLeft = 1500;
             updateTimerDisplay();
         }
 
-        function pomodoroComplete() {
+        function completePomodoroSession() {
             pomodorosToday++;
-            localStorage.setItem('pomodorosToday', pomodorosToday);
-            document.getElementById('pomodoroCount').textContent = `🍅 ${pomodorosToday} pomodoros completed today!`;
-            document.getElementById('statPomodoros').textContent = pomodorosToday;
+            localStorage.setItem('pomodorosToday', pomodorosToday.toString());
+            updatePomodoroStats();
             
-            // Play sound if enabled
-            if (document.getElementById('soundToggle').checked) {
-                playNotificationSound();
+            // Update streak
+            const today = new Date().toDateString();
+            const lastStudyDate = localStorage.getItem('lastStudyDate');
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            if (lastStudyDate === yesterday.toDateString()) {
+                studyStreak++;
+            } else if (lastStudyDate !== today) {
+                studyStreak = 1;
             }
             
-            showBanner('🎉 Pomodoro Complete! Time for a break!');
-            resetTimer();
+            localStorage.setItem('studyStreak', studyStreak.toString());
+            localStorage.setItem('lastStudyDate', today);
+            updateStreakDisplay();
+            
+            if (document.getElementById('soundToggle').checked) {
+                playCompletionSound();
+            }
+            
+            showBanner('🍅 Pomodoro Complete! Great focus! 🎉');
+            
+            // Auto-start 5-minute break
+            timeLeft = 300;
+            updateTimerDisplay();
+            showBanner('☕ 5-minute break started!');
         }
 
-        function playNotificationSound() {
-            // Create a simple beep using Web Audio API
+        function updatePomodoroStats() {
+            document.getElementById('pomodoroStats').textContent = 
+                `🍅 ${pomodorosToday} pomodoro${pomodorosToday !== 1 ? 's' : ''} completed today!`;
+        }
+
+        function updateStreakDisplay() {
+            document.getElementById('streakCount').textContent = studyStreak;
+        }
+
+        function playCompletionSound() {
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
@@ -1732,551 +1593,15 @@
             oscillator.stop(audioContext.currentTime + 0.5);
         }
 
-        // ========== SPACED REPETITION TRACKER ==========
-        let spacedTopics = [];
-
-        function addSpacedTopic() {
-            document.getElementById('spacedModal').classList.add('show');
-        }
-
-        function closeSpacedModal() {
-            document.getElementById('spacedModal').classList.remove('show');
-        }
-
-        function saveSpacedTopic() {
-            const topic = document.getElementById('spacedTopic').value;
-            const startDate = document.getElementById('spacedDate').value;
-            
-            if (!topic || !startDate) {
-                alert('Please fill in all fields!');
-                return;
-            }
-
-            const start = new Date(startDate);
-            const reviewDates = [
-                new Date(start.getTime() + 3 * 24 * 60 * 60 * 1000),
-                new Date(start.getTime() + 7 * 24 * 60 * 60 * 1000),
-                new Date(start.getTime() + 14 * 24 * 60 * 60 * 1000)
-            ];
-
-            spacedTopics.push({
-                topic: topic,
-                startDate: startDate,
-                reviews: reviewDates.map(d => ({
-                    date: d.toISOString().split('T')[0],
-                    completed: false
-                }))
-            });
-
-            localStorage.setItem('spacedTopics', JSON.stringify(spacedTopics));
-            renderSpacedTopics();
-            closeSpacedModal();
-            
-            document.getElementById('spacedTopic').value = '';
-            document.getElementById('spacedDate').value = '';
-            
-            showBanner('📅 Topic added to spaced repetition tracker!');
-        }
-
-        function renderSpacedTopics() {
-            const container = document.getElementById('spacedTopicsList');
-            if (spacedTopics.length === 0) {
-                container.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">No topics yet! Add one to get started 🚀</p>';
-                return;
-            }
-
-            container.innerHTML = spacedTopics.map((item, index) => `
-                <div class="tracker-item">
-                    <div style="flex: 1;">
-                        <strong style="color: #667eea;">${item.topic}</strong>
-                        <div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
-                            ${item.reviews.map((review, rIndex) => `
-                                <span class="review-date ${review.completed ? 'completed' : ''}" 
-                                      onclick="toggleReview(${index}, ${rIndex})">
-                                    ${review.completed ? '✓' : '○'} ${new Date(review.date).toLocaleDateString()}
-                                </span>
-                            `).join('')}
-                        </div>
-                    </div>
-                    <button class="btn btn-danger" onclick="deleteSpacedTopic(${index})" style="padding: 8px 16px;">🗑️</button>
-                </div>
-            `).join('');
-        }
-
-        function toggleReview(topicIndex, reviewIndex) {
-            spacedTopics[topicIndex].reviews[reviewIndex].completed = 
-                !spacedTopics[topicIndex].reviews[reviewIndex].completed;
-            localStorage.setItem('spacedTopics', JSON.stringify(spacedTopics));
-            renderSpacedTopics();
-        }
-
-        function deleteSpacedTopic(index) {
-            spacedTopics.splice(index, 1);
-            localStorage.setItem('spacedTopics', JSON.stringify(spacedTopics));
-            renderSpacedTopics();
-        }
-
-        // ========== AI SECTION TOGGLE ==========
-        function toggleAISection(section) {
-            if (section === 'use') {
-                document.getElementById('aiUseSection').style.display = 'block';
-                document.getElementById('aiEthicsSection').style.display = 'none';
-                document.getElementById('aiUseBtn').className = 'btn btn-primary';
-                document.getElementById('aiEthicsBtn').className = 'btn btn-secondary';
-            } else {
-                document.getElementById('aiUseSection').style.display = 'none';
-                document.getElementById('aiEthicsSection').style.display = 'block';
-                document.getElementById('aiUseBtn').className = 'btn btn-secondary';
-                document.getElementById('aiEthicsBtn').className = 'btn btn-primary';
-            }
-        }
-
-        // ========== COPY PROMPT FUNCTIONS ==========
-        function copyPrompt(button) {
-            const promptText = button.previousElementSibling.textContent;
+        // Copy Prompts
+        function copyPrompt(promptId) {
+            const promptText = document.getElementById(promptId).textContent;
             navigator.clipboard.writeText(promptText).then(() => {
-                const originalText = button.textContent;
-                button.textContent = '✅ Copied!';
-                setTimeout(() => {
-                    button.textContent = originalText;
-                }, 2000);
+                showBanner('📋 Prompt copied to clipboard!');
             });
         }
 
-        // ========== TIMETABLE ==========
-        let timetableData = [];
-        let currentTimeSlot = null;
-
-        function initTimetable() {
-            const grid = document.getElementById('timetableGrid');
-            const times = [];
-            
-            // Generate time slots from 6am to 11pm
-            for (let hour = 6; hour <= 23; hour++) {
-                times.push(`${hour.toString().padStart(2, '0')}:00`);
-                if (hour < 23) {
-                    times.push(`${hour.toString().padStart(2, '0')}:30`);
-                }
-            }
-
-            grid.innerHTML = times.map(time => `
-                <div class="time-slot">${time}</div>
-                <div class="schedule-cell" data-time="${time}" onclick="openSessionModal('${time}')"></div>
-            `).join('');
-        }
-
-        function openSessionModal(time) {
-            currentTimeSlot = time;
-            document.getElementById('sessionModal').classList.add('show');
-            
-            // If time is provided, convert to HH:MM format for time input
-            if (time) {
-                document.getElementById('sessionTime').value = time;
-            } else {
-                // Set to current time if no time provided
-                const now = new Date();
-                const hours = now.getHours().toString().padStart(2, '0');
-                const minutes = now.getMinutes().toString().padStart(2, '0');
-                document.getElementById('sessionTime').value = `${hours}:${minutes}`;
-            }
-        }
-
-        function closeSessionModal() {
-            document.getElementById('sessionModal').classList.remove('show');
-            currentTimeSlot = null;
-        }
-
-        function quickAddSession(duration) {
-            openSessionModal(null);
-            document.getElementById('sessionDuration').value = duration;
-            if (duration === 15) {
-                document.getElementById('sessionSubject').value = 'Break';
-                document.getElementById('sessionType').value = 'Break';
-            } else if (duration === 25) {
-                document.getElementById('sessionSubject').value = 'Pomodoro Focus Session';
-                document.getElementById('sessionType').value = 'Practice';
-            } else {
-                document.getElementById('sessionSubject').value = 'Study Session';
-                document.getElementById('sessionType').value = 'Practice';
-            }
-        }
-
-        function saveSession() {
-            const timeInput = document.getElementById('sessionTime').value;
-            const subject = document.getElementById('sessionSubject').value;
-            const type = document.getElementById('sessionType').value;
-            const duration = parseInt(document.getElementById('sessionDuration').value);
-
-            if (!timeInput || !subject) {
-                alert('Please enter time and subject!');
-                return;
-            }
-
-            // Convert HH:MM to our format (handle both HH:MM and HH:00/HH:30)
-            const time = timeInput;
-
-            timetableData.push({
-                time: time,
-                subject: subject,
-                type: type,
-                duration: duration
-            });
-
-            saveTimetable();
-            renderTimetable();
-            closeSessionModal();
-
-            // Clear form
-            document.getElementById('sessionSubject').value = '';
-            document.getElementById('sessionType').value = 'Lecture';
-            document.getElementById('sessionDuration').value = '60';
-            
-            showBanner('📚 Session added to timetable!');
-        }
-
-        function saveTimetable() {
-            localStorage.setItem('timetableData', JSON.stringify(timetableData));
-        }
-
-        function renderTimetable() {
-            const cells = document.querySelectorAll('.schedule-cell');
-            cells.forEach(cell => {
-                cell.innerHTML = '';
-                cell.className = 'schedule-cell';
-                cell.onclick = null; // Clear old event listeners
-            });
-
-            let totalMinutes = 0;
-            
-            // Ensure timetableData is an array
-            if (!Array.isArray(timetableData)) {
-                timetableData = [];
-            }
-            
-            timetableData.forEach((session, sessionIndex) => {
-                // Try to find exact time match first
-                let cell = document.querySelector(`[data-time="${session.time}"]`);
-                
-                // If no exact match, find closest time slot
-                if (!cell && session.time) {
-                    const [hours, minutes] = session.time.split(':').map(Number);
-                    const roundedMinutes = minutes >= 30 ? '30' : '00';
-                    const roundedTime = `${hours.toString().padStart(2, '0')}:${roundedMinutes}`;
-                    cell = document.querySelector(`[data-time="${roundedTime}"]`);
-                }
-                
-                if (cell) {
-                    const colors = {
-                        'Lecture': '#e7f5ff',
-                        'Reading': '#fff3cd',
-                        'Practice': '#d4edda',
-                        'Review': '#f8d7da',
-                        'Break': '#e2d5f5'
-                    };
-                    
-                    cell.style.background = colors[session.type] || '#f8f9fa';
-                    cell.classList.add('filled');
-                    cell.innerHTML = `
-                        <div><strong>${session.subject}</strong></div>
-                        <div style="font-size: 0.85em; color: #666;">${session.time} • ${session.duration} min</div>
-                        <div style="font-size: 0.75em; color: #999; margin-top: 5px;">Click to delete</div>
-                    `;
-                    
-                    // Add click to delete
-                    cell.onclick = function(e) {
-                        e.stopPropagation();
-                        deleteTimetableSession(sessionIndex);
-                    };
-                    
-                    if (session.type !== 'Break') {
-                        totalMinutes += session.duration;
-                    }
-                }
-            });
-            
-            // Re-add click to add for empty cells
-            cells.forEach(cell => {
-                if (!cell.classList.contains('filled')) {
-                    const time = cell.getAttribute('data-time');
-                    cell.onclick = function() {
-                        openSessionModal(time);
-                    };
-                }
-            });
-
-            document.getElementById('totalStudyTime').textContent = `${(totalMinutes / 60).toFixed(1)} hours`;
-            document.getElementById('statHours').textContent = (totalMinutes / 60).toFixed(1);
-        }
-
-        function deleteTimetableSession(index) {
-            if (confirm('Delete this session?')) {
-                timetableData.splice(index, 1);
-                localStorage.setItem('timetableData', JSON.stringify(timetableData));
-                renderTimetable();
-                showBanner('🗑️ Session deleted!');
-            }
-        }
-
-        function clearTimetable() {
-            if (confirm('Are you sure you want to clear the entire timetable? This will delete all sessions.')) {
-                // Clear the data array
-                timetableData = [];
-                
-                // Clear localStorage
-                localStorage.removeItem('timetableData');
-                localStorage.setItem('timetableData', '[]');
-                
-                // Re-render to show empty timetable
-                renderTimetable();
-                
-                showBanner('🗑️ Timetable cleared! All sessions deleted.');
-            }
-        }
-
-        // ========== PROJECT PLANNER ==========
-        let projects = [];
-
-        function openGoalModal() {
-            document.getElementById('goalModal').classList.add('show');
-        }
-
-        function closeGoalModal() {
-            document.getElementById('goalModal').classList.remove('show');
-        }
-
-        function addMicroTaskInput() {
-            const container = document.getElementById('microTasksContainer');
-            const newInput = document.createElement('div');
-            newInput.className = 'micro-task-input';
-            newInput.innerHTML = '<input type="text" class="micro-task" placeholder="Another task...">';
-            container.appendChild(newInput);
-        }
-
-        function saveGoal() {
-            const deadline = document.getElementById('goalDeadline').value;
-            const goal = document.getElementById('goalText').value;
-            const microTaskInputs = document.querySelectorAll('.micro-task');
-            const tasks = Array.from(microTaskInputs)
-                .map(input => input.value)
-                .filter(val => val.trim() !== '');
-
-            if (!deadline || !goal || tasks.length === 0) {
-                alert('Please fill in deadline, goal, and at least one task!');
-                return;
-            }
-
-            projects.push({
-                deadline: deadline,
-                goal: goal,
-                tasks: tasks.map(task => ({ text: task, completed: false }))
-            });
-
-            localStorage.setItem('projects', JSON.stringify(projects));
-            renderProjects();
-            closeGoalModal();
-
-            // Clear form
-            document.getElementById('goalDeadline').value = '';
-            document.getElementById('goalText').value = '';
-            document.getElementById('microTasksContainer').innerHTML = `
-                <div class="micro-task-input">
-                    <input type="text" class="micro-task" placeholder="e.g., Read pages 45-60">
-                </div>
-            `;
-
-            showBanner('🎯 Goal added! Let\'s crush it!');
-        }
-
-        function renderProjects() {
-            const container = document.getElementById('projectsList');
-            
-            if (projects.length === 0) {
-                container.innerHTML = '<div class="card" style="text-align: center; color: #999;"><p>No projects yet! Hit "Set New Goal" to get started 🚀</p></div>';
-                updateProjectStats();
-                return;
-            }
-
-            container.innerHTML = projects.map((project, pIndex) => {
-                const completedCount = project.tasks.filter(t => t.completed).length;
-                const totalCount = project.tasks.length;
-                const progress = (completedCount / totalCount * 100).toFixed(0);
-
-                return `
-                    <div class="project-card">
-                        <div class="project-header">
-                            <div>
-                                <span class="deadline-badge">📅 ${project.deadline}</span>
-                                <div class="project-goal" style="margin-top: 10px;">🎯 ${project.goal}</div>
-                            </div>
-                            <button class="btn btn-danger delete-project-btn" data-project-index="${pIndex}" style="padding: 8px 16px;">🗑️ Delete Project</button>
-                        </div>
-                        
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${progress}%">${progress}%</div>
-                        </div>
-
-                        <ul class="task-list">
-                            ${project.tasks.map((task, tIndex) => `
-                                <li class="task-item ${task.completed ? 'completed' : ''}">
-                                    <input type="checkbox" class="task-checkbox" 
-                                           data-project-index="${pIndex}" 
-                                           data-task-index="${tIndex}"
-                                           ${task.completed ? 'checked' : ''}>
-                                    <span style="flex: 1;">${task.text}</span>
-                                    <button class="btn btn-danger delete-task-btn" 
-                                            data-project-index="${pIndex}" 
-                                            data-task-index="${tIndex}"
-                                            style="padding: 4px 10px; font-size: 0.85em; margin-left: 10px;">✕</button>
-                                </li>
-                            `).join('')}
-                        </ul>
-
-                        ${completedCount === totalCount ? '<div style="text-align: center; color: #51cf66; font-weight: bold; margin-top: 15px;">✅ Project Complete! 🎉</div>' : ''}
-                    </div>
-                `;
-            }).join('');
-
-            // Add event listeners after rendering
-            attachProjectEventListeners();
-            updateProjectStats();
-        }
-
-        function attachProjectEventListeners() {
-            // Delete project buttons
-            document.querySelectorAll('.delete-project-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const index = parseInt(this.getAttribute('data-project-index'));
-                    deleteProject(index);
-                });
-            });
-
-            // Delete task buttons
-            document.querySelectorAll('.delete-task-btn').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const pIndex = parseInt(this.getAttribute('data-project-index'));
-                    const tIndex = parseInt(this.getAttribute('data-task-index'));
-                    deleteTask(pIndex, tIndex);
-                });
-            });
-
-            // Task checkboxes
-            document.querySelectorAll('.task-checkbox').forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    const pIndex = parseInt(this.getAttribute('data-project-index'));
-                    const tIndex = parseInt(this.getAttribute('data-task-index'));
-                    toggleTask(pIndex, tIndex);
-                });
-            });
-        }
-
-        function toggleTask(projectIndex, taskIndex) {
-            projects[projectIndex].tasks[taskIndex].completed = 
-                !projects[projectIndex].tasks[taskIndex].completed;
-            localStorage.setItem('projects', JSON.stringify(projects));
-            renderProjects();
-            
-            const project = projects[projectIndex];
-            const allCompleted = project.tasks.every(t => t.completed);
-            if (allCompleted) {
-                showBanner('🎉 Project completed! You\'re killing it!');
-            }
-        }
-
-        function deleteTask(projectIndex, taskIndex) {
-            console.log('deleteTask called with:', projectIndex, taskIndex);
-            if (confirm('Delete this task?')) {
-                console.log('User confirmed deletion');
-                projects[projectIndex].tasks.splice(taskIndex, 1);
-                
-                // If project has no tasks left, delete the project
-                if (projects[projectIndex].tasks.length === 0) {
-                    projects.splice(projectIndex, 1);
-                    showBanner('🗑️ Task deleted! Project removed (no tasks left).');
-                } else {
-                    showBanner('🗑️ Task deleted!');
-                }
-                
-                localStorage.setItem('projects', JSON.stringify(projects));
-                renderProjects();
-            }
-        }
-
-        function deleteProject(index) {
-            console.log('deleteProject called with:', index);
-            if (confirm('Delete this entire project and all its tasks?')) {
-                console.log('User confirmed project deletion');
-                projects.splice(index, 1);
-                localStorage.setItem('projects', JSON.stringify(projects));
-                renderProjects();
-                showBanner('🗑️ Project deleted!');
-            }
-        }
-
-        function updateProjectStats() {
-            document.getElementById('totalProjects').textContent = projects.length;
-            
-            let totalTasks = 0;
-            let completedTasks = 0;
-            
-            projects.forEach(project => {
-                totalTasks += project.tasks.length;
-                completedTasks += project.tasks.filter(t => t.completed).length;
-            });
-
-            document.getElementById('completedTasks').textContent = `${completedTasks}/${totalTasks}`;
-            const overallProgress = totalTasks > 0 ? ((completedTasks / totalTasks) * 100).toFixed(0) : 0;
-            document.getElementById('overallProgress').textContent = `${overallProgress}%`;
-        }
-
-        function clearCompletedTasks() {
-            projects = projects.map(project => ({
-                ...project,
-                tasks: project.tasks.filter(task => !task.completed)
-            })).filter(project => project.tasks.length > 0);
-
-            localStorage.setItem('projects', JSON.stringify(projects));
-            renderProjects();
-            showBanner('✨ Completed tasks cleared!');
-        }
-
-        function resetPlannerData() {
-            if (confirm('This will delete ALL projects and tasks. Are you sure?')) {
-                projects = [];
-                localStorage.setItem('projects', JSON.stringify(projects));
-                renderProjects();
-                showBanner('🔄 Planner reset!');
-            }
-        }
-
-        // ========== CELEBRATION ==========
-        function celebrateCompletion() {
-            const overlay = document.getElementById('celebrationOverlay');
-            overlay.classList.add('show');
-            
-            // Create confetti
-            for (let i = 0; i < 50; i++) {
-                setTimeout(() => createConfetti(), i * 50);
-            }
-
-            // Hide after 5 seconds
-            setTimeout(() => {
-                overlay.classList.remove('show');
-            }, 5000);
-        }
-
-        function createConfetti() {
-            const confetti = document.createElement('div');
-            confetti.className = 'confetti';
-            confetti.style.left = Math.random() * 100 + '%';
-            confetti.style.background = ['#667eea', '#764ba2', '#51cf66', '#ffd43b', '#ff6b6b'][Math.floor(Math.random() * 5)];
-            confetti.style.animationDelay = Math.random() * 0.5 + 's';
-            document.getElementById('celebrationOverlay').appendChild(confetti);
-            
-            setTimeout(() => confetti.remove(), 3000);
-        }
-
-        // ========== CITATION GENERATORS ==========
+        // Citation Generators
         function generateBookCitation() {
             const author = document.getElementById('bookAuthor').value;
             const year = document.getElementById('bookYear').value;
@@ -2284,16 +1609,17 @@
             const edition = document.getElementById('bookEdition').value;
             const place = document.getElementById('bookPlace').value;
             const publisher = document.getElementById('bookPublisher').value;
-
+            
             if (!author || !year || !title || !place || !publisher) {
-                alert('Please fill in all required fields!');
+                alert('Please fill in all required fields');
                 return;
             }
-
+            
             const editionText = edition ? ` ${edition}.` : '';
             const citation = `${author} (${year}) <em>${title}</em>.${editionText} ${place}: ${publisher}.`;
             
-            document.getElementById('bookOutput').innerHTML = citation;
+            document.getElementById('bookCitationText').innerHTML = citation;
+            document.getElementById('bookCitation').style.display = 'block';
         }
 
         function generateJournalCitation() {
@@ -2302,16 +1628,18 @@
             const article = document.getElementById('journalArticle').value;
             const journal = document.getElementById('journalTitle').value;
             const volume = document.getElementById('journalVolume').value;
+            const issue = document.getElementById('journalIssue').value;
             const pages = document.getElementById('journalPages').value;
-
-            if (!author || !year || !article || !journal || !volume || !pages) {
-                alert('Please fill in all fields!');
+            
+            if (!author || !year || !article || !journal || !volume || !issue || !pages) {
+                alert('Please fill in all required fields');
                 return;
             }
-
-            const citation = `${author} (${year}) '${article}', <em>${journal}</em>, ${volume}, pp. ${pages}.`;
             
-            document.getElementById('journalOutput').innerHTML = citation;
+            const citation = `${author} (${year}) '${article}', <em>${journal}</em>, ${volume}(${issue}), pp. ${pages}.`;
+            
+            document.getElementById('journalCitationText').innerHTML = citation;
+            document.getElementById('journalCitation').style.display = 'block';
         }
 
         function generateWebCitation() {
@@ -2320,108 +1648,606 @@
             const title = document.getElementById('webTitle').value;
             const url = document.getElementById('webURL').value;
             const accessed = document.getElementById('webAccessed').value;
-
+            
             if (!author || !year || !title || !url || !accessed) {
-                alert('Please fill in all fields!');
+                alert('Please fill in all required fields');
                 return;
             }
-
-            const citation = `${author} (${year}) <em>${title}</em>. Available at: ${url} (Accessed: ${accessed}).`;
             
-            document.getElementById('webOutput').innerHTML = citation;
+            const accessedDate = new Date(accessed).toLocaleDateString('en-GB', { 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric' 
+            });
+            
+            const citation = `${author} (${year}) <em>${title}</em>. Available at: ${url} (Accessed: ${accessedDate}).`;
+            
+            document.getElementById('webCitationText').innerHTML = citation;
+            document.getElementById('webCitation').style.display = 'block';
         }
 
         function generateChapterCitation() {
             const author = document.getElementById('chapterAuthor').value;
             const year = document.getElementById('chapterYear').value;
-            const chapterTitle = document.getElementById('chapterTitle').value;
+            const chapter = document.getElementById('chapterTitle').value;
             const editor = document.getElementById('chapterEditor').value;
-            const bookTitle = document.getElementById('chapterBook').value;
+            const book = document.getElementById('chapterBook').value;
             const place = document.getElementById('chapterPlace').value;
             const publisher = document.getElementById('chapterPublisher').value;
             const pages = document.getElementById('chapterPages').value;
-
-            if (!author || !year || !chapterTitle || !editor || !bookTitle || !place || !publisher || !pages) {
-                alert('Please fill in all fields!');
+            
+            if (!author || !year || !chapter || !editor || !book || !place || !publisher || !pages) {
+                alert('Please fill in all required fields');
                 return;
             }
-
-            const citation = `${author} (${year}) '${chapterTitle}', in ${editor} (ed.) <em>${bookTitle}</em>. ${place}: ${publisher}, pp. ${pages}.`;
             
-            document.getElementById('chapterOutput').innerHTML = citation;
+            const citation = `${author} (${year}) '${chapter}', in ${editor} (ed.) <em>${book}</em>. ${place}: ${publisher}, pp. ${pages}.`;
+            
+            document.getElementById('chapterCitationText').innerHTML = citation;
+            document.getElementById('chapterCitation').style.display = 'block';
         }
 
-        function copyCitation(outputId) {
-            const output = document.getElementById(outputId);
-            const text = output.innerText;
+        function copyCitation(elementId) {
+            const citationHTML = document.getElementById(elementId).innerHTML;
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = citationHTML;
+            const citationText = tempDiv.textContent;
             
-            if (text === 'Your citation will appear here...') {
-                alert('Generate a citation first!');
-                return;
-            }
-
-            navigator.clipboard.writeText(text).then(() => {
+            navigator.clipboard.writeText(citationText).then(() => {
                 showBanner('📋 Citation copied to clipboard!');
             });
         }
 
-        // ========== BANNER ==========
+        // Spaced Repetition Tracker
+        let spacedItems = JSON.parse(localStorage.getItem('spacedItems') || '[]');
+
+        function addSpacedItem() {
+            const topic = document.getElementById('spacedTopic').value;
+            const date = document.getElementById('spacedDate').value;
+            
+            if (!topic || !date) {
+                alert('Please enter both topic and date');
+                return;
+            }
+            
+            spacedItems.push({ topic, date, reviewed: false });
+            localStorage.setItem('spacedItems', JSON.stringify(spacedItems));
+            
+            document.getElementById('spacedTopic').value = '';
+            document.getElementById('spacedDate').value = '';
+            
+            displaySpacedItems();
+            showBanner('✅ Review reminder added!');
+        }
+
+        function displaySpacedItems() {
+            const list = document.getElementById('spacedList');
+            list.innerHTML = '';
+            
+            spacedItems.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            spacedItems.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'tracker-item';
+                div.innerHTML = `
+                    <div>
+                        <strong>${item.topic}</strong><br>
+                        <small>Review: ${new Date(item.date).toLocaleDateString()}</small>
+                    </div>
+                    <div>
+                        <button class="btn-secondary" onclick="markReviewed(${index})">${item.reviewed ? '✅ Reviewed' : '📝 Mark Reviewed'}</button>
+                        <button class="btn-secondary" onclick="removeSpacedItem(${index})">🗑️</button>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function markReviewed(index) {
+            spacedItems[index].reviewed = !spacedItems[index].reviewed;
+            localStorage.setItem('spacedItems', JSON.stringify(spacedItems));
+            displaySpacedItems();
+        }
+
+        function removeSpacedItem(index) {
+            spacedItems.splice(index, 1);
+            localStorage.setItem('spacedItems', JSON.stringify(spacedItems));
+            displaySpacedItems();
+        }
+
+        displaySpacedItems();
+
+        // Study Timetable
+        const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        let timetableData = JSON.parse(localStorage.getItem('timetableData') || '{}');
+        let currentView = 'week'; // 'day' or 'week'
+        let currentDayView = 'Monday';
+
+        function initTimetable() {
+            if (currentView === 'week') {
+                renderWeekView();
+            } else {
+                renderDayView();
+            }
+            updateTimetableProgress();
+            updateViewButtons();
+        }
+
+        function updateViewButtons() {
+            const dayBtn = document.getElementById('dayViewBtn');
+            const weekBtn = document.getElementById('weekViewBtn');
+            const clearDayBtn = document.getElementById('clearDayBtn');
+            const clearWeekBtn = document.getElementById('clearWeekBtn');
+            
+            if (currentView === 'day') {
+                dayBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                dayBtn.style.color = 'white';
+                weekBtn.style.background = '#f8f9fa';
+                weekBtn.style.color = '#000';
+                
+                // Show Clear Your Day button, hide Clear Your Week
+                clearDayBtn.style.display = 'inline-block';
+                clearWeekBtn.style.display = 'none';
+            } else {
+                weekBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                weekBtn.style.color = 'white';
+                dayBtn.style.background = '#f8f9fa';
+                dayBtn.style.color = '#000';
+                
+                // Show Clear Your Week button, hide Clear Your Day
+                clearDayBtn.style.display = 'none';
+                clearWeekBtn.style.display = 'inline-block';
+            }
+        }
+
+        function switchToDay() {
+            currentView = 'day';
+            initTimetable();
+        }
+
+        function switchToWeek() {
+            currentView = 'week';
+            initTimetable();
+        }
+
+        function renderWeekView() {
+            const container = document.getElementById('timetableContainer');
+            container.innerHTML = '';
+            
+            // Create week grid
+            const weekGrid = document.createElement('div');
+            weekGrid.style.display = 'grid';
+            weekGrid.style.gridTemplateColumns = '80px repeat(7, 1fr)';
+            weekGrid.style.gap = '1px';
+            weekGrid.style.background = '#e0e0e0';
+            weekGrid.style.border = '2px solid #e0e0e0';
+            weekGrid.style.borderRadius = '10px';
+            weekGrid.style.overflow = 'hidden';
+            
+            // Header row with days
+            const emptyCorner = document.createElement('div');
+            emptyCorner.className = 'time-slot';
+            emptyCorner.textContent = 'Time';
+            weekGrid.appendChild(emptyCorner);
+            
+            weekDays.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'time-slot';
+                dayHeader.textContent = day.substring(0, 3);
+                dayHeader.style.fontWeight = 'bold';
+                weekGrid.appendChild(dayHeader);
+            });
+            
+            // Time slots
+            for (let hour = 6; hour <= 23; hour++) {
+                const timeSlot = document.createElement('div');
+                timeSlot.className = 'time-slot';
+                timeSlot.textContent = `${hour}:00`;
+                weekGrid.appendChild(timeSlot);
+                
+                weekDays.forEach(day => {
+                    const cell = document.createElement('div');
+                    cell.className = 'timetable-cell';
+                    cell.dataset.hour = hour;
+                    cell.dataset.day = day;
+                    cell.onclick = () => editCell(day, hour);
+                    
+                    const key = `${day}-${hour}`;
+                    if (timetableData[key]) {
+                        cell.classList.add('has-content');
+                        const block = timetableData[key];
+                        cell.innerHTML = `
+                            <div class="study-session" style="cursor: pointer;">
+                                <strong>${block.title}</strong><br>
+                                <small>${block.type}</small>
+                            </div>
+                        `;
+                    }
+                    
+                    weekGrid.appendChild(cell);
+                });
+            }
+            
+            container.appendChild(weekGrid);
+        }
+
+        function renderDayView() {
+            const container = document.getElementById('timetableContainer');
+            container.innerHTML = '';
+            
+            // Day selector
+            const daySelector = document.createElement('div');
+            daySelector.style.display = 'flex';
+            daySelector.style.gap = '10px';
+            daySelector.style.marginBottom = '20px';
+            daySelector.style.flexWrap = 'wrap';
+            daySelector.style.justifyContent = 'center';
+            
+            weekDays.forEach(day => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-secondary';
+                btn.textContent = day;
+                btn.onclick = () => {
+                    currentDayView = day;
+                    renderDayView();
+                };
+                if (day === currentDayView) {
+                    btn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                    btn.style.color = 'white';
+                }
+                daySelector.appendChild(btn);
+            });
+            
+            container.appendChild(daySelector);
+            
+            // Day grid
+            const dayGrid = document.createElement('div');
+            dayGrid.className = 'timetable-grid';
+            
+            for (let hour = 6; hour <= 23; hour++) {
+                const timeSlot = document.createElement('div');
+                timeSlot.className = 'time-slot';
+                timeSlot.textContent = `${hour}:00`;
+                dayGrid.appendChild(timeSlot);
+                
+                const cell = document.createElement('div');
+                cell.className = 'timetable-cell';
+                cell.dataset.hour = hour;
+                cell.dataset.day = currentDayView;
+                cell.onclick = () => editCell(currentDayView, hour);
+                
+                const key = `${currentDayView}-${hour}`;
+                if (timetableData[key]) {
+                    cell.classList.add('has-content');
+                    const block = timetableData[key];
+                    cell.innerHTML = `
+                        <div class="study-session">
+                            <strong>${block.title}</strong><br>
+                            <small>${block.type} - ${block.duration}</small>
+                        </div>
+                    `;
+                }
+                
+                dayGrid.appendChild(cell);
+            }
+            
+            container.appendChild(dayGrid);
+        }
+
+        function editCell(day, hour) {
+            const key = `${day}-${hour}`;
+            
+            if (timetableData[key]) {
+                if (confirm(`Delete this study block?\n${timetableData[key].title} (${timetableData[key].type})`)) {
+                    delete timetableData[key];
+                    localStorage.setItem('timetableData', JSON.stringify(timetableData));
+                    initTimetable();
+                }
+            } else {
+                openStudyBlockModal(day, hour);
+            }
+        }
+
+        function openStudyBlockModal(day = null, hour = null) {
+            document.getElementById('studyBlockModal').classList.add('active');
+            
+            if (day) {
+                document.getElementById('blockDay').value = day;
+            } else {
+                document.getElementById('blockDay').value = currentView === 'day' ? currentDayView : 'Monday';
+            }
+            
+            if (hour) {
+                document.getElementById('blockTime').value = hour;
+            }
+        }
+
+        function closeStudyBlockModal() {
+            document.getElementById('studyBlockModal').classList.remove('active');
+            // Clear form
+            document.getElementById('blockTitle').value = '';
+            document.getElementById('blockType').value = 'Lecture';
+            document.getElementById('blockDuration').value = '1';
+        }
+
+        function addStudyBlock() {
+            const title = document.getElementById('blockTitle').value;
+            const type = document.getElementById('blockType').value;
+            const day = document.getElementById('blockDay').value;
+            const hour = parseInt(document.getElementById('blockTime').value);
+            const duration = document.getElementById('blockDuration').value;
+            
+            if (!title) {
+                alert('Please enter a title for your study block');
+                return;
+            }
+            
+            const key = `${day}-${hour}`;
+            
+            // Check if slot is already taken
+            if (timetableData[key]) {
+                if (!confirm('This time slot already has a study block. Replace it?')) {
+                    return;
+                }
+            }
+            
+            timetableData[key] = {
+                title,
+                type,
+                duration: duration + (duration == 1 ? ' hour' : ' hours'),
+                day,
+                hour
+            };
+            
+            localStorage.setItem('timetableData', JSON.stringify(timetableData));
+            closeStudyBlockModal();
+            initTimetable();
+            showBanner('✅ Study block added!');
+        }
+
+        function clearCurrentDay() {
+            // Clear only current day data - like original blank template
+            Object.keys(timetableData).forEach(key => {
+                if (key.startsWith(currentDayView + '-')) {
+                    delete timetableData[key];
+                }
+            });
+            localStorage.setItem('timetableData', JSON.stringify(timetableData));
+            initTimetable();
+            showBanner(`📄 ${currentDayView} cleared - blank template ready!`);
+        }
+
+        function clearEntireWeek() {
+            // Clear entire week data - like original blank template
+            timetableData = {};
+            localStorage.setItem('timetableData', JSON.stringify(timetableData));
+            initTimetable();
+            showBanner('📄 Blank week template ready!');
+        }
+
+        function updateTimetableProgress() {
+            const totalBlocks = Object.keys(timetableData).length;
+            let totalHours = 0;
+            
+            Object.values(timetableData).forEach(block => {
+                const hours = parseFloat(block.duration);
+                if (!isNaN(hours)) {
+                    totalHours += hours;
+                }
+            });
+            
+            const progressBar = document.getElementById('timetableProgress');
+            const percentage = Math.min((totalHours / 40) * 100, 100); // 40 hours as full bar
+            
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = `${totalHours} hours this week`;
+        }
+
+        // Weekly Planner
+        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        let weeklyData = JSON.parse(localStorage.getItem('weeklyData') || '{}');
+
+        function initWeeklyPlanner() {
+            const planner = document.getElementById('weekPlanner');
+            planner.innerHTML = '';
+            
+            days.forEach((day, index) => {
+                const dayCard = document.createElement('div');
+                dayCard.className = 'day-card';
+                
+                const dayData = weeklyData[day] || { goal: '', tasks: [] };
+                const completedTasks = dayData.tasks.filter(t => t.completed).length;
+                const totalTasks = dayData.tasks.length;
+                const allComplete = totalTasks > 0 && completedTasks === totalTasks;
+                
+                dayCard.innerHTML = `
+                    <div class="day-header">${getDayEmoji(index)} ${day}</div>
+                    ${dayData.goal ? `
+                        <div class="goal-text">🎯 ${dayData.goal}</div>
+                    ` : ''}
+                    <ul class="task-list" id="${day}-tasks">
+                        ${dayData.tasks.map((task, i) => `
+                            <li class="task-item ${task.completed ? 'completed' : ''}">
+                                <input type="checkbox" ${task.completed ? 'checked' : ''} 
+                                    onchange="toggleTask('${day}', ${i})">
+                                <span>${task.text}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                    ${totalTasks > 0 ? `
+                        <div style="margin-top: 10px; font-size: 0.9em; color: #667eea;">
+                            ${allComplete ? '✅ All done!' : `${completedTasks}/${totalTasks} tasks ✓`}
+                        </div>
+                    ` : ''}
+                    <button class="btn-secondary" onclick="openGoalModal('${day}')" style="margin-top: 10px; width: 100%;">
+                        ${dayData.goal ? '✏️ Edit Goal' : '➕ Set Goal'}
+                    </button>
+                `;
+                
+                planner.appendChild(dayCard);
+            });
+            
+            updateWeeklyProgress();
+        }
+
+        function getDayEmoji(index) {
+            const emojis = ['📅', '📅', '📅', '📅', '📅', '🎉', '😴'];
+            return emojis[index];
+        }
+
+        function openGoalModal(day) {
+            document.getElementById('modalDay').textContent = day;
+            document.getElementById('goalModal').classList.add('active');
+            
+            const dayData = weeklyData[day] || { goal: '', tasks: [] };
+            document.getElementById('goalInput').value = dayData.goal;
+            
+            const container = document.getElementById('microTasksContainer');
+            container.innerHTML = '';
+            
+            if (dayData.tasks.length === 0) {
+                for (let i = 0; i < 3; i++) {
+                    addMicroTaskInput();
+                }
+            } else {
+                dayData.tasks.forEach(task => {
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'citation-input';
+                    input.value = task.text;
+                    container.appendChild(input);
+                });
+            }
+        }
+
+        function closeGoalModal() {
+            document.getElementById('goalModal').classList.remove('active');
+        }
+
+        function addMicroTaskInput() {
+            const container = document.getElementById('microTasksContainer');
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'citation-input';
+            input.placeholder = 'Enter a micro task...';
+            container.appendChild(input);
+        }
+
+        function saveGoal() {
+            const day = document.getElementById('modalDay').textContent;
+            const goal = document.getElementById('goalInput').value;
+            
+            const taskInputs = document.querySelectorAll('#microTasksContainer input');
+            const tasks = Array.from(taskInputs)
+                .map(input => input.value.trim())
+                .filter(text => text !== '')
+                .map(text => ({ text, completed: false }));
+            
+            weeklyData[day] = { goal, tasks };
+            localStorage.setItem('weeklyData', JSON.stringify(weeklyData));
+            
+            closeGoalModal();
+            initWeeklyPlanner();
+            showBanner('🎯 Goal saved!');
+        }
+
+        function toggleTask(day, taskIndex) {
+            weeklyData[day].tasks[taskIndex].completed = !weeklyData[day].tasks[taskIndex].completed;
+            localStorage.setItem('weeklyData', JSON.stringify(weeklyData));
+            initWeeklyPlanner();
+        }
+
+        function updateWeeklyProgress() {
+            let totalTasks = 0;
+            let completedTasks = 0;
+            
+            days.forEach(day => {
+                const dayData = weeklyData[day];
+                if (dayData && dayData.tasks) {
+                    totalTasks += dayData.tasks.length;
+                    completedTasks += dayData.tasks.filter(t => t.completed).length;
+                }
+            });
+            
+            const percentage = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+            const progressBar = document.getElementById('weeklyProgress');
+            const stats = document.getElementById('weeklyStats');
+            
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = `${percentage}% complete`;
+            stats.textContent = `This week: ${completedTasks}/${totalTasks} tasks complete`;
+            
+            // Enable celebration button if all tasks complete
+            const celebrateBtn = document.getElementById('celebrateBtn');
+            if (totalTasks > 0 && completedTasks === totalTasks) {
+                celebrateBtn.disabled = false;
+            } else {
+                celebrateBtn.disabled = true;
+            }
+        }
+
+        function resetCelebration() {
+            if (confirm('Uncheck all tasks to reset the celebration button? Your goals will stay, but all tasks will be marked incomplete.')) {
+                days.forEach(day => {
+                    if (weeklyData[day] && weeklyData[day].tasks) {
+                        weeklyData[day].tasks.forEach(task => {
+                            task.completed = false;
+                        });
+                    }
+                });
+                localStorage.setItem('weeklyData', JSON.stringify(weeklyData));
+                initWeeklyPlanner();
+                showBanner('🔄 All tasks reset! Ready to crush it again!');
+            }
+        }
+
+        function triggerCelebration() {
+            const modal = document.getElementById('celebrationModal');
+            modal.classList.add('active');
+            
+            // Create confetti
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => createConfetti(), i * 50);
+            }
+            
+            // Close after 5 seconds
+            setTimeout(() => {
+                modal.classList.remove('active');
+            }, 5000);
+        }
+
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.background = ['#667eea', '#764ba2', '#f093fb', '#4facfe'][Math.floor(Math.random() * 4)];
+            confetti.style.animationDelay = Math.random() * 2 + 's';
+            
+            document.getElementById('celebrationModal').appendChild(confetti);
+            
+            setTimeout(() => confetti.remove(), 3000);
+        }
+
+        // Banner Notifications
         function showBanner(message) {
-            const banner = document.getElementById('successBanner');
-            document.getElementById('bannerText').textContent = message;
-            banner.classList.add('show');
+            const banner = document.createElement('div');
+            banner.className = 'banner';
+            banner.textContent = message;
+            document.body.appendChild(banner);
             
             setTimeout(() => {
-                banner.classList.remove('show');
+                banner.style.animation = 'slideIn 0.3s reverse';
+                setTimeout(() => banner.remove(), 300);
             }, 3000);
         }
 
-        // ========== INIT ON LOAD ==========
-        window.addEventListener('load', () => {
-            // Load saved data
-            pomodorosToday = parseInt(localStorage.getItem('pomodorosToday') || '0');
-            document.getElementById('pomodoroCount').textContent = `🍅 ${pomodorosToday} pomodoros completed today!`;
-            document.getElementById('statPomodoros').textContent = pomodorosToday;
-
-            try {
-                spacedTopics = JSON.parse(localStorage.getItem('spacedTopics') || '[]');
-            } catch (e) {
-                console.error('Error loading spaced topics:', e);
-                spacedTopics = [];
-            }
-            renderSpacedTopics();
-
-            try {
-                timetableData = JSON.parse(localStorage.getItem('timetableData') || '[]');
-            } catch (e) {
-                console.error('Error loading timetable data:', e);
-                timetableData = [];
-            }
-            initTimetable();
-            renderTimetable();
-
-            try {
-                projects = JSON.parse(localStorage.getItem('projects') || '[]');
-            } catch (e) {
-                console.error('Error loading projects:', e);
-                projects = [];
-            }
-            renderProjects();
-
-            // Reset pomodoros at midnight
-            const lastReset = localStorage.getItem('lastPomodoroReset');
-            const today = new Date().toDateString();
-            if (lastReset !== today) {
-                pomodorosToday = 0;
-                localStorage.setItem('pomodorosToday', '0');
-                localStorage.setItem('lastPomodoroReset', today);
-                document.getElementById('pomodoroCount').textContent = '🍅 0 pomodoros completed today!';
-                document.getElementById('statPomodoros').textContent = '0';
-            }
-
-            // Calculate study streak (simplified)
-            const streak = Math.floor(Math.random() * 10); // Placeholder
-            document.getElementById('statStreak').textContent = streak;
+        // Initialize on load - wrapped in DOMContentLoaded to ensure elements exist
+        document.addEventListener('DOMContentLoaded', function() {
+            initWeeklyPlanner();
+            displaySpacedItems();
+            updatePomodoroStats();
+            updateStreakDisplay();
+            updateTimerDisplay();
         });
     </script>
 </body>
