@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Tab - Student Life Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: 20px 20px 0 0;
+            margin-bottom: 0;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: visible;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .intro-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .intro-section h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .intro-section p {
+            color: #666;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        /* Topic Cards Grid */
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .topic-card {
+            background: white;
+            border: 3px solid #e0e0e0;
+            border-radius: 16px;
+            overflow: visible;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .topic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .topic-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .topic-header:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .topic-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .topic-emoji {
+            font-size: 2.5em;
+        }
+
+        .topic-text h3 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .topic-text p {
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+
+        .toggle-icon {
+            font-size: 1.8em;
+            transition: transform 0.3s ease;
+            font-weight: bold;
+        }
+
+        .toggle-icon.rotated {
+            transform: rotate(180deg);
+        }
+
+        .topic-body {
+            padding: 30px;
+            display: none;
+        }
+
+        .topic-body.expanded {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Interactive Stat Cards */
+        .stat-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 3px solid #dee2e6;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: #667eea;
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-card.active {
+            border-color: #667eea;
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.95em;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stat-hint {
+            font-size: 0.85em;
+            color: #999;
+            margin-top: 10px;
+        }
+
+        .stat-details {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #dee2e6;
+            text-align: left;
+            color: #444;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .stat-details.visible {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+            }
+            to {
+                opacity: 1;
+                max-height: 500px;
+            }
+        }
+
+        /* Content Styling */
+        .topic-content h4 {
+            color: #667eea;
+            font-size: 1.3em;
+            margin: 25px 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topic-content h4:first-child {
+            margin-top: 0;
+        }
+
+        .topic-content p {
+            color: #444;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        .topic-content ul {
+            margin: 15px 0 15px 25px;
+        }
+
+        .topic-content li {
+            color: #444;
+            line-height: 1.8;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+
+        .topic-content ol {
+            margin: 15px 0 15px 25px;
+        }
+
+        .topic-content ol li {
+            color: #444;
+            line-height: 1.8;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+
+        /* Info Boxes */
+        .info-box {
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 5px solid;
+        }
+
+        .info-box.tip {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .info-box.warning {
+            background: #fff3cd;
+            border-color: #ffc107;
+        }
+
+        .info-box.danger {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .info-box.info {
+            background: #d1ecf1;
+            border-color: #17a2b8;
+        }
+
+        .info-box-title {
+            font-weight: bold;
+            font-size: 1.15em;
+            margin-bottom: 10px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box-content {
+            color: #444;
+            line-height: 1.7;
+        }
+
+        /* Two Column Layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .col-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .col-box h5 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        /* Table */
+        .simple-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .simple-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .simple-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            color: #444;
+        }
+
+        .simple-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .simple-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Links Section */
+        .links-section {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .links-section h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .link-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 18px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .link-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Expand All Button */
+        .expand-all-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .expand-all-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .expand-all-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Footer */
+        .footer-section {
+            margin-top: 50px;
+            padding: 35px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            color: white;
+            text-align: center;
+        }
+
+        .footer-section h3 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .footer-link {
+            background: white;
+            color: #667eea;
+            padding: 15px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .footer-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Key Number Highlight */
+        .key-number {
+            background: #667eea;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .topics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚖️ Legal Essentials</h1>
+            <p>Your rights, simplified. Know the rules, save money, stay protected.</p>
+        </div>
+
+        <div class="content">
+            <div class="intro-section">
+                <h2>🎓 Student Legal Guide</h2>
+                <p>Everything you need to know about your rights. Click any card to expand, tap stat boxes for details!</p>
+            </div>
+
+            <div class="expand-all-section">
+                <button class="expand-all-btn" onclick="toggleAll()">
+                    <span id="toggleText">📖 Expand All</span>
+                </button>
+            </div>
+
+            <div class="topics-grid">
+                <!-- RENTING -->
+                <div class="topic-card">
+                    <div class="topic-header" onclick="toggleTopic(this)">
+                        <div class="topic-title">
+                            <span class="topic-emoji">🏠</span>
+                            <div class="topic-text">
+                                <h3>Renting Rights</h3>
+                                <p>Deposits, landlords & repairs</p>
+                            </div>
+                        </div>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="topic-body">
+                        <div class="topic-content">
+                            <p style="text-align: center; color: #666; margin-bottom: 15px; font-style: italic;">👇 Tap each card for details</p>
+                            
+                            <div class="stat-cards-grid">
+                                <div class="stat-card" onclick="toggleStatCard(this, event)">
+                                    <div class="stat-number">30 days</div>
+                                    <div class="stat-label">Deposit protection</div>
+                                    <div class="stat-hint">Tap for info ▼</div>
+                                    <div class="stat-details">
+                                        <strong>What is this?</strong> Your landlord MUST protect your deposit in a government-approved scheme (DPS, MyDeposits, or TDS) within 30 days of receiving it. This is the law!<br><br>
+                                        <strong>Why it matters:</strong> If they don't, you can take them to court and claim 1-3x your deposit back. They must also give you the scheme details within 30 days.
+                                    </div>
+                                </div>
+                                <div class="stat-card" onclick="toggleStatCard(this, event)">
+                                    <div class="stat-number">2 months</div>
+                                    <div class="stat-label">Landlord's notice</div>
+                                    <div class="stat-hint">Tap for info ▼</div>
+                                    <div class="stat-details">
+                                        <strong>What is this?</strong> If your landlord wants to evict you (Section 21 no-fault eviction), they must give you at least 2 months' written notice.<br><br>
+                                        <strong>Why it matters:</strong> They can't just kick you out! They need proper paperwork and a court order. Never let them change locks or intimidate you.
+                                    </div>
+                                </div>
+                                <div class="stat-card" onclick="toggleStatCard(this, event)">
+                                    <div class="stat-number">24 hours</div>
+                                    <div class="stat-label">Visit notice required</div>
+                                    <div class="stat-hint">Tap for info ▼</div>
+                                    <div class="stat-details">
+                                        <strong>What is this?</strong> Your landlord must give you at least 24 hours' notice before visiting the property (except in emergencies).<br><br>
+                                        <strong>Why it matters:</strong> It's your home during the tenancy. They can't just show up whenever they want. You have a right to privacy and "quiet enjoyment" of the property.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="info-box danger">
+                                <div class="info-box-title">🚨 Critical Info</div>
+                                <div class="info-box-content">
+                                    If your deposit isn't protected properly, you have grounds to sue. Your landlord also CAN'T evict you without following proper legal procedures and getting a court order.
+                                </div>
+                            </div>
+
+                            <h4>✅ Your Landlord Must:</h4>
+                            <ul>
+                                <li>Protect your deposit within 30 days</li>
+                                <li>Fix structure, heating, plumbing, electrics</li>
+                                <li>Do annual gas safety checks</li>
+                                <li>Provide EPC (minimum rating E)</li>
+                                <li>Give proper notice before visiting</li>
+                            </ul>
+
+                            <div class="info-box tip">
+                                <div class="info-box-title">💡 Pro Tip</div>
+                                <div class="info-box-content">
+                                    Take photos/videos of EVERYTHING on move-in day with timestamps. Document any existing damage. This is your evidence if there's a dispute about your deposit!
+                                </div>
+                            </div>
+
+                            <div class="links-section">
+                                <h4>🔗 Helpful Resources</h4>
+                                <div class="link-buttons">
+                                    <a href="https://www.shelter.org.uk/" target="_blank" class="link-btn">🏠 Shelter</a>
+                                    <a href="https://www.gov.uk/private-renting" target="_blank" class="link-btn">📋 Gov.uk</a>
+                                    <a href="https://www.citizensadvice.org.uk/housing/" target="_blank" class="link-btn">ℹ️ Citizens Advice</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TV LICENCE -->
+                <div class="topic-card">
+                    <div class="topic-header" onclick="toggleTopic(this)">
+                        <div class="topic-title">
+                            <span class="topic-emoji">📺</span>
+                            <div class="topic-text">
+                                <h3>TV Licence</h3>
+                                <p>Do you actually need one?</p>
+                            </div>
+                        </div>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="topic-body">
+                        <div class="topic-content">
+                            <p style="text-align: center; color: #666; margin-bottom: 15px; font-style: italic;">👇 Tap each card for details</p>
+                            
+                            <div class="stat-cards-grid">
+                                <div class="stat-card" onclick="toggleStatCard(this, event)">
+                                    <div class="stat-number">£169.50</div>
+                                    <div class="stat-label">Cost per year</div>
+                                    <div class="stat-hint">Tap for info ▼</div>
+                                    <div class="stat-details">
+                                        <strong>What is this?</strong> The current cost of a TV licence for 2024/25.<br><br>
+                                        <strong>Payment options:</strong> You can pay in full, monthly by direct debit, or quarterly. In shared houses, split the cost between housemates!
+                                    </div>
+                                </div>
+                                <div class="stat-card" onclick="toggleStatCard(this, event)">
+                                    <div class="stat-number">£1,000</div>
+                                    <div class="stat-label">Maximum fine</div>
+                                    <div class="stat-hint">Tap for info ▼</div>
+                                    <div class="stat-details">
+                                        <strong>What is this?</strong> If you're caught watching live TV or using BBC iPlayer without a licence, you can be fined up to £1,000.<br><br>
+                                        <strong>Why it matters:</strong> You could also get a court summons. TV Licensing enforcement can visit, but they have NO right to enter without permission.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="two-col">
+                                <div class="col-box">
+                                    <h5>✅ You NEED one if you:</h5>
+                                    <ul>
+                                        <li>Watch live TV (any channel)</li>
+                                        <li>Use BBC iPlayer (even catch-up)</li>
+                                        <li>Stream live broadcasts</li>
+                                    </ul>
+                                </div>
+                                <div class="col-box">
+                                    <h5>🎉 You DON'T need one if:</h5>
+                                    <ul>
+                                        <li>Only Netflix/Prime/Disney+</li>
+                                        <li>YouTube (non-live)</li>
+                                        <li>Catch-up TV (not iPlayer)</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="info-box info">
+                                <div class="info-box-title">🏠 In Halls?</div>
+                                <div class="info-box-content">
+                                    Your accommodation might already be covered by a communal licence! Check with your uni accommodation office before buying one.
+                                </div>
+                            </div>
+
+                            <div class="info-box tip">
+                                <div class="info-box-title">💡 Don't Need One?</div>
+                                <div class="info-box-content">
+                                    Declare it online at tvlicensing.co.uk to stop the letters. You'll need to renew this declaration every 2 years. Keep the confirmation email as proof!
+                                </div>
+                            </div>
+
+                            <div class="links-section">
+                                <h4>🔗 Helpful Resources</h4>
+                                <div class="link-buttons">
+                                    <a href="https://www.tvlicensing.co.uk/check-if-you-need-one" target="_blank" class="link-btn">🤔 Check Status</a>
+                                    <a href="https://www.moneysavingexpert.com/utilities/tv-licence/" target="_blank" class="link-btn">💰 MSE Guide</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CONSUMER RIGHTS -->
+                <div class="topic-card">
+                    <div class="topic-header" onclick="toggleTopic(this)">
+                        <div class="topic-title">
+                            <span class="topic-emoji">🛍️</span>
+                            <div class="topic-text">
+                                <h3>Consumer Rights</h3>
+                                <p>Returns, refunds & warranties</p>
+                            </div>
+                        </div>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="topic-body">
+                        <div class="topic-content">
+                            <p style="text-align: center; color: #666; margin-bottom: 15px; font-style: italic;">👇 Tap each card for details</p>
+                            
+                            <div class="stat-cards-grid">
+                                <div class="stat-card" onclick="toggleStatCard(this, event)">
+                                    <div class="stat-number">30 days</div>
+                                    <div class="stat-label">Full refund period</div>
+                                    <div class="stat-hint">Tap for info ▼</div>
+                                    <div class="stat-details">
+                                        <strong>What is this?</strong> If something you bought is faulty, not as described, or doesn't work, you have 30 days to return it for a full refund.<br><br>
+                                        <strong>Why it matters:</strong> The retailer can't force you to accept a repair or replacement during this period. It's YOUR choice to reject the item!
+                                    </div>
+                                </div>
+                                <div class="stat-card" onclick="toggleStatCard(this, event)">
+                                    <div class="stat-number">6 months</div>
+                                    <div class="stat-label">Repair/replace period</div>
+                                    <div class="stat-hint">Tap for info ▼</div>
+                                    <div class="stat-details">
+                                        <strong>What is this?</strong> Between 30 days and 6 months, the seller must repair or replace faulty goods. They get ONE attempt to fix it.<br><br>
+                                        <strong>After 6 months:</strong> You can still claim up to 6 years, but YOU must prove the fault existed when you bought it. Keep evidence!
+                                    </div>
+                                </div>
+                                <div class="stat-card" onclick="toggleStatCard(this, event)">
+                                    <div class="stat-number">14 days</div>
+                                    <div class="stat-label">Online cooling-off</div>
+                                    <div class="stat-hint">Tap for info ▼</div>
+                                    <div class="stat-details">
+                                        <strong>What is this?</strong> When you buy online, you get 14 days to return items for ANY reason - even if you just changed your mind!<br><br>
+                                        <strong>Exceptions:</strong> Personalized items, perishables, hygiene products (if opened), digital downloads, and tickets can't be returned.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="info-box tip">
+                                <div class="info-box-title">💳 Section 75 Protection</div>
+                                <div class="info-box-content">
+                                    Buy anything £100-£30,000 on a credit card? Your card company is jointly liable! If the seller won't refund, claim from your bank.
+                                </div>
+                            </div>
+
+                            <h4>📝 How to Get Your Refund</h4>
+                            <ol>
+                                <li>Contact retailer (polite but firm)</li>
+                                <li>Quote "Consumer Rights Act 2015"</li>
+                                <li>Put it in writing (email = evidence)</li>
+                                <li>Give 14-day deadline</li>
+                                <li>Escalate to manager if needed</li>
+                                <li>Citizens Advice or small claims court</li>
+                            </ol>
+
+                            <div class="info-box warning">
+                                <div class="info-box-title">⚠️ Keep Your Receipts!</div>
+                                <div class="info-box-content">
+                                    Take photos of receipts or save email confirmations. Bank statements can also prove purchase. Create a "Receipts" folder in your email!
+                                </div>
+                            </div>
+
+                            <div class="links-section">
+                                <h4>🔗 Helpful Resources</h4>
+                                <div class="link-buttons">
+                                    <a href="https://www.moneysavingexpert.com/shopping/consumer-rights-refunds-exchange/" target="_blank" class="link-btn">💰 MSE Guide</a>
+                                    <a href="https://www.which.co.uk/consumer-rights" target="_blank" class="link-btn">✅ Which?</a>
+                                    <a href="https://www.citizensadvice.org.uk/consumer/" target="_blank" class="link-btn">ℹ️ Citizens Advice</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EMPLOYMENT RIGHTS -->
+                <div class="topic-card">
+                    <div class="topic-header" onclick="toggleTopic(this)">
+                        <div class="topic-title">
+                            <span class="topic-emoji">💼</span>
+                            <div class="topic-text">
+                                <h3>Work Rights</h3>
+                                <p>Wages, breaks & holidays</p>
+                            </div>
+                        </div>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="topic-body">
+                        <div class="topic-content">
+                            <h4>💷 National Minimum Wage (2024/25)</h4>
+                            <table class="simple-table">
+                                <thead>
+                                    <tr>
+                                        <th>Age</th>
+                                        <th>Hourly Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>21+ (Living Wage)</td>
+                                        <td><strong>£11.44</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>18-20 years</td>
+                                        <td><strong>£8.60</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Under 18</td>
+                                        <td><strong>£6.40</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Apprentice</td>
+                                        <td><strong>£6.40</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="info-box danger">
+                                <div class="info-box-title">🚨 Being Underpaid?</div>
+                                <div class="info-box-content">
+                                    That's ILLEGAL. Report to HMRC immediately. Employers can be fined up to £20,000 per worker!
+                                </div>
+                            </div>
+
+                            <p style="text-align: center; color: #666; margin: 20px 0 15px 0; font-style: italic;">👇 Tap each card for details</p>
+                            
+                            <div class="stat-cards-grid">
+                                <div class="stat-card" onclick="toggleStatCard(this, event)">
+                                    <div class="stat-number">20 min</div>
+                                    <div class="stat-label">Break for 6+ hours</div>
+                                    <div class="stat-hint">Tap for info ▼</div>
+                                    <div class="stat-details">
+                                        <strong>What is this?</strong> If you work more than 6 hours, you're entitled to at least a 20-minute uninterrupted break.<br><br>
+                                        <strong>Why it matters:</strong> Your employer can't ask you to work through breaks. If they do, that break doesn't count and they must give you another one!
+                                    </div>
+                                </div>
+                                <div class="stat-card" onclick="toggleStatCard(this, event)">
+                                    <div class="stat-number">5.6 weeks</div>
+                                    <div class="stat-label">Paid holiday</div>
+                                    <div class="stat-hint">Tap for info ▼</div>
+                                    <div class="stat-details">
+                                        <strong>What is this?</strong> Legal minimum paid holiday per year (28 days for full-time workers, including bank holidays).<br><br>
+                                        <strong>Part-time?</strong> Calculate: Hours per week × 5.6 = Your annual holiday hours. You MUST be paid for unused holiday when leaving a job!
+                                    </div>
+                                </div>
+                                <div class="stat-card" onclick="toggleStatCard(this, event)">
+                                    <div class="stat-number">11 hours</div>
+                                    <div class="stat-label">Rest between shifts</div>
+                                    <div class="stat-hint">Tap for info ▼</div>
+                                    <div class="stat-details">
+                                        <strong>What is this?</strong> You're entitled to at least 11 consecutive hours of rest between working days.<br><br>
+                                        <strong>Also:</strong> You must get at least 24 hours off per week (or 48 hours per fortnight). This protects you from being overworked!
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h4>🚫 Your Employer CANNOT:</h4>
+                            <ul>
+                                <li>Pay below minimum wage</li>
+                                <li>Not pay for mandatory training</li>
+                                <li>Make illegal wage deductions</li>
+                                <li>Discriminate (age, sex, race, etc.)</li>
+                                <li>Deny you breaks</li>
+                                <li>Use tips to top up to minimum wage</li>
+                            </ul>
+
+                            <div class="info-box tip">
+                                <div class="info-box-title">💡 Tips Belong to YOU!</div>
+                                <div class="info-box-content">
+                                    Employers can't use tips to make up your wages to minimum wage level. Tips are EXTRA on top of your proper wage!
+                                </div>
+                            </div>
+
+                            <div class="links-section">
+                                <h4>🔗 Helpful Resources</h4>
+                                <div class="link-buttons">
+                                    <a href="https://www.acas.org.uk/" target="_blank" class="link-btn">📞 ACAS (0300 123 1100)</a>
+                                    <a href="https://www.gov.uk/national-minimum-wage-rates" target="_blank" class="link-btn">💷 Wage Rates</a>
+                                    <a href="https://www.gov.uk/holiday-entitlement-rights" target="_blank" class="link-btn">🏖️ Holiday Calculator</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DRIVING -->
+                <div class="topic-card">
+                    <div class="topic-header" onclick="toggleTopic(this)">
+                        <div class="topic-title">
+                            <span class="topic-emoji">🚗</span>
+                            <div class="topic-text">
+                                <h3>Student Driving</h3>
+                                <p>Insurance, parking & fines</p>
+                            </div>
+                        </div>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="topic-body">
+                        <div class="topic-content">
+                            <div class="info-box danger">
+                                <div class="info-box-title">🚨 Never Drive Uninsured!</div>
+                                <div class="info-box-content">
+                                    Penalties: 6 points + unlimited fine + car seized. "Just 5 minutes" doesn't matter - if you're on a public road, you MUST have insurance!
+                                </div>
+                            </div>
+
+                            <h4>💰 Reduce Insurance Costs</h4>
+                            <ul>
+                                <li><strong>Black box insurance</strong> - Rewards safe driving</li>
+                                <li><strong>Pass Plus course</strong> - Gets insurer discounts</li>
+                                <li><strong>Named driver</strong> - Add experienced parent (if they genuinely drive it sometimes)</li>
+                                <li><strong>Pay annually</strong> - Avoid monthly interest</li>
+                                <li><strong>Lower mileage</strong> - Cheaper if rarely used</li>
+                                <li><strong>Comparison sites</strong> - Compare the Market, MoneySuperMarket, Confused</li>
+                            </ul>
+
+                            <div class="info-box warning">
+                                <div class="info-box-title">⚠️ NEVER Lie on Insurance</div>
+                                <div class="info-box-content">
+                                    "Fronting" (claiming parent is main driver when you are) invalidates insurance. If you crash, you won't be covered and could face prosecution!
+                                </div>
+                            </div>
+
+                            <p style="text-align: center; color: #666; margin: 20px 0 15px 0; font-style: italic;">👇 Tap each card for details</p>
+
+                            <div class="stat-cards-grid">
+                                <div class="stat-card" onclick="toggleStatCard(this, event)">
+                                    <div class="stat-number">£200 + 6pts</div>
+                                    <div class="stat-label">Phone while driving</div>
+                                    <div class="stat-hint">Tap for info ▼</div>
+                                    <div class="stat-details">
+                                        <strong>Penalty:</strong> £200 fine and 6 points on your licence.<br><br>
+                                        <strong>New drivers beware:</strong> 6+ points in your first 2 years = licence REVOKED. You'd have to retake both tests!
+                                    </div>
+                                </div>
+                                <div class="stat-card" onclick="toggleStatCard(this, event)">
+                                    <div class="stat-number">12mo ban</div>
+                                    <div class="stat-label">Drink driving (min.)</div>
+                                    <div class="stat-hint">Tap for info ▼</div>
+                                    <div class="stat-details">
+                                        <strong>Penalty:</strong> Minimum 12-month ban, up to £5,000 fine, criminal record, possible prison time.<br><br>
+                                        <strong>Long-term impact:</strong> Insurance will be massively expensive for at least 5 years. Just don't do it!
+                                    </div>
+                                </div>
+                                <div class="stat-card" onclick="toggleStatCard(this, event)">
+                                    <div class="stat-number">6+ points</div>
+                                    <div class="stat-label">New driver ban</div>
+                                    <div class="stat-hint">Tap for info ▼</div>
+                                    <div class="stat-details">
+                                        <strong>What is this?</strong> If you get 6 or more points within 2 years of passing your test, your licence is automatically revoked.<br><br>
+                                        <strong>Starting over:</strong> You'd have to apply for a provisional licence and retake both the theory and practical driving tests!
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="info-box info">
+                                <div class="info-box-title">🅿️ University Parking</div>
+                                <div class="info-box-content">
+                                    Most unis require permits (£100-£300/year) and many ban first-years from having cars on campus. Check your specific uni's policy!
+                                </div>
+                            </div>
+
+                            <h4>📋 Essential Checks</h4>
+                            <ul>
+                                <li><strong>MOT:</strong> Cars 3+ years old (~£35-£55/year) - check at gov.uk/check-mot-status</li>
+                                <li><strong>Road Tax:</strong> Must pay or declare SORN if off-road</li>
+                                <li><strong>Breakdown Cover:</strong> Highly recommended (£7-£15/month) - AA, RAC, or Green Flag</li>
+                            </ul>
+
+                            <div class="links-section">
+                                <h4>🔗 Helpful Resources</h4>
+                                <div class="link-buttons">
+                                    <a href="https://www.moneysavingexpert.com/insurance/cheap-car-insurance/" target="_blank" class="link-btn">💰 MSE Insurance</a>
+                                    <a href="https://www.gov.uk/check-mot-status" target="_blank" class="link-btn">🔧 Check MOT</a>
+                                    <a href="https://www.comparethemarket.com/car-insurance/" target="_blank" class="link-btn">📊 Compare Prices</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STUDENT MONEY -->
+                <div class="topic-card">
+                    <div class="topic-header" onclick="toggleTopic(this)">
+                        <div class="topic-title">
+                            <span class="topic-emoji">💰</span>
+                            <div class="topic-text">
+                                <h3>Student Money</h3>
+                                <p>Loans, grants & budgeting</p>
+                            </div>
+                        </div>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="topic-body">
+                        <div class="topic-content">
+                            <div class="info-box tip">
+                                <div class="info-box-title">✅ Student Loans Aren't Scary</div>
+                                <div class="info-box-content">
+                                    You only repay when earning over <span class="key-number">£27,295/year</span>. You pay 9% of anything ABOVE that. Earning £30k? That's just £20/month! Loan wiped after 40 years (Plan 5).
+                                </div>
+                            </div>
+
+                            <p style="text-align: center; color: #666; margin: 20px 0 15px 0; font-style: italic;">👇 Tap each card for details</p>
+
+                            <div class="stat-cards-grid">
+                                <div class="stat-card" onclick="toggleStatCard(this, event)">
+                                    <div class="stat-number">£9,250</div>
+                                    <div class="stat-label">Max tuition loan/year</div>
+                                    <div class="stat-hint">Tap for info ▼</div>
+                                    <div class="stat-details">
+                                        <strong>What is this?</strong> Maximum tuition fee loan per year for most courses. This money goes directly to your university - you never see it.<br><br>
+                                        <strong>Remember:</strong> You don't pay this back until you're earning over £27,295/year, and only at 9% of income above that threshold.
+                                    </div>
+                                </div>
+                                <div class="stat-card" onclick="toggleStatCard(this, event)">
+                                    <div class="stat-number">40 years</div>
+                                    <div class="stat-label">Loan wiped (Plan 5)</div>
+                                    <div class="stat-hint">Tap for info ▼</div>
+                                    <div class="stat-details">
+                                        <strong>What is this?</strong> For Plan 5 (students starting 2023+), any remaining loan balance is wiped 40 years after graduation.<br><br>
+                                        <strong>Plan 2 (2012-2023):</strong> Wiped after 30 years. Most people never pay back the full amount!
+                                    </div>
+                                </div>
+                                <div class="stat-card" onclick="toggleStatCard(this, event)">
+                                    <div class="stat-number">9%</div>
+                                    <div class="stat-label">Repayment rate</div>
+                                    <div class="stat-hint">Tap for info ▼</div>
+                                    <div class="stat-details">
+                                        <strong>What is this?</strong> You repay 9% of everything you earn ABOVE £27,295.<br><br>
+                                        <strong>Example:</strong> Earning £30,000? That's £2,705 above threshold. 9% of £2,705 = £243/year (£20/month). Not scary at all!
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h4>🎁 Free Money (Don't Pay Back!)</h4>
+                            <ul>
+                                <li><strong>Uni bursaries</strong> - £1,000-£3,000/year for low-income students</li>
+                                <li><strong>NHS bursaries</strong> - For healthcare students</li>
+                                <li><strong>Disability support</strong> - Up to £25,000/year</li>
+                                <li><strong>Hardship funds</strong> - Apply mid-year if struggling</li>
+                                <li><strong>Care leavers</strong> - Extra support available</li>
+                            </ul>
+
+                            <div class="info-box warning">
+                                <div class="info-box-title">⚠️ Student Overdrafts</div>
+                                <div class="info-box-content">
+                                    0% overdraft (£1-3k) is great WHILE studying. But after graduation it becomes 40%+ interest. Plan to pay it off before leaving uni!
+                                </div>
+                            </div>
+
+                            <h4>💡 Money-Saving Hacks</h4>
+                            <ul>
+                                <li><strong>UNiDAYS/Student Beans/Totum</strong> - Discounts everywhere</li>
+                                <li><strong>16-25 Railcard</strong> - 1/3 off trains (£30/year, saves £££)</li>
+                                <li><strong>Amazon Prime Student</strong> - 6 months free, then £4.49/month</li>
+                                <li><strong>Shop own-brand</strong> - Aldi/Lidl = huge savings</li>
+                                <li><strong>Meal prep Sundays</strong> - Cheaper than meal deals</li>
+                                <li><strong>Library books</strong> - Don't buy expensive textbooks!</li>
+                            </ul>
+
+                            <div class="info-box info">
+                                <div class="info-box-title">📱 Council Tax Exemption</div>
+                                <div class="info-box-content">
+                                    Full-time students DON'T pay council tax! Get a certificate from your uni student services and send it to your local council ASAP when you move in.
+                                </div>
+                            </div>
+
+                            <div class="info-box danger">
+                                <div class="info-box-title">🚨 Money Traps to Avoid</div>
+                                <div class="info-box-content">
+                                    NEVER use payday loans (1,500%+ interest!). Be careful with Klarna/Clearpay - makes overspending too easy. Cancel unused subscriptions!
+                                </div>
+                            </div>
+
+                            <div class="links-section">
+                                <h4>🔗 Helpful Resources</h4>
+                                <div class="link-buttons">
+                                    <a href="https://www.moneysavingexpert.com/students/" target="_blank" class="link-btn">💰 MSE Student Money</a>
+                                    <a href="https://www.gov.uk/student-finance" target="_blank" class="link-btn">🎓 Gov.uk Finance</a>
+                                    <a href="https://www.studentbeans.com/" target="_blank" class="link-btn">🎟️ Student Beans</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer-section">
+                <h3>🌟 Essential Legal Resources</h3>
+                <p>Bookmark these - they're lifesavers when you need help!</p>
+                <div class="footer-grid">
+                    <a href="https://www.moneysavingexpert.com/" target="_blank" class="footer-link">💰 MoneySavingExpert</a>
+                    <a href="https://www.citizensadvice.org.uk/" target="_blank" class="footer-link">ℹ️ Citizens Advice</a>
+                    <a href="https://www.shelter.org.uk/" target="_blank" class="footer-link">🏠 Shelter</a>
+                    <a href="https://www.acas.org.uk/" target="_blank" class="footer-link">💼 ACAS</a>
+                    <a href="https://www.which.co.uk/" target="_blank" class="footer-link">✅ Which?</a>
+                    <a href="https://www.gov.uk/" target="_blank" class="footer-link">📋 Gov.uk</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allExpanded = false;
+
+        function toggleTopic(header) {
+            const body = header.nextElementSibling;
+            const icon = header.querySelector('.toggle-icon');
+            
+            if (body.classList.contains('expanded')) {
+                body.style.display = 'none';
+                body.classList.remove('expanded');
+                icon.classList.remove('rotated');
+            } else {
+                body.style.display = 'block';
+                body.classList.add('expanded');
+                icon.classList.add('rotated');
+            }
+        }
+
+        function toggleStatCard(card, event) {
+            event.stopPropagation();
+            const details = card.querySelector('.stat-details');
+            
+            // Close all other stat cards first
+            const allDetails = document.querySelectorAll('.stat-details');
+            const allCards = document.querySelectorAll('.stat-card');
+            allDetails.forEach(d => {
+                if (d !== details) {
+                    d.classList.remove('visible');
+                }
+            });
+            allCards.forEach(c => {
+                if (c !== card) {
+                    c.classList.remove('active');
+                }
+            });
+            
+            // Toggle this card
+            details.classList.toggle('visible');
+            card.classList.toggle('active');
+        }
+
+        function toggleAll() {
+            const allBodies = document.querySelectorAll('.topic-body');
+            const allIcons = document.querySelectorAll('.toggle-icon');
+            const btnText = document.getElementById('toggleText');
+            
+            allExpanded = !allExpanded;
+            
+            allBodies.forEach(body => {
+                if (allExpanded) {
+                    body.style.display = 'block';
+                    body.classList.add('expanded');
+                } else {
+                    body.style.display = 'none';
+                    body.classList.remove('expanded');
+                }
+            });
+            
+            allIcons.forEach(icon => {
+                if (allExpanded) {
+                    icon.classList.add('rotated');
+                } else {
+                    icon.classList.remove('rotated');
+                }
+            });
+            
+            btnText.textContent = allExpanded ? '📕 Collapse All' : '📖 Expand All';
+        }
+    </script>
+</body>
+</html>
