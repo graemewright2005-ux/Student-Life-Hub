@@ -1,0 +1,1896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DIY & Essentials Hub - Student Life</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: #333;
+        }
+
+        .tab-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* DIY Hub Styles */
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: #666;
+            margin-right: 5px;
+            align-self: center;
+        }
+
+        .filter-button {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            color: #333;
+        }
+
+        .filter-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        .diy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .diy-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .diy-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .diy-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .diy-card h3 {
+            color: #333;
+            font-size: 1.2em;
+            margin-bottom: 8px;
+            flex: 1;
+        }
+
+        .difficulty-badge {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: white;
+        }
+
+        .difficulty-easy {
+            background: #4caf50;
+        }
+
+        .difficulty-medium {
+            background: #ff9800;
+        }
+
+        .difficulty-hard {
+            background: #f44336;
+        }
+
+        .diy-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 12px;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .diy-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tools-needed {
+            margin: 12px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+
+        .tools-needed strong {
+            color: #667eea;
+        }
+
+        .diy-instructions {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .diy-card.expanded .diy-instructions {
+            max-height: 1000px;
+        }
+
+        .diy-instructions ol {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .diy-instructions li {
+            margin: 8px 0;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .expand-icon {
+            transition: transform 0.3s ease;
+            font-size: 1.2em;
+            color: #667eea;
+        }
+
+        .diy-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .tutorial-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .tutorial-button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Checklist Styles */
+        .checklist-progress {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .checklist-progress h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .overall-progress {
+            background: rgba(255, 255, 255, 0.3);
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .overall-progress-bar {
+            background: linear-gradient(90deg, #4caf50 0%, #8bc34a 100%);
+            height: 100%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .reset-button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .reset-button:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .category-section {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .category-header {
+            background: #f8f9fa;
+            padding: 18px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .category-header:hover {
+            background: #e9ecef;
+        }
+
+        .category-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .category-progress {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .progress-text {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .mini-progress {
+            width: 100px;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .mini-progress-bar {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .category-items {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .category-section.expanded .category-items {
+            max-height: 2000px;
+        }
+
+        .checklist-item {
+            padding: 12px 20px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .checklist-item:hover {
+            background: #f8f9fa;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+
+        .checklist-item label {
+            flex: 1;
+            cursor: pointer;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        .checklist-item.checked label {
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        /* Shop Finder Styles */
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .shop-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .shop-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .shop-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .shop-card h3 {
+            color: #333;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .shop-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .shop-button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .shop-button-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .shop-button-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .shop-button-secondary {
+            background: #f8f9fa;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .shop-button-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .postcode-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .postcode-input {
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            width: 200px;
+            margin: 0 10px;
+        }
+
+        .postcode-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .postcode-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .diy-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .shop-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab-button {
+                width: 100%;
+            }
+
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-group {
+                width: 100%;
+            }
+
+            .postcode-section {
+                padding: 15px;
+            }
+
+            .postcode-input {
+                width: 100%;
+                margin: 10px 0;
+            }
+
+            .postcode-button {
+                width: 100%;
+            }
+        }
+
+        /* Banner Notification */
+        .banner {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+            max-width: 300px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+
+        .banner.hiding {
+            animation: slideOut 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔨 DIY & Essentials Hub</h1>
+        <p>Fix it, build it, get it sorted - your student survival guide!</p>
+    </div>
+
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('diy-hub')">🔧 DIY & Repairs</button>
+            <button class="tab-button" onclick="switchTab('checklist')">📦 Uni Essentials</button>
+            <button class="tab-button" onclick="switchTab('shops')">🗺️ Find Shops</button>
+        </div>
+
+        <!-- DIY & Repairs Hub -->
+        <div id="diy-hub" class="tab-content active">
+            <div class="filters">
+                <div class="filter-group">
+                    <span class="filter-label">Difficulty:</span>
+                    <button class="filter-button active" onclick="filterDifficulty('all')">All</button>
+                    <button class="filter-button" onclick="filterDifficulty('easy')">Easy</button>
+                    <button class="filter-button" onclick="filterDifficulty('medium')">Medium</button>
+                    <button class="filter-button" onclick="filterDifficulty('hard')">Hard</button>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Category:</span>
+                    <button class="filter-button active" onclick="filterCategory('all')">All</button>
+                    <button class="filter-button" onclick="filterCategory('repairs')">Repairs</button>
+                    <button class="filter-button" onclick="filterCategory('maintenance')">Maintenance</button>
+                    <button class="filter-button" onclick="filterCategory('assembly')">Assembly</button>
+                    <button class="filter-button" onclick="filterCategory('general')">General</button>
+                </div>
+            </div>
+
+            <div class="diy-grid" id="diy-grid"></div>
+        </div>
+
+        <!-- Uni Essentials Checklist -->
+        <div id="checklist" class="tab-content">
+            <div class="checklist-progress">
+                <h3>Your Packing Progress</h3>
+                <p id="total-progress-text">0 out of 0 items packed</p>
+                <div class="overall-progress">
+                    <div class="overall-progress-bar" id="overall-progress-bar" style="width: 0%">0%</div>
+                </div>
+                <button class="reset-button" onclick="resetChecklist()">🔄 Reset All</button>
+            </div>
+
+            <div id="checklist-container"></div>
+        </div>
+
+        <!-- Find Nearest Shops -->
+        <div id="shops" class="tab-content">
+            <div class="postcode-section">
+                <h3>🎯 Enter Your Postcode for Better Results</h3>
+                <p style="margin: 10px 0; color: #666;">Optional: Get more accurate local results</p>
+                <input type="text" id="postcode-input" class="postcode-input" placeholder="e.g., M1 5GD">
+                <button class="postcode-button" onclick="savePostcode()">Save Location</button>
+            </div>
+
+            <div class="shop-grid" id="shop-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        // DIY Tasks Database
+        const diyTasks = [
+            {
+                name: "Fix a Leaky Tap",
+                difficulty: "medium",
+                category: "repairs",
+                time: "20 mins",
+                tools: "🔧 Wrench, 🪛 Screwdriver, 🧽 Cloth",
+                steps: [
+                    "Turn off the water supply under the sink",
+                    "Remove the tap handle (usually with a screwdriver)",
+                    "Unscrew and remove the old washer",
+                    "Pop in a new washer (grab one from any hardware shop)",
+                    "Reassemble everything and turn the water back on",
+                    "Test it out - no more drips! 💧"
+                ]
+            },
+            {
+                name: "Unblock a Drain",
+                difficulty: "easy",
+                category: "repairs",
+                time: "15 mins",
+                tools: "🪠 Plunger, 🧤 Gloves, 🧽 Cloth",
+                steps: [
+                    "Remove any visible gunk from the drain (wear gloves!)",
+                    "Fill the sink with a few inches of water",
+                    "Place plunger over the drain and pump vigorously",
+                    "If still blocked, try baking soda + vinegar (let it fizz for 30 mins)",
+                    "Flush with hot water",
+                    "Sorted! Keep hair out of drains to prevent this 🚿"
+                ]
+            },
+            {
+                name: "Replace a Light Bulb",
+                difficulty: "easy",
+                category: "general",
+                time: "5 mins",
+                tools: "💡 New bulb, 🪜 Stepladder (if needed)",
+                steps: [
+                    "Turn off the light switch (safety first!)",
+                    "Let the old bulb cool down if it was just on",
+                    "Twist the old bulb counter-clockwise to remove",
+                    "Screw in the new bulb clockwise until snug",
+                    "Turn on the switch and let there be light! ✨"
+                ]
+            },
+            {
+                name: "Fix a Squeaky Door",
+                difficulty: "easy",
+                category: "repairs",
+                time: "10 mins",
+                tools: "🛢️ WD-40 or Oil, 🧽 Cloth",
+                steps: [
+                    "Open the door and locate the squeaky hinge",
+                    "Spray WD-40 or drop some oil on the hinge pin",
+                    "Open and close the door a few times to work it in",
+                    "Wipe away excess oil with a cloth",
+                    "Enjoy your silent door - no more jump scares! 🚪"
+                ]
+            },
+            {
+                name: "Patch a Hole in the Wall",
+                difficulty: "medium",
+                category: "repairs",
+                time: "30 mins",
+                tools: "🪛 Putty knife, 🎨 Filler, 🖌️ Sandpaper, Paint",
+                steps: [
+                    "Clean around the hole and remove loose bits",
+                    "Apply filler with a putty knife, overfilling slightly",
+                    "Let it dry completely (check the packet - usually 2-4 hours)",
+                    "Sand it smooth until flush with the wall",
+                    "Paint over to match the wall color",
+                    "Good as new! Your deposit is safe 💰"
+                ]
+            },
+            {
+                name: "Reset a Tripped Circuit Breaker",
+                difficulty: "easy",
+                category: "repairs",
+                time: "5 mins",
+                tools: "🔦 Torch (maybe)",
+                steps: [
+                    "Locate your fuse box (usually in hallway or cupboard)",
+                    "Find the switch that's in the OFF position",
+                    "Switch it fully OFF first, then back to ON",
+                    "If it trips again immediately, unplug some appliances",
+                    "Call your landlord if it keeps tripping - might be a bigger issue ⚡"
+                ]
+            },
+            {
+                name: "Fix a Stuck Window",
+                difficulty: "medium",
+                category: "repairs",
+                time: "20 mins",
+                tools: "🔨 Hammer, 🪛 Screwdriver, 🛢️ Lubricant",
+                steps: [
+                    "Check if paint is sealing the window shut - run a knife along the seal",
+                    "Spray hinges with WD-40 if it's a casement window",
+                    "For sash windows, tap the frame gently with a hammer and wood block",
+                    "Lubricate the tracks and try opening again",
+                    "If still stuck, landlord time! Don't force it too much 🪟"
+                ]
+            },
+            {
+                name: "Repair a Loose Door Handle",
+                difficulty: "easy",
+                category: "repairs",
+                time: "10 mins",
+                tools: "🪛 Screwdriver",
+                steps: [
+                    "Locate the screws on the door handle (usually on the side)",
+                    "Tighten all screws with a screwdriver",
+                    "If screws keep loosening, try a tiny bit of thread-lock liquid",
+                    "Test the handle - should feel solid now",
+                    "Job done! 🚪"
+                ]
+            },
+            {
+                name: "Bleed a Radiator",
+                difficulty: "medium",
+                category: "maintenance",
+                time: "15 mins",
+                tools: "🔑 Radiator key, 🧽 Cloth, 🥣 Container",
+                steps: [
+                    "Turn your heating on so radiators are warm",
+                    "Feel for cold spots at the top (that's trapped air)",
+                    "Turn heating off and wait for radiators to cool",
+                    "Insert radiator key into valve and turn anti-clockwise slowly",
+                    "Hold a cloth underneath - hiss of air, then water means it's done",
+                    "Close the valve tight and done! Toasty radiators 🔥"
+                ]
+            },
+            {
+                name: "Clean Extractor Fan",
+                difficulty: "easy",
+                category: "maintenance",
+                time: "20 mins",
+                tools: "🪛 Screwdriver, 🧽 Cloth, 🧼 Soapy water",
+                steps: [
+                    "Turn off the fan at the switch",
+                    "Remove the cover (usually clips or screws)",
+                    "Wash the cover in warm soapy water",
+                    "Wipe the fan blades with a damp cloth",
+                    "Let everything dry and reassemble",
+                    "Your bathroom won't fog up as much now! 💨"
+                ]
+            },
+            {
+                name: "Descale a Shower Head",
+                difficulty: "easy",
+                category: "maintenance",
+                time: "2 hours (mostly waiting)",
+                tools: "🍋 White vinegar, 🛍️ Plastic bag, 🧵 Rubber band",
+                steps: [
+                    "Fill a plastic bag with white vinegar",
+                    "Pull the bag over the shower head so it's submerged",
+                    "Secure with a rubber band and leave for 1-2 hours",
+                    "Remove bag and turn on water to flush",
+                    "Use an old toothbrush to scrub away remaining limescale",
+                    "Enjoy that powerful water pressure again! 🚿"
+                ]
+            },
+            {
+                name: "Maintain Door Locks",
+                difficulty: "easy",
+                category: "maintenance",
+                time: "10 mins",
+                tools: "🛢️ Graphite powder or WD-40, 🔑 Key",
+                steps: [
+                    "Spray graphite powder or lubricant into the keyhole",
+                    "Insert your key and turn a few times to spread it",
+                    "Wipe away any excess",
+                    "Lock should turn smoothly now - no more wrestling! 🔑"
+                ]
+            },
+            {
+                name: "Assemble Flat-Pack Furniture",
+                difficulty: "medium",
+                category: "assembly",
+                time: "1-2 hours",
+                tools: "🪛 Screwdriver, 🔨 Hammer, 📋 Instructions",
+                steps: [
+                    "Clear a big space and lay out ALL the pieces",
+                    "Check you have all parts listed in instructions",
+                    "Read instructions fully before starting (seriously, do it!)",
+                    "Assemble step-by-step, don't skip ahead",
+                    "Don't fully tighten screws until the end",
+                    "High five yourself when done! You're basically a carpenter now 🪵"
+                ]
+            },
+            {
+                name: "Hang a Shelf",
+                difficulty: "medium",
+                category: "assembly",
+                time: "30 mins",
+                tools: "🔨 Drill, 📏 Level, ✏️ Pencil, 🪛 Wall plugs & screws",
+                steps: [
+                    "Hold shelf against wall and mark where brackets go",
+                    "Use a level to make sure marks are straight",
+                    "Drill holes and tap in wall plugs",
+                    "Screw brackets into wall plugs",
+                    "Place shelf on brackets and secure",
+                    "Load it up with your stuff! 📚"
+                ]
+            },
+            {
+                name: "Mount a TV on Wall",
+                difficulty: "hard",
+                category: "assembly",
+                time: "1 hour",
+                tools: "🔨 Drill, 📏 Stud finder, 🪛 Screws & wall plugs, 📏 Level",
+                steps: [
+                    "Use stud finder to locate wall studs (mount must go into studs!)",
+                    "Hold bracket against wall and mark drilling points",
+                    "Drill pilot holes and attach bracket to wall",
+                    "Get a mate to help lift the TV (seriously, don't do it alone)",
+                    "Hook TV onto bracket and secure according to instructions",
+                    "Check it's level and properly secure before letting go",
+                    "Netflix time! 📺"
+                ]
+            },
+            {
+                name: "Hang Pictures",
+                difficulty: "easy",
+                category: "assembly",
+                time: "15 mins",
+                tools: "🔨 Hammer, 📌 Picture hooks, 📏 Level, ✏️ Pencil",
+                steps: [
+                    "Hold picture where you want it and mark the top center",
+                    "Measure down to where the hook needs to go",
+                    "Hammer in the picture hook at an angle",
+                    "Hang your picture and adjust until level",
+                    "Step back and admire! 🖼️"
+                ]
+            },
+            {
+                name: "Install Curtain Rail",
+                difficulty: "medium",
+                category: "assembly",
+                time: "45 mins",
+                tools: "🔨 Drill, 📏 Tape measure, 🪛 Screwdriver, 📏 Level",
+                steps: [
+                    "Measure window width and add 20cm on each side for brackets",
+                    "Mark bracket positions with pencil, using level to keep straight",
+                    "Drill holes and insert wall plugs",
+                    "Screw brackets into place",
+                    "Slot rail into brackets and attach curtains",
+                    "Say goodbye to early morning sun! ☀️"
+                ]
+            },
+            {
+                name: "Change Smoke Alarm Batteries",
+                difficulty: "easy",
+                category: "general",
+                time: "5 mins",
+                tools: "🔋 9V battery, 🪜 Stepladder",
+                steps: [
+                    "Twist the alarm cover off (usually counter-clockwise)",
+                    "Remove old battery",
+                    "Pop in a fresh 9V battery",
+                    "Test the alarm using the test button",
+                    "Replace cover and you're sorted - no more 3am beeping! 🚨"
+                ]
+            },
+            {
+                name: "Fix Wobbly Furniture",
+                difficulty: "easy",
+                category: "general",
+                time: "10 mins",
+                tools: "🪛 Screwdriver, 🔧 Wrench, 📄 Cardboard (maybe)",
+                steps: [
+                    "Identify which leg is causing the wobble",
+                    "Tighten any loose screws or bolts",
+                    "If legs are uneven, fold cardboard to even them out",
+                    "Stick cardboard under short leg with tape",
+                    "Test - should be stable now! 🪑"
+                ]
+            },
+            {
+                name: "Organize Cables",
+                difficulty: "easy",
+                category: "general",
+                time: "20 mins",
+                tools: "🎀 Cable ties, 📎 Clips, 🏷️ Labels",
+                steps: [
+                    "Unplug everything (photo the setup first!)",
+                    "Bundle cables together with cable ties",
+                    "Use cable clips to route them neatly",
+                    "Label each cable if you have loads",
+                    "Plug everything back in",
+                    "Enjoy your tangle-free life! 🎉"
+                ]
+            },
+            {
+                name: "Weatherproof Windows",
+                difficulty: "medium",
+                category: "general",
+                time: "30 mins",
+                tools: "🪟 Weatherstrip tape, ✂️ Scissors, 🧽 Cloth",
+                steps: [
+                    "Clean window frame with cloth to remove dirt",
+                    "Measure and cut weatherstrip to fit",
+                    "Peel backing and stick around window frame",
+                    "Press firmly to ensure good seal",
+                    "Feel the difference - less drafts, lower heating bills! 💨"
+                ]
+            },
+            {
+                name: "Fix a Running Toilet",
+                difficulty: "medium",
+                category: "repairs",
+                time: "25 mins",
+                tools: "🪛 Screwdriver, 🔧 Pliers",
+                steps: [
+                    "Remove toilet tank lid (careful, it's heavy!)",
+                    "Check if the flapper is sealing properly",
+                    "If worn, buy a replacement flapper (£5 from hardware shop)",
+                    "Turn off water, drain tank, and swap old flapper for new",
+                    "Turn water back on and test",
+                    "Silence is golden (and saves water!) 🚽"
+                ]
+            },
+            {
+                name: "Replace Cabinet Handles",
+                difficulty: "easy",
+                category: "general",
+                time: "15 mins",
+                tools: "🪛 Screwdriver, 📏 Tape measure",
+                steps: [
+                    "Measure the distance between screws on old handles",
+                    "Buy new handles with same measurements",
+                    "Unscrew old handles from inside the cabinet",
+                    "Screw new handles in place",
+                    "Instantly makes your place look fancier! ✨"
+                ]
+            },
+            {
+                name: "Fix Squeaky Floorboards",
+                difficulty: "medium",
+                category: "repairs",
+                time: "20 mins",
+                tools: "🔨 Hammer, 🪛 Screws, 💨 Talcum powder",
+                steps: [
+                    "Locate exactly where the squeak is coming from",
+                    "Sprinkle talcum powder into the cracks (acts as lubricant)",
+                    "If that doesn't work, screw down the loose board",
+                    "Cover screw heads with wood filler if visible",
+                    "No more sneaking fails at 2am! 🤫"
+                ]
+            },
+            {
+                name: "Clean Washing Machine",
+                difficulty: "easy",
+                category: "maintenance",
+                time: "2 hours (mostly waiting)",
+                tools: "🍋 White vinegar, 🧂 Baking soda",
+                steps: [
+                    "Mix 2 cups white vinegar with 1/4 cup baking soda",
+                    "Pour into detergent drawer",
+                    "Run hottest, longest cycle with empty machine",
+                    "Wipe door seal and detergent drawer with cloth",
+                    "Leave door open to air dry",
+                    "Your clothes will smell fresher! 👕"
+                ]
+            },
+            {
+                name: "Replace Shower Curtain Rail",
+                difficulty: "easy",
+                category: "assembly",
+                time: "20 mins",
+                tools: "🔨 Drill, 🪛 Screwdriver, 📏 Tape measure",
+                steps: [
+                    "Measure your shower space width",
+                    "Buy adjustable curtain rail slightly longer",
+                    "Remove old rail by unscrewing brackets",
+                    "Install new brackets at same height (use old holes if possible)",
+                    "Extend rail to fit and secure in brackets",
+                    "Hang curtain and you're done! 🚿"
+                ]
+            },
+            {
+                name: "Fix a Sticky Drawer",
+                difficulty: "easy",
+                category: "repairs",
+                time: "15 mins",
+                tools: "🕯️ Candle or soap bar, 🧽 Cloth",
+                steps: [
+                    "Pull drawer fully out and check runners",
+                    "Rub candle or soap on the runners/slides",
+                    "Also rub on the drawer bottom edges",
+                    "Slide drawer in and out a few times",
+                    "Should glide smoothly now! Satisfying AF 😌"
+                ]
+            },
+            {
+                name: "Replace Vacuum Cleaner Bag/Filter",
+                difficulty: "easy",
+                category: "maintenance",
+                time: "10 mins",
+                tools: "🆕 Replacement bag/filter",
+                steps: [
+                    "Unplug the vacuum (safety first!)",
+                    "Open the dust compartment",
+                    "Remove full bag or dirty filter",
+                    "Insert new bag/filter according to manual",
+                    "Close compartment and test",
+                    "Back to full suction power! 💨"
+                ]
+            },
+            {
+                name: "Install a Key Hook Rack",
+                difficulty: "easy",
+                category: "assembly",
+                time: "15 mins",
+                tools: "🔨 Drill, 🪛 Screws, 📏 Level",
+                steps: [
+                    "Choose a spot near your door (about shoulder height)",
+                    "Mark drilling points with pencil",
+                    "Drill holes and insert wall plugs",
+                    "Screw rack to wall, checking it's level",
+                    "Never lose your keys again! 🔑"
+                ]
+            },
+            {
+                name: "Replace a Toilet Seat",
+                difficulty: "easy",
+                category: "general",
+                time: "20 mins",
+                tools: "🪛 Screwdriver, 🔧 Wrench, 🆕 New toilet seat",
+                steps: [
+                    "Locate bolts under back of current seat",
+                    "Unscrew them (might be tight - use wrench if needed)",
+                    "Remove old seat",
+                    "Line up new seat and insert bolts",
+                    "Tighten securely but don't overtighten",
+                    "Fresh throne! 🚽✨"
+                ]
+            },
+            {
+                name: "Fix Loose Carpet/Rug Edges",
+                difficulty: "easy",
+                category: "general",
+                time: "10 mins",
+                tools: "📏 Double-sided carpet tape",
+                steps: [
+                    "Clean floor underneath the lifting edge",
+                    "Apply carpet tape along the edge",
+                    "Press carpet down firmly",
+                    "Walk over it a few times to seal",
+                    "No more tripping hazard! 🏃"
+                ]
+            },
+            {
+                name: "Unclog a Vacuum Hose",
+                difficulty: "easy",
+                category: "maintenance",
+                time: "15 mins",
+                tools: "🧹 Broom handle, 🧽 Cloth",
+                steps: [
+                    "Disconnect hose from vacuum",
+                    "Look through it to spot the blockage",
+                    "Push broom handle through to dislodge clog",
+                    "Run water through if washable (check manual)",
+                    "Dry thoroughly before reattaching",
+                    "Vacuum power restored! 💪"
+                ]
+            },
+            {
+                name: "Install Draft Excluders",
+                difficulty: "easy",
+                category: "general",
+                time: "10 mins",
+                tools: "✂️ Scissors, 📏 Tape measure, 🆕 Draft excluder",
+                steps: [
+                    "Measure width of door or window",
+                    "Cut draft excluder to size if needed",
+                    "Peel adhesive backing and stick to door/window",
+                    "Press firmly for good seal",
+                    "Keep that cold air out! ❄️"
+                ]
+            },
+            {
+                name: "Replace a Doorstop",
+                difficulty: "easy",
+                category: "general",
+                time: "10 mins",
+                tools: "🪛 Screwdriver, 🆕 New doorstop",
+                steps: [
+                    "Unscrew old doorstop from wall or floor",
+                    "Check which type you need (wall-mounted or floor)",
+                    "Screw new doorstop in same position",
+                    "Test door opens fully without hitting anything",
+                    "No more door-handle-sized holes in the wall! 🚪"
+                ]
+            },
+            {
+                name: "Fix a Jammed Bin Lid",
+                difficulty: "easy",
+                category: "repairs",
+                time: "10 mins",
+                tools: "🛢️ WD-40, 🧽 Cloth",
+                steps: [
+                    "Spray hinges with WD-40",
+                    "Work the lid up and down to distribute",
+                    "Clean any built-up gunk with cloth",
+                    "Wipe excess lubricant",
+                    "Bin opens like butter now! 🗑️"
+                ]
+            },
+            {
+                name: "Install Shelf Liner",
+                difficulty: "easy",
+                category: "general",
+                time: "20 mins",
+                tools: "✂️ Scissors, 📏 Ruler, 🆕 Shelf liner",
+                steps: [
+                    "Measure shelf dimensions",
+                    "Cut liner to fit (better slightly smaller than too big)",
+                    "Clean shelf surface",
+                    "Lay liner in place",
+                    "Protects shelves and looks neat! 📚"
+                ]
+            },
+            {
+                name: "Tighten Loose Toilet Handle",
+                difficulty: "easy",
+                category: "repairs",
+                time: "5 mins",
+                tools: "🔧 Wrench",
+                steps: [
+                    "Remove toilet tank lid",
+                    "Locate nut inside tank connected to handle",
+                    "Tighten nut by turning clockwise (note: might be reverse-threaded!)",
+                    "Test flush",
+                    "Handle should feel solid again 🚽"
+                ]
+            },
+            {
+                name: "Replace Fridge Light Bulb",
+                difficulty: "easy",
+                category: "general",
+                time: "10 mins",
+                tools: "💡 Replacement bulb",
+                steps: [
+                    "Unplug fridge or turn off circuit",
+                    "Remove light cover (usually clips or screws)",
+                    "Unscrew old bulb",
+                    "Screw in new bulb (make sure it's appliance-rated)",
+                    "Replace cover and turn power back on",
+                    "Let there be light in the fridge! 🧊"
+                ]
+            },
+            {
+                name: "Fix Loose Oven/Stove Knob",
+                difficulty: "easy",
+                category: "repairs",
+                time: "10 mins",
+                tools: "🪛 Screwdriver",
+                steps: [
+                    "Pull knob straight off (they usually just pull off)",
+                    "Check if there's a screw behind it that needs tightening",
+                    "If no screw, check the metal shaft isn't worn",
+                    "Push knob back firmly onto shaft",
+                    "If it keeps coming loose, buy replacement knobs online 🍳"
+                ]
+            },
+            {
+                name: "Seal Gap Around Bath/Sink",
+                difficulty: "medium",
+                category: "repairs",
+                time: "30 mins",
+                tools: "🧴 Silicone sealant, 🧽 Cloth, 💳 Smoothing tool",
+                steps: [
+                    "Remove old sealant with a scraper",
+                    "Clean area with rubbing alcohol and dry thoroughly",
+                    "Apply thin, steady bead of new silicone",
+                    "Smooth with wet finger or smoothing tool",
+                    "Let cure for 24 hours before using",
+                    "Waterproof seal achieved! 💦"
+                ]
+            },
+            {
+                name: "Replace Oven Light Bulb",
+                difficulty: "medium",
+                category: "general",
+                time: "20 mins",
+                tools: "🧤 Oven mitt, 💡 Heat-resistant bulb, 🪛 Screwdriver",
+                steps: [
+                    "Turn off oven and let it cool completely",
+                    "Remove glass cover (might need to unscrew)",
+                    "Unscrew old bulb with cloth/glove",
+                    "Screw in new OVEN-SAFE bulb (regular bulbs will explode!)",
+                    "Replace cover and test",
+                    "See your food cooking clearly! 👀"
+                ]
+            },
+            {
+                name: "Fix Sliding Closet Door",
+                difficulty: "medium",
+                category: "repairs",
+                time: "30 mins",
+                tools: "🪛 Screwdriver, 🛢️ Lubricant, 📏 Level",
+                steps: [
+                    "Lift door off track to inspect wheels",
+                    "Clean track with cloth - remove any gunk",
+                    "Spray wheels and track with lubricant",
+                    "Rehang door and adjust height screws if needed",
+                    "Test - should slide smoothly now",
+                    "No more fighting with your wardrobe! 👔"
+                ]
+            },
+            {
+                name: "Install Bathroom Mirror",
+                difficulty: "medium",
+                category: "assembly",
+                time: "30 mins",
+                tools: "🔨 Drill, 🪛 Screws, 📏 Level, ✏️ Pencil",
+                steps: [
+                    "Hold mirror where you want it and mark top corners",
+                    "Use level to ensure marks are straight",
+                    "Drill holes and insert wall plugs",
+                    "Get someone to help hold the mirror while you screw brackets",
+                    "Double-check it's secure - mirrors are heavy!",
+                    "Admire yourself! 🪞"
+                ]
+            },
+            {
+                name: "Replace Shower Head",
+                difficulty: "easy",
+                category: "general",
+                time: "15 mins",
+                tools: "🔧 Adjustable wrench, 🧽 Cloth, 🆕 New shower head",
+                steps: [
+                    "Turn off water (or just work carefully)",
+                    "Unscrew old shower head counter-clockwise",
+                    "Clean threads on pipe with cloth",
+                    "Wrap threads with plumber's tape if you have it",
+                    "Screw new head on hand-tight, then snug with wrench",
+                    "Test for leaks - enjoy the upgrade! 🚿"
+                ]
+            },
+            {
+                name: "Fix a Stiff Lock",
+                difficulty: "easy",
+                category: "maintenance",
+                time: "10 mins",
+                tools: "💨 Graphite powder or dry lubricant, 🔑 Key",
+                steps: [
+                    "Spray graphite powder into the keyhole",
+                    "Insert key and turn several times",
+                    "Don't use WD-40 - it attracts dust!",
+                    "Wipe away excess",
+                    "Lock should turn like butter now 🔐"
+                ]
+            },
+            {
+                name: "Install Floating Shelf",
+                difficulty: "hard",
+                category: "assembly",
+                time: "45 mins",
+                tools: "🔨 Drill, 📏 Stud finder, 🪛 Screwdriver, 📏 Level",
+                steps: [
+                    "Use stud finder to locate wall studs (MUST hit studs!)",
+                    "Mark where bracket will go",
+                    "Drill holes and screw bracket firmly into studs",
+                    "Slide shelf onto bracket",
+                    "Check level and adjust if needed",
+                    "Load it up - these can hold loads! 💪"
+                ]
+            },
+            {
+                name: "Clean Dishwasher Filter",
+                difficulty: "easy",
+                category: "maintenance",
+                time: "15 mins",
+                tools: "🧽 Brush, 🧼 Dish soap",
+                steps: [
+                    "Remove bottom rack",
+                    "Twist and pull out the filter (usually at the bottom)",
+                    "Rinse under hot water and scrub with brush",
+                    "Wash with dish soap",
+                    "Replace and twist to lock",
+                    "Your dishes will be actually clean now! 🍽️"
+                ]
+            },
+            {
+                name: "Replace Cabinet Door Hinges",
+                difficulty: "medium",
+                category: "repairs",
+                time: "30 mins",
+                tools: "🪛 Screwdriver, 🆕 New hinges",
+                steps: [
+                    "Open door and unscrew old hinges",
+                    "Check if screw holes are stripped",
+                    "If stripped, use matchsticks + wood glue to fill holes",
+                    "Screw new hinges in place",
+                    "Adjust door alignment if needed",
+                    "Doors close properly again! 🚪"
+                ]
+            }
+        ];
+
+        // Checklist Categories
+        const checklistData = {
+            bedroom: {
+                icon: "🛏️",
+                name: "Bedroom Essentials",
+                items: [
+                    "Bedsheets (at least 2 sets)",
+                    "Duvet & duvet cover",
+                    "Pillows (2-3)",
+                    "Pillow cases",
+                    "Mattress protector",
+                    "Clothes hangers (10-15)",
+                    "Laundry basket",
+                    "Desk lamp",
+                    "Alarm clock",
+                    "Mirror",
+                    "Storage boxes/drawers",
+                    "Coat hooks"
+                ]
+            },
+            kitchen: {
+                icon: "🍳",
+                name: "Kitchen Essentials",
+                items: [
+                    "Plates (4-6)",
+                    "Bowls (4-6)",
+                    "Cutlery set",
+                    "Glasses (4-6)",
+                    "Mugs (4-6)",
+                    "Pots & pans (2-3 sizes)",
+                    "Cooking utensils (spatula, wooden spoon, etc.)",
+                    "Chopping board",
+                    "Sharp knife",
+                    "Can opener",
+                    "Kettle",
+                    "Toaster",
+                    "Mixing bowls",
+                    "Measuring cups",
+                    "Baking tray"
+                ]
+            },
+            bathroom: {
+                icon: "🚿",
+                name: "Bathroom Essentials",
+                items: [
+                    "Towels (2-3)",
+                    "Bath mat",
+                    "Shower caddy",
+                    "Toiletries (shampoo, soap, toothpaste, etc.)",
+                    "Toilet brush",
+                    "Toilet roll holder",
+                    "First aid kit",
+                    "Bathroom bin",
+                    "Hair dryer",
+                    "Shower curtain (if needed)"
+                ]
+            },
+            study: {
+                icon: "📚",
+                name: "Study Essentials",
+                items: [
+                    "Laptop/tablet",
+                    "Phone charger",
+                    "Notebooks (3-5)",
+                    "Pens & pencils",
+                    "Highlighters",
+                    "Folders & binders",
+                    "Desk organizer",
+                    "USB drive",
+                    "Calculator",
+                    "Sticky notes"
+                ]
+            },
+            cleaning: {
+                icon: "🧹",
+                name: "Cleaning Supplies",
+                items: [
+                    "All-purpose cleaner",
+                    "Sponges",
+                    "Cleaning cloths",
+                    "Bin bags",
+                    "Washing-up liquid",
+                    "Laundry detergent",
+                    "Fabric softener",
+                    "Vacuum cleaner (if not provided)",
+                    "Mop & bucket",
+                    "Toilet cleaner"
+                ]
+            },
+            tech: {
+                icon: "🔌",
+                name: "Electronics & Tech",
+                items: [
+                    "Extension leads (2-3)",
+                    "Laptop charger",
+                    "Phone charger",
+                    "Headphones",
+                    "HDMI cable",
+                    "USB cables",
+                    "Power bank",
+                    "Adapter plugs (if international)"
+                ]
+            },
+            decor: {
+                icon: "🎨",
+                name: "Room Decor",
+                items: [
+                    "Fairy lights",
+                    "Posters/prints",
+                    "Plants (real or fake)",
+                    "Photo frames",
+                    "Cushions",
+                    "Rug",
+                    "Curtains (if not provided)",
+                    "Desk organizer"
+                ]
+            },
+            documents: {
+                icon: "📋",
+                name: "Important Documents",
+                items: [
+                    "ID/Passport",
+                    "Insurance documents",
+                    "Tenancy agreement",
+                    "University acceptance letter",
+                    "Bank details",
+                    "Medical records",
+                    "Prescription information",
+                    "Emergency contacts list"
+                ]
+            }
+        };
+
+        // Shop Finder Data
+        const shops = [
+            {
+                icon: "🛒",
+                name: "Supermarkets",
+                search: "supermarket",
+                website: null
+            },
+            {
+                icon: "🏪",
+                name: "Convenience Stores",
+                search: "convenience store 24 hour",
+                website: null
+            },
+            {
+                icon: "🛠️",
+                name: "DIY & Hardware",
+                search: "hardware store DIY",
+                website: "https://www.diy.com"
+            },
+            {
+                icon: "💊",
+                name: "Pharmacies",
+                search: "pharmacy",
+                website: "https://www.boots.com"
+            },
+            {
+                icon: "📮",
+                name: "Post Office",
+                search: "post office",
+                website: "https://www.postoffice.co.uk"
+            },
+            {
+                icon: "🏬",
+                name: "Department Stores",
+                search: "department store",
+                website: "https://www.primark.com"
+            },
+            {
+                icon: "🛋️",
+                name: "Furniture Stores",
+                search: "furniture store",
+                website: "https://www.ikea.com"
+            },
+            {
+                icon: "📱",
+                name: "Electronics",
+                search: "electronics store",
+                website: "https://www.currys.co.uk"
+            },
+            {
+                icon: "📚",
+                name: "Stationery Shops",
+                search: "stationery store",
+                website: "https://www.whsmith.co.uk"
+            },
+            {
+                icon: "🧺",
+                name: "Laundromats",
+                search: "laundromat near me",
+                website: null
+            },
+            {
+                icon: "🔧",
+                name: "Repair Shops",
+                search: "repair shop",
+                website: null
+            },
+            {
+                icon: "♻️",
+                name: "Recycling Centers",
+                search: "recycling centre",
+                website: null
+            },
+            {
+                icon: "🍕",
+                name: "Takeaway & Restaurants",
+                search: "restaurants takeaway",
+                website: null
+            },
+            {
+                icon: "🏋️",
+                name: "Gyms & Sports",
+                search: "gym fitness centre",
+                website: null
+            },
+            {
+                icon: "💇",
+                name: "Hair & Beauty",
+                search: "hair salon barber",
+                website: null
+            }
+        ];
+
+        // Current filters
+        let currentDifficulty = 'all';
+        let currentCategory = 'all';
+        let savedPostcode = localStorage.getItem('userPostcode') || '';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPostcode();
+            renderDIYCards();
+            renderChecklist();
+            renderShops();
+            updateChecklistProgress();
+        });
+
+        // Tab Switching
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // DIY Card Rendering
+        function renderDIYCards() {
+            const grid = document.getElementById('diy-grid');
+            const filteredTasks = diyTasks.filter(task => {
+                const difficultyMatch = currentDifficulty === 'all' || task.difficulty === currentDifficulty;
+                const categoryMatch = currentCategory === 'all' || task.category === currentCategory;
+                return difficultyMatch && categoryMatch;
+            });
+
+            grid.innerHTML = filteredTasks.map((task, index) => `
+                <div class="diy-card" data-difficulty="${task.difficulty}" data-category="${task.category}" onclick="toggleCard(${index})">
+                    <div class="diy-card-header">
+                        <h3>${task.name}</h3>
+                        <span class="difficulty-badge difficulty-${task.difficulty}">${task.difficulty}</span>
+                    </div>
+                    <div class="diy-meta">
+                        <span>⏱️ ${task.time}</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="tools-needed">
+                        <strong>Tools:</strong> ${task.tools}
+                    </div>
+                    <div class="diy-instructions">
+                        <ol>
+                            ${task.steps.map(step => `<li>${step}</li>`).join('')}
+                        </ol>
+                        <button class="tutorial-button" onclick="event.stopPropagation(); openTutorial('${encodeURIComponent(task.name)}')">
+                            📺 Watch Tutorial
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleCard(index) {
+            const cards = document.querySelectorAll('.diy-card');
+            cards[index].classList.toggle('expanded');
+        }
+
+        function openTutorial(taskName) {
+            const searchQuery = decodeURIComponent(taskName);
+            window.open(`https://www.youtube.com/results?search_query=how+to+${encodeURIComponent(searchQuery)}+tutorial`, '_blank');
+        }
+
+        // Filter Functions
+        function filterDifficulty(difficulty) {
+            currentDifficulty = difficulty;
+            document.querySelectorAll('.filter-group')[0].querySelectorAll('.filter-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            renderDIYCards();
+        }
+
+        function filterCategory(category) {
+            currentCategory = category;
+            document.querySelectorAll('.filter-group')[1].querySelectorAll('.filter-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            renderDIYCards();
+        }
+
+        // Checklist Functions
+        function renderChecklist() {
+            const container = document.getElementById('checklist-container');
+            container.innerHTML = Object.keys(checklistData).map(key => {
+                const category = checklistData[key];
+                return `
+                    <div class="category-section" id="category-${key}">
+                        <div class="category-header" onclick="toggleCategory('${key}')">
+                            <div class="category-title">
+                                <span>${category.icon}</span>
+                                <span>${category.name}</span>
+                            </div>
+                            <div class="category-progress">
+                                <span class="progress-text" id="progress-${key}">0/${category.items.length}</span>
+                                <div class="mini-progress">
+                                    <div class="mini-progress-bar" id="bar-${key}" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="category-items">
+                            ${category.items.map((item, index) => `
+                                <div class="checklist-item" id="item-${key}-${index}">
+                                    <input type="checkbox" id="check-${key}-${index}" onchange="updateProgress()">
+                                    <label for="check-${key}-${index}">${item}</label>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Load saved state
+            loadChecklistState();
+        }
+
+        function toggleCategory(categoryKey) {
+            const category = document.getElementById(`category-${categoryKey}`);
+            category.classList.toggle('expanded');
+        }
+
+        function updateProgress() {
+            let totalItems = 0;
+            let checkedItems = 0;
+
+            Object.keys(checklistData).forEach(key => {
+                const category = checklistData[key];
+                let categoryChecked = 0;
+
+                category.items.forEach((item, index) => {
+                    const checkbox = document.getElementById(`check-${key}-${index}`);
+                    if (checkbox.checked) {
+                        categoryChecked++;
+                        checkedItems++;
+                        document.getElementById(`item-${key}-${index}`).classList.add('checked');
+                    } else {
+                        document.getElementById(`item-${key}-${index}`).classList.remove('checked');
+                    }
+                    totalItems++;
+                });
+
+                // Update category progress
+                const percentage = (categoryChecked / category.items.length) * 100;
+                document.getElementById(`progress-${key}`).textContent = `${categoryChecked}/${category.items.length}`;
+                document.getElementById(`bar-${key}`).style.width = `${percentage}%`;
+            });
+
+            // Update overall progress
+            const overallPercentage = Math.round((checkedItems / totalItems) * 100);
+            document.getElementById('total-progress-text').textContent = `${checkedItems} out of ${totalItems} items packed`;
+            document.getElementById('overall-progress-bar').style.width = `${overallPercentage}%`;
+            document.getElementById('overall-progress-bar').textContent = `${overallPercentage}%`;
+
+            // Save state
+            saveChecklistState();
+        }
+
+        function updateChecklistProgress() {
+            updateProgress();
+        }
+
+        function saveChecklistState() {
+            const state = {};
+            Object.keys(checklistData).forEach(key => {
+                const category = checklistData[key];
+                state[key] = category.items.map((item, index) => {
+                    const checkbox = document.getElementById(`check-${key}-${index}`);
+                    return checkbox ? checkbox.checked : false;
+                });
+            });
+            localStorage.setItem('checklistState', JSON.stringify(state));
+        }
+
+        function loadChecklistState() {
+            const savedState = localStorage.getItem('checklistState');
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                Object.keys(state).forEach(key => {
+                    if (state[key]) {
+                        state[key].forEach((checked, index) => {
+                            const checkbox = document.getElementById(`check-${key}-${index}`);
+                            if (checkbox) {
+                                checkbox.checked = checked;
+                            }
+                        });
+                    }
+                });
+                updateProgress();
+            }
+        }
+
+        function resetChecklist() {
+            if (confirm('Are you sure you want to reset your entire checklist? This cannot be undone!')) {
+                Object.keys(checklistData).forEach(key => {
+                    const category = checklistData[key];
+                    category.items.forEach((item, index) => {
+                        const checkbox = document.getElementById(`check-${key}-${index}`);
+                        if (checkbox) {
+                            checkbox.checked = false;
+                        }
+                    });
+                });
+                updateProgress();
+                showBanner('Checklist reset! Start fresh 🔄');
+            }
+        }
+
+        // Shop Finder Functions
+        function renderShops() {
+            const grid = document.getElementById('shop-grid');
+            grid.innerHTML = shops.map(shop => `
+                <div class="shop-card">
+                    <div class="shop-icon">${shop.icon}</div>
+                    <h3>${shop.name}</h3>
+                    <div class="shop-buttons">
+                        <button class="shop-button shop-button-primary" onclick="findNearMe('${shop.search}')">
+                            📍 Find Near Me
+                        </button>
+                        ${shop.website ? `
+                            <button class="shop-button shop-button-secondary" onclick="window.open('${shop.website}', '_blank')">
+                                🌐 Browse Online
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function findNearMe(searchQuery) {
+            const postcode = savedPostcode || '';
+            let mapsUrl;
+            
+            if (postcode) {
+                // If postcode is saved, search for shops near that postcode
+                mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(searchQuery)}+near+${encodeURIComponent(postcode)}`;
+            } else {
+                // If no postcode, use "near me" which triggers Google Maps location services
+                mapsUrl = `https://www.google.com/maps/search/${encodeURIComponent(searchQuery)}+near+me`;
+            }
+            
+            // Open in new tab/window to avoid CSP issues
+            const newWindow = window.open(mapsUrl, '_blank', 'noopener,noreferrer');
+            
+            if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+                // Popup was blocked, show the URL to user
+                showBanner('Pop-up blocked! Please allow pop-ups or copy this URL');
+                console.log('Google Maps URL:', mapsUrl);
+            }
+        }
+
+        function savePostcode() {
+            const input = document.getElementById('postcode-input');
+            const postcode = input.value.trim();
+            if (postcode) {
+                savedPostcode = postcode;
+                localStorage.setItem('userPostcode', postcode);
+                showBanner('Location saved! 📍');
+            } else {
+                showBanner('Please enter a valid postcode');
+            }
+        }
+
+        function loadPostcode() {
+            const input = document.getElementById('postcode-input');
+            if (savedPostcode) {
+                input.value = savedPostcode;
+            }
+        }
+
+        // Banner Notification
+        function showBanner(message) {
+            const banner = document.createElement('div');
+            banner.className = 'banner';
+            banner.textContent = message;
+            document.body.appendChild(banner);
+
+            setTimeout(() => {
+                banner.classList.add('hiding');
+                setTimeout(() => banner.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
