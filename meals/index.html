@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Life Hub - Meals Tab</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            min-height: 100vh; 
+            padding: 20px; 
+            color: #333; 
+        }
+        .container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 20px; 
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); 
+            overflow: hidden; 
+        }
+        header { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; 
+            padding: 30px; 
+            text-align: center; 
+        }
+        header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        header p { font-size: 1.2em; opacity: 0.9; }
+        .content { padding: 30px; }
+        
+        /* Sub-tabs */
+        .sub-tabs { 
+            display: flex; 
+            gap: 10px; 
+            margin-bottom: 30px; 
+            flex-wrap: wrap; 
+        }
+        .sub-tab-button { 
+            padding: 12px 24px; 
+            background: #f8f9fa; 
+            border: 2px solid #e0e0e0; 
+            border-radius: 25px; 
+            cursor: pointer; 
+            font-size: 14px; 
+            font-weight: 600; 
+            color: #666; 
+            transition: all 0.3s; 
+        }
+        .sub-tab-button:hover { background: #e9ecef; border-color: #667eea; }
+        .sub-tab-button.active { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; 
+            border-color: transparent; 
+        }
+        .sub-tab-content { display: none; animation: fadeIn 0.3s; }
+        .sub-tab-content.active { display: block; }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        
+        /* Filters */
+        .filters { 
+            display: flex; 
+            gap: 15px; 
+            margin-bottom: 25px; 
+            flex-wrap: wrap; 
+            padding: 20px; 
+            background: #f8f9fa; 
+            border-radius: 12px; 
+        }
+        .filter-group { display: flex; flex-direction: column; gap: 8px; }
+        .filter-group label { font-weight: 600; color: #667eea; font-size: 14px; }
+        .filter-buttons { display: flex; gap: 8px; flex-wrap: wrap; }
+        .filter-btn { 
+            padding: 8px 16px; 
+            background: white; 
+            border: 2px solid #e0e0e0; 
+            border-radius: 20px; 
+            cursor: pointer; 
+            font-size: 13px; 
+            transition: all 0.3s; 
+        }
+        .filter-btn:hover { border-color: #667eea; color: #667eea; }
+        .filter-btn.active { 
+            background: #667eea; 
+            color: white; 
+            border-color: #667eea; 
+        }
+        
+        /* Cards Grid */
+        .cards-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+            gap: 20px; 
+            margin-top: 20px; 
+        }
+        .card { 
+            background: white; 
+            border: 2px solid #e0e0e0; 
+            border-radius: 12px; 
+            padding: 20px; 
+            transition: all 0.3s; 
+            position: relative; 
+        }
+        .card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2); 
+            border-color: #667eea; 
+        }
+        .card h3 { color: #667eea; margin-bottom: 8px; font-size: 1.3em; }
+        .card-price { 
+            color: #764ba2; 
+            font-weight: bold; 
+            font-size: 1.1em; 
+            margin-bottom: 10px; 
+        }
+        .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0; }
+        .tag { 
+            padding: 4px 10px; 
+            background: #f0f0f0; 
+            border-radius: 12px; 
+            font-size: 11px; 
+            color: #666; 
+        }
+        .tag.budget-cheap { background: #d4edda; color: #155724; }
+        .tag.budget-moderate { background: #fff3cd; color: #856404; }
+        .tag.budget-premium { background: #f8d7da; color: #721c24; }
+        
+        .ingredient-list { 
+            background: #f8f9fa; 
+            padding: 12px; 
+            border-radius: 8px; 
+            margin: 10px 0; 
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .ingredient-list h4 { 
+            color: #667eea; 
+            margin-bottom: 8px; 
+            font-size: 0.9em; 
+        }
+        .ingredient-list ul { list-style: none; padding: 0; }
+        .ingredient-list li { padding: 2px 0; color: #555; font-size: 0.85em; }
+        .ingredient-list li::before { 
+            content: "• "; 
+            color: #667eea; 
+            font-weight: bold; 
+            margin-right: 5px; 
+        }
+        
+        /* Expandable Card Details */
+        .expand-btn {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background: #e9ecef;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #667eea;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .expand-btn:hover {
+            background: #dee2e6;
+        }
+        .expand-icon {
+            transition: transform 0.3s;
+            font-size: 0.9em;
+        }
+        .card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+        
+        .card-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .card.expanded .card-details {
+            max-height: 2000px;
+            transition: max-height 0.5s ease-in;
+        }
+        
+        .instructions {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .instructions h4 {
+            color: #856404;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        .instructions ol {
+            padding-left: 20px;
+        }
+        .instructions li {
+            margin: 8px 0;
+            color: #555;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+        
+        .equipment-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .equipment-info h4 {
+            color: #1565c0;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        .equipment-info ul {
+            list-style: none;
+            padding: 0;
+        }
+        .equipment-info li {
+            padding: 4px 0;
+            color: #555;
+            font-size: 0.9em;
+        }
+        .equipment-info li::before {
+            content: "🔧 ";
+            margin-right: 5px;
+        }
+        
+        .nutrition-info {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .nutrition-info h4 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        .nutrition-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .nutrition-item {
+            font-size: 0.9em;
+            color: #555;
+        }
+        .nutrition-item strong {
+            color: #2e7d32;
+        }
+        
+        .time-info {
+            background: #fce4ec;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .time-info h4 {
+            color: #c2185b;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        .time-info p {
+            color: #555;
+            font-size: 0.9em;
+            margin: 5px 0;
+        }
+        
+        .card-actions { display: flex; gap: 10px; margin-top: 15px; }
+        .btn { 
+            flex: 1; 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            transition: all 0.3s; 
+            font-size: 14px; 
+        }
+        .btn-primary { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; 
+        }
+        .btn-primary:hover { 
+            transform: scale(1.05); 
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); 
+        }
+        .btn-favourite { 
+            width: 45px; 
+            padding: 10px; 
+            background: white; 
+            border: 2px solid #ffc107; 
+            color: #ffc107; 
+            font-size: 18px; 
+        }
+        .btn-favourite.active { background: #ffc107; color: white; }
+        
+        /* Modal */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background: rgba(0, 0, 0, 0.7); 
+            z-index: 1000; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .modal.active { display: flex; }
+        .modal-content { 
+            background: white; 
+            border-radius: 20px; 
+            padding: 30px; 
+            max-width: 500px; 
+            width: 90%; 
+            max-height: 80vh; 
+            overflow-y: auto; 
+        }
+        .modal-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 20px; 
+        }
+        .modal-header h2 { color: #667eea; }
+        .close-modal { 
+            background: none; 
+            border: none; 
+            font-size: 30px; 
+            cursor: pointer; 
+            color: #999; 
+            line-height: 1; 
+        }
+        .close-modal:hover { color: #667eea; }
+        
+        /* Day Selector */
+        .day-selector { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
+            gap: 10px; 
+            margin: 20px 0; 
+        }
+        .day-btn { 
+            padding: 15px; 
+            background: #f8f9fa; 
+            border: 2px solid #e0e0e0; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            transition: all 0.3s; 
+        }
+        .day-btn:hover { border-color: #667eea; background: #e9ecef; }
+        .day-btn.selected { 
+            background: #667eea; 
+            color: white; 
+            border-color: #667eea; 
+        }
+        
+        /* Meal Planner */
+        .weekly-total { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            color: white; 
+            padding: 25px; 
+            border-radius: 12px; 
+            text-align: center; 
+            margin-bottom: 25px; 
+        }
+        .weekly-total h2 { font-size: 2em; margin-top: 10px; }
+        .planner-container { display: grid; gap: 20px; }
+        .day-card { 
+            background: #f8f9fa; 
+            border-radius: 12px; 
+            padding: 20px; 
+            border: 2px solid #e0e0e0; 
+        }
+        .day-card h3 { 
+            color: #667eea; 
+            margin-bottom: 15px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .day-total { font-size: 0.9em; color: #764ba2; font-weight: normal; }
+        .planned-meal { 
+            background: white; 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin-bottom: 10px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border: 1px solid #e0e0e0; 
+        }
+        .planned-meal-info h4 { color: #333; margin-bottom: 5px; }
+        .planned-meal-info p { color: #666; font-size: 0.9em; }
+        .remove-meal { 
+            background: #dc3545; 
+            color: white; 
+            border: none; 
+            width: 30px; 
+            height: 30px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            font-size: 18px; 
+            transition: all 0.3s; 
+            line-height: 1; 
+        }
+        .remove-meal:hover { background: #c82333; transform: scale(1.1); }
+        .clear-week-btn { 
+            background: #dc3545; 
+            color: white; 
+            padding: 12px 24px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            margin-right: 10px; 
+            margin-bottom: 20px; 
+            transition: all 0.3s; 
+        }
+        .clear-week-btn:hover { background: #c82333; transform: scale(1.05); }
+        
+        /* Shopping List */
+        .shopping-list { background: white; border-radius: 12px; padding: 20px; }
+        .shopping-list-item { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            padding: 12px; 
+            border-bottom: 1px solid #e0e0e0; 
+        }
+        .shopping-list-item input[type="checkbox"] { 
+            width: 20px; 
+            height: 20px; 
+            cursor: pointer; 
+        }
+        .shopping-list-item.checked label { 
+            text-decoration: line-through; 
+            color: #999; 
+        }
+        .export-btn, .clear-shopping-btn { 
+            background: #28a745; 
+            color: white; 
+            padding: 12px 24px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            margin-top: 20px; 
+            margin-right: 10px;
+            transition: all 0.3s; 
+            font-size: 16px; 
+        }
+        .export-btn:hover { background: #218838; transform: scale(1.05); }
+        .clear-shopping-btn { background: #dc3545; }
+        .clear-shopping-btn:hover { background: #c82333; }
+        
+        /* Banner */
+        .banner { 
+            position: fixed; 
+            top: 20px; 
+            right: 20px; 
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%); 
+            color: white; 
+            padding: 15px 25px; 
+            border-radius: 10px; 
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3); 
+            z-index: 2000; 
+            display: none; 
+            animation: slideIn 0.3s, slideOut 0.3s 2.7s; 
+        }
+        .banner.show { display: block; }
+        @keyframes slideIn { 
+            from { transform: translateX(400px); opacity: 0; } 
+            to { transform: translateX(0); opacity: 1; } 
+        }
+        @keyframes slideOut { 
+            from { transform: translateX(0); opacity: 1; } 
+            to { transform: translateX(400px); opacity: 0; } 
+        }
+        
+        @media (max-width: 768px) { 
+            header h1 { font-size: 1.8em; }
+            .cards-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="banner" id="banner"></div>
+    
+    <div class="container">
+        <header>
+            <h1>🍽️ Meals Tab</h1>
+            <p>Plan your meals • Save favourites • Generate shopping lists</p>
+        </header>
+        
+        <div class="content">
+            <div class="sub-tabs">
+                <button class="sub-tab-button active" onclick="switchSubTab('browse-meals')">Browse Meals</button>
+                <button class="sub-tab-button" onclick="switchSubTab('meal-planner')">Meal Planner</button>
+                <button class="sub-tab-button" onclick="switchSubTab('favourites')">Favourites</button>
+                <button class="sub-tab-button" onclick="switchSubTab('shopping-list')">Shopping List</button>
+            </div>
+            
+            <!-- Browse Meals -->
+            <div id="browse-meals" class="sub-tab-content active">
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Budget:</label>
+                        <div class="filter-buttons">
+                            <button class="filter-btn active" data-filter="budget" data-value="all">All</button>
+                            <button class="filter-btn" data-filter="budget" data-value="cheap">£ Cheap</button>
+                            <button class="filter-btn" data-filter="budget" data-value="moderate">££ Moderate</button>
+                            <button class="filter-btn" data-filter="budget" data-value="premium">£££ Premium</button>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label>Dietary:</label>
+                        <div class="filter-buttons">
+                            <button class="filter-btn" data-filter="dietary" data-value="vegetarian">Vegetarian</button>
+                            <button class="filter-btn" data-filter="dietary" data-value="vegan">Vegan</button>
+                            <button class="filter-btn" data-filter="dietary" data-value="meat">Meat</button>
+                            <button class="filter-btn" data-filter="dietary" data-value="fish">Fish</button>
+                            <button class="filter-btn" data-filter="dietary" data-value="halal">Halal</button>
+                            <button class="filter-btn" data-filter="dietary" data-value="gluten-free">Gluten Free</button>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <label>Meal Type:</label>
+                        <div class="filter-buttons">
+                            <button class="filter-btn active" data-filter="mealtype" data-value="all">All</button>
+                            <button class="filter-btn" data-filter="mealtype" data-value="breakfast">Breakfast</button>
+                            <button class="filter-btn" data-filter="mealtype" data-value="lunch">Lunch</button>
+                            <button class="filter-btn" data-filter="mealtype" data-value="dinner">Dinner</button>
+                            <button class="filter-btn" data-filter="mealtype" data-value="snack">Snack</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="meals-grid" class="cards-grid"></div>
+            </div>
+            
+            <!-- Meal Planner -->
+            <div id="meal-planner" class="sub-tab-content">
+                <button class="clear-week-btn" onclick="clearWeek()">Clear Week</button>
+                <button class="btn-primary" style="padding: 12px 24px; border-radius: 8px; margin-bottom: 20px;" onclick="generateShoppingList()">Generate Shopping List</button>
+                
+                <div class="weekly-total">
+                    <h3>Weekly Total</h3>
+                    <h2 id="weekly-total-amount">£0.00</h2>
+                </div>
+                <div class="planner-container" id="planner-container"></div>
+            </div>
+            
+            <!-- Favourites -->
+            <div id="favourites" class="sub-tab-content">
+                <div id="favourites-grid" class="cards-grid"></div>
+            </div>
+            
+            <!-- Shopping List -->
+            <div id="shopping-list" class="sub-tab-content">
+                <div class="shopping-list">
+                    <h2 style="color: #667eea; margin-bottom: 20px;">Your Shopping List</h2>
+                    <div id="shopping-list-items"></div>
+                    <button class="export-btn" onclick="exportShoppingList()">📥 Download Shopping List</button>
+                    <button class="clear-shopping-btn" onclick="clearShoppingList()">Clear Shopping List</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Meal Planner Modal -->
+    <div id="meal-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add to Planner</h2>
+                <button class="close-modal" onclick="closeMealModal()">×</button>
+            </div>
+            <h3 id="modal-meal-name" style="color: #667eea; margin-bottom: 20px;"></h3>
+            <p style="margin-bottom: 20px;">Select which day to add this meal:</p>
+            <div class="day-selector">
+                <button class="day-btn" onclick="selectDay('Monday')">Monday</button>
+                <button class="day-btn" onclick="selectDay('Tuesday')">Tuesday</button>
+                <button class="day-btn" onclick="selectDay('Wednesday')">Wednesday</button>
+                <button class="day-btn" onclick="selectDay('Thursday')">Thursday</button>
+                <button class="day-btn" onclick="selectDay('Friday')">Friday</button>
+                <button class="day-btn" onclick="selectDay('Saturday')">Saturday</button>
+                <button class="day-btn" onclick="selectDay('Sunday')">Sunday</button>
+            </div>
+            <button class="btn-primary" style="width: 100%; margin-top: 20px;" onclick="confirmAddToPlanner()">Add to Planner</button>
+        </div>
+    </div>
+    
+    <script>
+        // COMPLETE MEAL DATABASE - 80+ meals across all categories
+        const meals = [
+            // VEGETARIAN BREAKFAST
+            {name: "Avocado Toast", cost: 2.50, budget: "moderate", dietary: ["vegetarian"], mealType: "breakfast", ingredients: ["2 slices bread", "1 avocado", "lemon juice", "salt", "pepper", "chilli flakes"], time: "10 mins", equipment: ["toaster", "knife", "fork"], instructions: ["Toast bread until golden", "Mash avocado with lemon juice, salt and pepper", "Spread avocado on toast", "Sprinkle with chilli flakes"], nutrition: {calories: 320, protein: "8g", carbs: "38g", fat: "16g"}},
+            {name: "Veggie Full English", cost: 4.00, budget: "moderate", dietary: ["vegetarian"], mealType: "breakfast", ingredients: ["2 eggs", "2 veggie sausages", "mushrooms", "tomato", "baked beans", "toast"], time: "20 mins", equipment: ["frying pan", "toaster", "saucepan"], instructions: ["Fry veggie sausages for 8 mins", "Add mushrooms and tomato to pan", "Heat beans in saucepan", "Fry eggs to preference", "Toast bread and serve everything together"], nutrition: {calories: 580, protein: "28g", carbs: "54g", fat: "26g"}},
+            {name: "Porridge with Berries", cost: 1.50, budget: "cheap", dietary: ["vegetarian"], mealType: "breakfast", ingredients: ["50g oats", "200ml milk", "mixed berries", "1 tbsp honey"], time: "8 mins", equipment: ["saucepan", "spoon", "bowl"], instructions: ["Add oats and milk to saucepan", "Cook on medium heat for 5 mins, stirring", "Pour into bowl", "Top with berries and drizzle honey"], nutrition: {calories: 280, protein: "10g", carbs: "52g", fat: "5g"}},
+            {name: "Scrambled Eggs on Toast", cost: 1.80, budget: "cheap", dietary: ["vegetarian"], mealType: "breakfast", ingredients: ["3 eggs", "butter", "2 tbsp milk", "2 slices bread"], time: "10 mins", equipment: ["frying pan", "toaster", "whisk", "spatula"], instructions: ["Beat eggs with milk", "Toast bread", "Melt butter in pan over low heat", "Add eggs and stir continuously until creamy", "Serve on toast"], nutrition: {calories: 420, protein: "22g", carbs: "32g", fat: "22g"}},
+            {name: "Greek Yogurt Parfait", cost: 2.20, budget: "moderate", dietary: ["vegetarian"], mealType: "breakfast", ingredients: ["200g Greek yogurt", "granola", "honey", "mixed berries"], time: "5 mins", equipment: ["bowl", "spoon"], instructions: ["Layer yogurt in bowl", "Add granola layer", "Add berries on top", "Drizzle with honey"], nutrition: {calories: 380, protein: "18g", carbs: "58g", fat: "8g"}},
+            {name: "Pancakes with Syrup", cost: 2.50, budget: "moderate", dietary: ["vegetarian"], mealType: "breakfast", ingredients: ["flour", "2 eggs", "milk", "maple syrup", "butter"], time: "20 mins", equipment: ["mixing bowl", "frying pan", "whisk", "ladle"], instructions: ["Mix flour, eggs and milk into batter", "Heat butter in pan", "Pour ladle of batter and cook 2 mins each side", "Stack pancakes", "Pour over maple syrup"], nutrition: {calories: 450, protein: "12g", carbs: "72g", fat: "14g"}},
+            {name: "Cheese Omelette", cost: 2.20, budget: "moderate", dietary: ["vegetarian"], mealType: "breakfast", ingredients: ["3 eggs", "50g cheese", "butter", "fresh chives"], time: "10 mins", equipment: ["frying pan", "whisk", "spatula"], instructions: ["Beat eggs in bowl", "Melt butter in pan over medium heat", "Pour in eggs and let set", "Add cheese and chives to one half", "Fold omelette and serve"], nutrition: {calories: 380, protein: "26g", carbs: "4g", fat: "30g"}},
+            {name: "Bagel with Cream Cheese", cost: 1.50, budget: "cheap", dietary: ["vegetarian"], mealType: "breakfast", ingredients: ["1 bagel", "cream cheese", "sliced cucumber"], time: "5 mins", equipment: ["toaster", "knife"], instructions: ["Slice bagel in half", "Toast until golden", "Spread cream cheese generously", "Top with cucumber slices"], nutrition: {calories: 320, protein: "12g", carbs: "48g", fat: "10g"}},
+            {name: "French Toast", cost: 2.80, budget: "moderate", dietary: ["vegetarian"], mealType: "breakfast", ingredients: ["bread", "2 eggs", "milk", "cinnamon", "maple syrup"], time: "15 mins", equipment: ["frying pan", "bowl", "whisk"], instructions: ["Beat eggs with milk and cinnamon", "Dip bread slices in mixture", "Fry in butter until golden on both sides", "Serve with maple syrup"], nutrition: {calories: 420, protein: "14g", carbs: "64g", fat: "12g"}},
+            {name: "Veggie Breakfast Burrito", cost: 3.50, budget: "moderate", dietary: ["vegetarian"], mealType: "breakfast", ingredients: ["tortilla", "2 eggs", "black beans", "cheese", "salsa"], time: "15 mins", equipment: ["frying pan", "saucepan"], instructions: ["Scramble eggs in pan", "Heat beans separately", "Warm tortilla", "Fill with eggs, beans and cheese", "Top with salsa and wrap"], nutrition: {calories: 480, protein: "24g", carbs: "52g", fat: "18g"}},
+            
+            // VEGETARIAN LUNCH
+            {name: "Margherita Pizza", cost: 5.50, budget: "moderate", dietary: ["vegetarian"], mealType: "lunch", ingredients: ["pizza base", "tomato sauce", "mozzarella", "basil", "olive oil"], time: "25 mins", equipment: ["oven", "baking tray"], instructions: ["Preheat oven to 220°C", "Spread tomato sauce on base", "Add mozzarella", "Bake for 12-15 mins", "Top with basil and olive oil"], nutrition: {calories: 650, protein: "28g", carbs: "82g", fat: "24g"}},
+            {name: "Cheese Toastie", cost: 1.80, budget: "cheap", dietary: ["vegetarian"], mealType: "lunch", ingredients: ["bread", "cheese", "butter"], time: "8 mins", equipment: ["frying pan", "spatula"], instructions: ["Butter bread on outside", "Place cheese between slices", "Fry on medium heat until golden", "Flip and cook other side", "Cut and serve hot"], nutrition: {calories: 420, protein: "18g", carbs: "38g", fat: "22g"}},
+            {name: "Tomato Soup with Bread", cost: 2.00, budget: "cheap", dietary: ["vegetarian"], mealType: "lunch", ingredients: ["tinned tomatoes", "onion", "garlic", "vegetable stock", "bread"], time: "25 mins", equipment: ["saucepan", "blender"], instructions: ["Fry onion and garlic", "Add tomatoes and stock", "Simmer 15 mins", "Blend until smooth", "Serve with bread"], nutrition: {calories: 280, protein: "8g", carbs: "52g", fat: "6g"}},
+            {name: "Caprese Salad", cost: 3.50, budget: "moderate", dietary: ["vegetarian"], mealType: "lunch", ingredients: ["mozzarella", "tomatoes", "basil", "olive oil", "balsamic vinegar"], time: "10 mins", equipment: ["knife", "plate"], instructions: ["Slice mozzarella and tomatoes", "Arrange alternating on plate", "Add basil leaves", "Drizzle with oil and vinegar", "Season with salt and pepper"], nutrition: {calories: 320, protein: "18g", carbs: "12g", fat: "24g"}},
+            {name: "Veggie Wrap", cost: 3.00, budget: "moderate", dietary: ["vegetarian"], mealType: "lunch", ingredients: ["tortilla", "hummus", "lettuce", "tomato", "cucumber", "feta"], time: "10 mins", equipment: ["knife", "chopping board"], instructions: ["Spread hummus on tortilla", "Layer lettuce, tomato, cucumber", "Crumble feta on top", "Roll tightly", "Cut in half diagonally"], nutrition: {calories: 380, protein: "14g", carbs: "48g", fat: "16g"}},
+            {name: "Baked Potato with Cheese", cost: 2.20, budget: "cheap", dietary: ["vegetarian"], mealType: "lunch", ingredients: ["large potato", "butter", "cheese", "spring onions"], time: "60 mins", equipment: ["oven", "fork"], instructions: ["Prick potato with fork", "Bake at 200°C for 50 mins", "Cut open and add butter", "Top with cheese and spring onions", "Microwave option: 10 mins on high"], nutrition: {calories: 450, protein: "16g", carbs: "68g", fat: "14g"}},
+            {name: "Greek Salad", cost: 3.80, budget: "moderate", dietary: ["vegetarian"], mealType: "lunch", ingredients: ["cucumber", "tomatoes", "feta", "olives", "red onion", "olive oil"], time: "15 mins", equipment: ["knife", "bowl"], instructions: ["Chop all vegetables", "Combine in bowl", "Crumble feta on top", "Add olives", "Dress with olive oil and oregano"], nutrition: {calories: 340, protein: "12g", carbs: "18g", fat: "26g"}},
+            {name: "Falafel Pita", cost: 3.50, budget: "moderate", dietary: ["vegetarian"], mealType: "lunch", ingredients: ["pita bread", "falafel", "hummus", "lettuce", "tomato", "tahini"], time: "20 mins", equipment: ["oven", "knife"], instructions: ["Bake falafel as per packet", "Warm pita bread", "Spread hummus inside", "Add falafel, lettuce, tomato", "Drizzle with tahini"], nutrition: {calories: 480, protein: "18g", carbs: "64g", fat: "18g"}},
+            {name: "Pasta Salad", cost: 2.50, budget: "cheap", dietary: ["vegetarian"], mealType: "lunch", ingredients: ["pasta", "cherry tomatoes", "mozzarella", "basil", "olive oil"], time: "20 mins", equipment: ["saucepan", "colander", "bowl"], instructions: ["Cook pasta and drain", "Cool under cold water", "Halve tomatoes", "Mix with mozzarella and basil", "Toss with olive oil"], nutrition: {calories: 420, protein: "16g", carbs: "58g", fat: "14g"}},
+            {name: "Mushroom Soup", cost: 2.80, budget: "moderate", dietary: ["vegetarian"], mealType: "lunch", ingredients: ["mushrooms", "onion", "garlic", "cream", "vegetable stock"], time: "30 mins", equipment: ["saucepan", "blender"], instructions: ["Sauté onion and garlic", "Add sliced mushrooms", "Pour in stock and simmer 15 mins", "Stir in cream", "Blend until smooth"], nutrition: {calories: 280, protein: "8g", carbs: "22g", fat: "18g"}},
+            
+            // VEGETARIAN DINNER
+            {name: "Vegetable Curry", cost: 4.50, budget: "moderate", dietary: ["vegetarian"], mealType: "dinner", ingredients: ["mixed vegetables", "curry paste", "coconut milk", "rice", "naan bread"], time: "35 mins", equipment: ["large pan", "saucepan"], instructions: ["Cook rice in saucepan", "Fry curry paste 2 mins", "Add vegetables and stir", "Pour in coconut milk", "Simmer 15 mins and serve with naan"], nutrition: {calories: 620, protein: "16g", carbs: "88g", fat: "24g"}},
+            {name: "Spaghetti Carbonara", cost: 3.50, budget: "moderate", dietary: ["vegetarian"], mealType: "dinner", ingredients: ["spaghetti", "eggs", "parmesan", "black pepper", "butter"], time: "20 mins", equipment: ["large pan", "bowl", "colander"], instructions: ["Cook spaghetti", "Beat eggs with parmesan", "Drain pasta, reserving water", "Mix hot pasta with egg mixture", "Add pasta water to make creamy", "Season with pepper"], nutrition: {calories: 580, protein: "24g", carbs: "72g", fat: "22g"}},
+            {name: "Stuffed Peppers", cost: 4.20, budget: "moderate", dietary: ["vegetarian"], mealType: "dinner", ingredients: ["bell peppers", "rice", "cheese", "tomato sauce", "herbs"], time: "50 mins", equipment: ["oven", "baking dish", "saucepan"], instructions: ["Cook rice", "Halve and deseed peppers", "Mix rice with tomato sauce and herbs", "Stuff peppers with mixture", "Top with cheese and bake 30 mins at 180°C"], nutrition: {calories: 420, protein: "18g", carbs: "62g", fat: "12g"}},
+            {name: "Veggie Stir Fry", cost: 3.80, budget: "moderate", dietary: ["vegetarian"], mealType: "dinner", ingredients: ["mixed vegetables", "soy sauce", "ginger", "garlic", "rice"], time: "25 mins", equipment: ["wok", "saucepan"], instructions: ["Cook rice", "Heat wok until very hot", "Add vegetables and stir constantly", "Add ginger, garlic and soy sauce", "Serve over rice"], nutrition: {calories: 380, protein: "12g", carbs: "68g", fat: "8g"}},
+            {name: "Mushroom Risotto", cost: 5.00, budget: "moderate", dietary: ["vegetarian"], mealType: "dinner", ingredients: ["arborio rice", "mushrooms", "parmesan", "white wine", "vegetable stock"], time: "40 mins", equipment: ["large pan", "ladle"], instructions: ["Fry mushrooms and set aside", "Toast rice in pan", "Add wine and let absorb", "Add stock ladle by ladle, stirring", "Stir in mushrooms and parmesan"], nutrition: {calories: 520, protein: "16g", carbs: "78g", fat: "16g"}},
+            {name: "Cheese and Tomato Pasta", cost: 2.50, budget: "cheap", dietary: ["vegetarian"], mealType: "dinner", ingredients: ["pasta", "tomato sauce", "cheese", "basil", "garlic"], time: "20 mins", equipment: ["saucepan", "frying pan"], instructions: ["Cook pasta", "Heat tomato sauce with garlic", "Drain pasta and mix with sauce", "Stir in cheese", "Top with fresh basil"], nutrition: {calories: 480, protein: "20g", carbs: "74g", fat: "12g"}},
+            {name: "Vegetable Lasagne", cost: 6.00, budget: "premium", dietary: ["vegetarian"], mealType: "dinner", ingredients: ["lasagne sheets", "mixed vegetables", "bechamel sauce", "cheese", "tomato sauce"], time: "70 mins", equipment: ["oven", "large baking dish"], instructions: ["Roast vegetables", "Layer lasagne: sauce, sheets, veg, bechamel", "Repeat layers", "Top with cheese", "Bake 40 mins at 180°C"], nutrition: {calories: 580, protein: "24g", carbs: "68g", fat: "24g"}},
+            {name: "Quiche Lorraine", cost: 4.80, budget: "moderate", dietary: ["vegetarian"], mealType: "dinner", ingredients: ["pastry", "eggs", "cream", "cheese", "spinach"], time: "55 mins", equipment: ["oven", "pie dish", "bowl"], instructions: ["Line dish with pastry", "Beat eggs with cream", "Add cheese and spinach", "Pour into pastry case", "Bake 35 mins at 180°C"], nutrition: {calories: 520, protein: "22g", carbs: "38g", fat: "32g"}},
+            {name: "Cauliflower Cheese", cost: 3.20, budget: "moderate", dietary: ["vegetarian"], mealType: "dinner", ingredients: ["cauliflower", "cheese sauce", "breadcrumbs", "butter"], time: "40 mins", equipment: ["oven", "saucepan", "baking dish"], instructions: ["Boil cauliflower florets 8 mins", "Make cheese sauce", "Place cauliflower in dish", "Cover with cheese sauce", "Top with breadcrumbs and bake 20 mins"], nutrition: {calories: 420, protein: "20g", carbs: "38g", fat: "22g"}},
+            {name: "Veggie Tacos", cost: 3.80, budget: "moderate", dietary: ["vegetarian"], mealType: "dinner", ingredients: ["taco shells", "black beans", "cheese", "lettuce", "salsa", "sour cream"], time: "20 mins", equipment: ["saucepan", "oven"], instructions: ["Heat taco shells in oven", "Warm black beans with spices", "Chop lettuce", "Fill shells with beans", "Top with cheese, lettuce, salsa and sour cream"], nutrition: {calories: 460, protein: "18g", carbs: "58g", fat: "18g"}},
+            
+            // VEGAN MEALS
+            {name: "Vegan Buddha Bowl", cost: 4.50, budget: "moderate", dietary: ["vegan"], mealType: "lunch", ingredients: ["quinoa", "chickpeas", "avocado", "mixed vegetables", "tahini dressing"], time: "30 mins", equipment: ["saucepan", "bowl", "oven"], instructions: ["Cook quinoa", "Roast chickpeas and veg at 200°C for 20 mins", "Slice avocado", "Arrange everything in bowl", "Drizzle with tahini dressing"], nutrition: {calories: 520, protein: "18g", carbs: "62g", fat: "22g"}},
+            {name: "Tofu Stir Fry", cost: 4.20, budget: "moderate", dietary: ["vegan"], mealType: "dinner", ingredients: ["tofu", "mixed vegetables", "soy sauce", "ginger", "rice"], time: "25 mins", equipment: ["wok", "saucepan"], instructions: ["Press and cube tofu", "Cook rice", "Fry tofu until golden", "Add vegetables, ginger, soy sauce", "Serve over rice"], nutrition: {calories: 480, protein: "22g", carbs: "64g", fat: "14g"}},
+            {name: "Vegan Curry", cost: 4.00, budget: "moderate", dietary: ["vegan"], mealType: "dinner", ingredients: ["chickpeas", "coconut milk", "curry paste", "vegetables", "rice"], time: "35 mins", equipment: ["large pan", "saucepan"], instructions: ["Cook rice", "Fry curry paste", "Add chickpeas and vegetables", "Pour in coconut milk", "Simmer 20 mins"], nutrition: {calories: 580, protein: "18g", carbs: "86g", fat: "20g"}},
+            {name: "Hummus Wrap", cost: 2.50, budget: "cheap", dietary: ["vegan"], mealType: "lunch", ingredients: ["tortilla", "hummus", "lettuce", "tomato", "cucumber", "carrots"], time: "10 mins", equipment: ["knife", "chopping board"], instructions: ["Spread hummus on tortilla", "Layer all vegetables", "Season with salt and pepper", "Roll tightly", "Slice in half"], nutrition: {calories: 340, protein: "12g", carbs: "52g", fat: "10g"}},
+            {name: "Vegan Pasta", cost: 3.00, budget: "moderate", dietary: ["vegan"], mealType: "dinner", ingredients: ["pasta", "tomato sauce", "vegetables", "garlic", "basil"], time: "20 mins", equipment: ["saucepan", "frying pan"], instructions: ["Cook pasta", "Sauté garlic and vegetables", "Add tomato sauce", "Mix with drained pasta", "Top with fresh basil"], nutrition: {calories: 440, protein: "14g", carbs: "78g", fat: "8g"}},
+            {name: "Smoothie Bowl", cost: 3.50, budget: "moderate", dietary: ["vegan"], mealType: "breakfast", ingredients: ["frozen berries", "banana", "oat milk", "granola", "seeds"], time: "10 mins", equipment: ["blender", "bowl"], instructions: ["Blend berries, banana and oat milk", "Pour into bowl", "Top with granola", "Sprinkle seeds", "Add fresh fruit"], nutrition: {calories: 420, protein: "12g", carbs: "72g", fat: "10g"}},
+            {name: "Vegan Burger", cost: 5.00, budget: "moderate", dietary: ["vegan"], mealType: "lunch", ingredients: ["vegan burger patty", "bun", "lettuce", "tomato", "vegan mayo"], time: "15 mins", equipment: ["frying pan", "spatula"], instructions: ["Cook vegan patty as per packet", "Toast bun", "Layer lettuce, patty, tomato", "Spread vegan mayo", "Assemble burger"], nutrition: {calories: 480, protein: "20g", carbs: "58g", fat: "18g"}},
+            {name: "Lentil Soup", cost: 2.20, budget: "cheap", dietary: ["vegan"], mealType: "lunch", ingredients: ["red lentils", "carrots", "onion", "vegetable stock", "bread"], time: "35 mins", equipment: ["large saucepan"], instructions: ["Sauté onion and carrots", "Add lentils and stock", "Simmer 25 mins", "Blend if desired", "Serve with bread"], nutrition: {calories: 320, protein: "16g", carbs: "58g", fat: "4g"}},
+            {name: "Vegan Chilli", cost: 3.80, budget: "moderate", dietary: ["vegan"], mealType: "dinner", ingredients: ["kidney beans", "tomatoes", "chilli powder", "rice", "vegetables"], time: "40 mins", equipment: ["large pan", "saucepan"], instructions: ["Cook rice", "Fry onions and peppers", "Add beans, tomatoes, chilli powder", "Simmer 25 mins", "Serve over rice"], nutrition: {calories: 460, protein: "18g", carbs: "82g", fat: "6g"}},
+            {name: "Overnight Oats", cost: 1.80, budget: "cheap", dietary: ["vegan"], mealType: "breakfast", ingredients: ["oats", "oat milk", "chia seeds", "berries", "maple syrup"], time: "5 mins + overnight", equipment: ["jar", "spoon"], instructions: ["Mix oats, oat milk, chia seeds", "Refrigerate overnight", "Top with berries and maple syrup in morning", "Eat cold or heat up"], nutrition: {calories: 320, protein: "10g", carbs: "58g", fat: "6g"}},
+            
+            // MEAT MEALS
+            {name: "Chicken Stir Fry", cost: 5.50, budget: "moderate", dietary: ["meat"], mealType: "dinner", ingredients: ["chicken breast", "mixed vegetables", "soy sauce", "rice", "ginger"], time: "25 mins", equipment: ["wok", "saucepan", "knife"], instructions: ["Slice chicken thinly", "Cook rice", "Stir fry chicken until cooked", "Add vegetables and ginger", "Add soy sauce and serve"], nutrition: {calories: 520, protein: "42g", carbs: "58g", fat: "12g"}},
+            {name: "Spaghetti Bolognese", cost: 4.80, budget: "moderate", dietary: ["meat"], mealType: "dinner", ingredients: ["spaghetti", "minced beef", "tomato sauce", "onion", "garlic"], time: "35 mins", equipment: ["large pan", "saucepan"], instructions: ["Cook spaghetti", "Brown mince with onion and garlic", "Add tomato sauce", "Simmer 20 mins", "Serve sauce over spaghetti"], nutrition: {calories: 620, protein: "38g", carbs: "72g", fat: "20g"}},
+            {name: "Chicken Wrap", cost: 4.00, budget: "moderate", dietary: ["meat"], mealType: "lunch", ingredients: ["tortilla", "chicken breast", "lettuce", "mayo", "cheese"], time: "20 mins", equipment: ["frying pan", "knife"], instructions: ["Cook and slice chicken", "Warm tortilla", "Layer lettuce, chicken, cheese", "Add mayo", "Roll and slice"], nutrition: {calories: 480, protein: "36g", carbs: "42g", fat: "18g"}},
+            {name: "Beef Tacos", cost: 5.20, budget: "moderate", dietary: ["meat"], mealType: "dinner", ingredients: ["taco shells", "minced beef", "cheese", "lettuce", "salsa", "sour cream"], time: "25 mins", equipment: ["frying pan", "oven"], instructions: ["Brown mince with taco seasoning", "Warm taco shells", "Fill with beef", "Top with cheese, lettuce, salsa", "Add sour cream"], nutrition: {calories: 580, protein: "32g", carbs: "48g", fat: "28g"}},
+            {name: "Chicken Caesar Salad", cost: 4.50, budget: "moderate", dietary: ["meat"], mealType: "lunch", ingredients: ["chicken breast", "romaine lettuce", "parmesan", "croutons", "caesar dressing"], time: "20 mins", equipment: ["frying pan", "bowl"], instructions: ["Cook and slice chicken", "Chop lettuce", "Toss with dressing", "Add chicken and parmesan", "Top with croutons"], nutrition: {calories: 460, protein: "38g", carbs: "28g", fat: "22g"}},
+            {name: "Bacon and Eggs", cost: 3.20, budget: "moderate", dietary: ["meat"], mealType: "breakfast", ingredients: ["bacon", "eggs", "toast", "butter"], time: "15 mins", equipment: ["frying pan", "toaster"], instructions: ["Fry bacon until crispy", "Toast bread", "Fry eggs in bacon fat", "Butter toast", "Serve together"], nutrition: {calories: 520, protein: "28g", carbs: "32g", fat: "32g"}},
+            {name: "Chicken Curry", cost: 5.80, budget: "moderate", dietary: ["meat"], mealType: "dinner", ingredients: ["chicken breast", "curry paste", "coconut milk", "rice", "naan"], time: "35 mins", equipment: ["large pan", "saucepan"], instructions: ["Dice chicken", "Cook rice", "Fry curry paste, add chicken", "Add coconut milk", "Simmer 20 mins, serve with naan"], nutrition: {calories: 680, protein: "44g", carbs: "78g", fat: "22g"}},
+            {name: "Meatball Sub", cost: 4.50, budget: "moderate", dietary: ["meat"], mealType: "lunch", ingredients: ["sub roll", "meatballs", "tomato sauce", "cheese"], time: "25 mins", equipment: ["oven", "saucepan"], instructions: ["Heat meatballs in tomato sauce", "Split and toast sub roll", "Fill with meatballs and sauce", "Top with cheese", "Melt under grill"], nutrition: {calories: 620, protein: "34g", carbs: "64g", fat: "24g"}},
+            {name: "Chicken Fried Rice", cost: 4.20, budget: "moderate", dietary: ["meat"], mealType: "dinner", ingredients: ["chicken breast", "rice", "eggs", "peas", "soy sauce"], time: "30 mins", equipment: ["wok", "saucepan"], instructions: ["Cook rice (ideally day before)", "Dice and cook chicken", "Scramble eggs, set aside", "Fry rice with chicken, peas, soy sauce", "Mix in eggs"], nutrition: {calories: 540, protein: "38g", carbs: "68g", fat: "12g"}},
+            {name: "Beef Burger", cost: 5.50, budget: "moderate", dietary: ["meat"], mealType: "lunch", ingredients: ["burger bun", "beef patty", "cheese", "lettuce", "tomato", "onion"], time: "20 mins", equipment: ["frying pan", "spatula"], instructions: ["Cook beef patty to preference", "Toast bun", "Layer lettuce, patty, cheese", "Add tomato and onion", "Assemble burger"], nutrition: {calories: 620, protein: "36g", carbs: "48g", fat: "32g"}},
+            
+            // FISH MEALS
+            {name: "Fish and Chips", cost: 6.50, budget: "premium", dietary: ["fish"], mealType: "dinner", ingredients: ["white fish", "potatoes", "batter", "peas", "tartar sauce"], time: "45 mins", equipment: ["deep fryer or oven", "saucepan"], instructions: ["Cut potatoes into chips", "Coat fish in batter", "Fry or bake both", "Cook peas", "Serve with tartar sauce"], nutrition: {calories: 720, protein: "38g", carbs: "82g", fat: "28g"}},
+            {name: "Tuna Pasta", cost: 3.50, budget: "moderate", dietary: ["fish"], mealType: "lunch", ingredients: ["pasta", "tinned tuna", "sweetcorn", "mayo", "cucumber"], time: "20 mins", equipment: ["saucepan", "bowl"], instructions: ["Cook pasta and cool", "Drain tuna", "Mix with sweetcorn and mayo", "Add diced cucumber", "Combine all ingredients"], nutrition: {calories: 480, protein: "32g", carbs: "64g", fat: "12g"}},
+            {name: "Salmon with Rice", cost: 7.00, budget: "premium", dietary: ["fish"], mealType: "dinner", ingredients: ["salmon fillet", "rice", "vegetables", "lemon", "butter"], time: "30 mins", equipment: ["oven", "saucepan", "baking tray"], instructions: ["Cook rice", "Season salmon with lemon and butter", "Bake at 180°C for 15 mins", "Steam vegetables", "Serve together"], nutrition: {calories: 580, protein: "42g", carbs: "52g", fat: "22g"}},
+            {name: "Tuna Melt", cost: 4.00, budget: "moderate", dietary: ["fish"], mealType: "lunch", ingredients: ["bread", "tinned tuna", "cheese", "mayo"], time: "15 mins", equipment: ["grill", "bowl"], instructions: ["Mix tuna with mayo", "Spread on bread", "Top with cheese", "Grill until cheese melts", "Serve hot"], nutrition: {calories: 460, protein: "34g", carbs: "38g", fat: "20g"}},
+            {name: "Fish Tacos", cost: 5.80, budget: "moderate", dietary: ["fish"], mealType: "dinner", ingredients: ["taco shells", "white fish", "cabbage", "lime", "salsa"], time: "25 mins", equipment: ["frying pan", "oven"], instructions: ["Cook fish and flake", "Warm taco shells", "Shred cabbage", "Fill shells with fish and cabbage", "Top with salsa and lime juice"], nutrition: {calories: 480, protein: "32g", carbs: "52g", fat: "16g"}},
+            {name: "Prawn Stir Fry", cost: 6.20, budget: "premium", dietary: ["fish"], mealType: "dinner", ingredients: ["prawns", "vegetables", "soy sauce", "rice", "ginger"], time: "20 mins", equipment: ["wok", "saucepan"], instructions: ["Cook rice", "Heat wok until very hot", "Stir fry prawns 3 mins", "Add vegetables and ginger", "Season with soy sauce"], nutrition: {calories: 420, protein: "36g", carbs: "58g", fat: "6g"}},
+            {name: "Tuna Salad", cost: 3.80, budget: "moderate", dietary: ["fish"], mealType: "lunch", ingredients: ["tinned tuna", "mixed leaves", "tomatoes", "cucumber", "dressing"], time: "10 mins", equipment: ["bowl", "knife"], instructions: ["Drain tuna", "Chop vegetables", "Arrange leaves in bowl", "Top with tuna and vegetables", "Drizzle with dressing"], nutrition: {calories: 280, protein: "32g", carbs: "18g", fat: "10g"}},
+            {name: "Smoked Salmon Bagel", cost: 4.50, budget: "moderate", dietary: ["fish"], mealType: "breakfast", ingredients: ["bagel", "smoked salmon", "cream cheese", "capers"], time: "5 mins", equipment: ["toaster", "knife"], instructions: ["Toast bagel", "Spread cream cheese", "Layer smoked salmon", "Add capers", "Serve immediately"], nutrition: {calories: 420, protein: "24g", carbs: "48g", fat: "16g"}},
+            {name: "Cod and Vegetables", cost: 6.80, budget: "premium", dietary: ["fish"], mealType: "dinner", ingredients: ["cod fillet", "mixed vegetables", "butter", "lemon"], time: "30 mins", equipment: ["oven", "baking tray"], instructions: ["Season cod with lemon and butter", "Arrange vegetables on tray", "Bake together at 180°C for 20 mins", "Check fish is cooked through", "Serve hot"], nutrition: {calories: 380, protein: "42g", carbs: "28g", fat: "12g"}},
+            {name: "Fish Finger Sandwich", cost: 2.80, budget: "cheap", dietary: ["fish"], mealType: "lunch", ingredients: ["bread", "fish fingers", "tartar sauce", "lettuce"], time: "15 mins", equipment: ["oven", "knife"], instructions: ["Cook fish fingers as per packet", "Toast bread", "Spread tartar sauce", "Layer fish fingers and lettuce", "Cut in half"], nutrition: {calories: 420, protein: "22g", carbs: "52g", fat: "14g"}},
+            
+            // HALAL MEALS
+            {name: "Halal Chicken Curry", cost: 5.50, budget: "moderate", dietary: ["halal", "meat"], mealType: "dinner", ingredients: ["halal chicken", "curry paste", "coconut milk", "rice", "naan"], time: "40 mins", equipment: ["large pan", "saucepan"], instructions: ["Dice halal chicken", "Cook rice", "Fry curry paste, add chicken", "Add coconut milk and simmer 25 mins", "Serve with naan"], nutrition: {calories: 680, protein: "44g", carbs: "78g", fat: "22g"}},
+            {name: "Lamb Kebab", cost: 6.00, budget: "premium", dietary: ["halal", "meat"], mealType: "lunch", ingredients: ["halal lamb", "pita bread", "salad", "tzatziki"], time: "25 mins", equipment: ["grill", "skewers"], instructions: ["Thread lamb on skewers", "Grill 12-15 mins turning", "Warm pita", "Fill with lamb and salad", "Add tzatziki sauce"], nutrition: {calories: 580, protein: "38g", carbs: "48g", fat: "26g"}},
+            {name: "Chicken Shawarma", cost: 5.20, budget: "moderate", dietary: ["halal", "meat"], mealType: "lunch", ingredients: ["halal chicken", "pita", "hummus", "pickles", "tahini"], time: "30 mins", equipment: ["oven", "knife"], instructions: ["Marinate and bake chicken", "Warm pita bread", "Spread hummus inside", "Add sliced chicken and pickles", "Drizzle with tahini"], nutrition: {calories: 520, protein: "42g", carbs: "52g", fat: "16g"}},
+            {name: "Beef Kofta", cost: 5.80, budget: "moderate", dietary: ["halal", "meat"], mealType: "dinner", ingredients: ["halal minced beef", "spices", "rice", "salad"], time: "30 mins", equipment: ["grill", "saucepan", "bowl"], instructions: ["Mix mince with spices", "Shape into koftas", "Cook rice", "Grill koftas 12 mins", "Serve with rice and salad"], nutrition: {calories: 560, protein: "42g", carbs: "58g", fat: "18g"}},
+            {name: "Halal Burger", cost: 5.50, budget: "moderate", dietary: ["halal", "meat"], mealType: "lunch", ingredients: ["halal beef patty", "bun", "cheese", "lettuce", "tomato"], time: "20 mins", equipment: ["frying pan", "spatula"], instructions: ["Cook halal beef patty", "Toast bun", "Layer lettuce, patty, cheese", "Add tomato", "Assemble and serve"], nutrition: {calories: 620, protein: "36g", carbs: "48g", fat: "32g"}},
+            {name: "Chicken Biryani", cost: 6.20, budget: "premium", dietary: ["halal", "meat"], mealType: "dinner", ingredients: ["halal chicken", "basmati rice", "spices", "yogurt", "saffron"], time: "60 mins", equipment: ["large pot", "bowl"], instructions: ["Marinate chicken in yogurt and spices", "Partially cook rice with saffron", "Layer chicken and rice in pot", "Cook on low heat 30 mins", "Serve with raita"], nutrition: {calories: 680, protein: "46g", carbs: "84g", fat: "18g"}},
+            {name: "Lamb Curry", cost: 7.00, budget: "premium", dietary: ["halal", "meat"], mealType: "dinner", ingredients: ["halal lamb", "curry paste", "tomatoes", "rice", "naan"], time: "70 mins", equipment: ["large pan", "saucepan"], instructions: ["Brown lamb pieces", "Add curry paste and tomatoes", "Simmer 50 mins until tender", "Cook rice", "Serve with naan"], nutrition: {calories: 720, protein: "48g", carbs: "68g", fat: "28g"}},
+            {name: "Chicken Tikka", cost: 5.80, budget: "moderate", dietary: ["halal", "meat"], mealType: "dinner", ingredients: ["halal chicken", "tikka spices", "yogurt", "rice", "salad"], time: "35 mins + marinating", equipment: ["oven", "saucepan", "baking tray"], instructions: ["Marinate chicken in yogurt and tikka spices", "Cook rice", "Bake chicken at 200°C for 25 mins", "Prepare salad", "Serve together"], nutrition: {calories: 540, protein: "46g", carbs: "56g", fat: "14g"}},
+            {name: "Beef Samosas", cost: 3.50, budget: "moderate", dietary: ["halal", "meat"], mealType: "snack", ingredients: ["halal minced beef", "pastry", "spices", "chutney"], time: "40 mins", equipment: ["oven", "frying pan"], instructions: ["Cook mince with spices", "Fill pastry triangles with mixture", "Fold and seal edges", "Bake at 180°C for 20 mins", "Serve with chutney"], nutrition: {calories: 380, protein: "18g", carbs: "38g", fat: "18g"}},
+            {name: "Chicken Wrap", cost: 4.50, budget: "moderate", dietary: ["halal", "meat"], mealType: "lunch", ingredients: ["halal chicken", "tortilla", "salad", "sauce"], time: "20 mins", equipment: ["frying pan", "knife"], instructions: ["Cook and slice halal chicken", "Warm tortilla", "Layer salad and chicken", "Add your choice of sauce", "Roll tightly and slice"], nutrition: {calories: 480, protein: "36g", carbs: "42g", fat: "18g"}},
+            
+            // GLUTEN FREE MEALS
+            {name: "GF Chicken Salad", cost: 5.00, budget: "moderate", dietary: ["gluten-free", "meat"], mealType: "lunch", ingredients: ["chicken breast", "mixed leaves", "tomatoes", "cucumber", "GF dressing"], time: "20 mins", equipment: ["frying pan", "bowl"], instructions: ["Cook and slice chicken", "Chop vegetables", "Arrange leaves in bowl", "Top with chicken and vegetables", "Drizzle with GF dressing"], nutrition: {calories: 380, protein: "42g", carbs: "22g", fat: "14g"}},
+            {name: "Rice Bowl with Vegetables", cost: 3.50, budget: "moderate", dietary: ["gluten-free", "vegan"], mealType: "lunch", ingredients: ["rice", "mixed vegetables", "soy sauce", "sesame seeds"], time: "25 mins", equipment: ["saucepan", "wok"], instructions: ["Cook rice", "Stir fry vegetables", "Add GF soy sauce", "Serve vegetables over rice", "Sprinkle sesame seeds"], nutrition: {calories: 380, protein: "10g", carbs: "72g", fat: "6g"}},
+            {name: "GF Pasta Bolognese", cost: 5.50, budget: "moderate", dietary: ["gluten-free", "meat"], mealType: "dinner", ingredients: ["GF pasta", "minced beef", "tomato sauce", "parmesan"], time: "35 mins", equipment: ["large pan", "saucepan"], instructions: ["Cook GF pasta", "Brown mince with onion and garlic", "Add tomato sauce", "Simmer 20 mins", "Serve with parmesan"], nutrition: {calories: 620, protein: "38g", carbs: "72g", fat: "20g"}},
+            {name: "Baked Salmon", cost: 7.50, budget: "premium", dietary: ["gluten-free", "fish"], mealType: "dinner", ingredients: ["salmon", "rice", "vegetables", "lemon butter"], time: "30 mins", equipment: ["oven", "saucepan", "baking tray"], instructions: ["Cook rice", "Season salmon with lemon butter", "Bake at 180°C for 15 mins", "Steam vegetables", "Serve together"], nutrition: {calories: 580, protein: "42g", carbs: "52g", fat: "22g"}},
+            {name: "GF Omelette", cost: 3.00, budget: "moderate", dietary: ["gluten-free", "vegetarian"], mealType: "breakfast", ingredients: ["eggs", "cheese", "vegetables", "butter"], time: "10 mins", equipment: ["frying pan", "whisk"], instructions: ["Beat eggs", "Melt butter in pan", "Pour in eggs and let set", "Add cheese and vegetables", "Fold and serve"], nutrition: {calories: 380, protein: "26g", carbs: "8g", fat: "28g"}},
+            {name: "Quinoa Salad", cost: 4.20, budget: "moderate", dietary: ["gluten-free", "vegan"], mealType: "lunch", ingredients: ["quinoa", "chickpeas", "vegetables", "olive oil", "lemon"], time: "25 mins", equipment: ["saucepan", "bowl"], instructions: ["Cook quinoa", "Drain chickpeas", "Chop vegetables", "Mix everything together", "Dress with olive oil and lemon"], nutrition: {calories: 420, protein: "16g", carbs: "58g", fat: "14g"}},
+            {name: "GF Pizza", cost: 7.00, budget: "premium", dietary: ["gluten-free", "vegetarian"], mealType: "dinner", ingredients: ["GF pizza base", "tomato sauce", "mozzarella", "vegetables"], time: "25 mins", equipment: ["oven", "baking tray"], instructions: ["Preheat oven to 220°C", "Spread sauce on GF base", "Add mozzarella and vegetables", "Bake 15 mins", "Slice and serve"], nutrition: {calories: 580, protein: "26g", carbs: "68g", fat: "22g"}},
+            {name: "Steak and Potatoes", cost: 8.50, budget: "premium", dietary: ["gluten-free", "meat"], mealType: "dinner", ingredients: ["beef steak", "potatoes", "vegetables", "butter"], time: "40 mins", equipment: ["frying pan", "oven", "saucepan"], instructions: ["Roast potatoes at 200°C", "Steam vegetables", "Season and rest steak", "Fry steak to preference", "Serve with butter"], nutrition: {calories: 720, protein: "48g", carbs: "62g", fat: "32g"}},
+            {name: "GF Porridge", cost: 2.00, budget: "cheap", dietary: ["gluten-free", "vegan"], mealType: "breakfast", ingredients: ["GF oats", "oat milk", "berries", "honey"], time: "8 mins", equipment: ["saucepan", "bowl"], instructions: ["Cook GF oats with oat milk", "Stir until creamy", "Pour into bowl", "Top with berries", "Drizzle with honey"], nutrition: {calories: 320, protein: "10g", carbs: "58g", fat: "6g"}},
+            {name: "Chicken and Rice", cost: 5.50, budget: "moderate", dietary: ["gluten-free", "meat"], mealType: "dinner", ingredients: ["chicken breast", "rice", "vegetables", "herbs"], time: "35 mins", equipment: ["saucepan", "frying pan"], instructions: ["Cook rice", "Season chicken with herbs", "Fry chicken 12-15 mins", "Steam vegetables", "Slice chicken and serve"], nutrition: {calories: 520, protein: "46g", carbs: "62g", fat: "10g"}},
+            
+            // SNACKS
+            {name: "Fruit Salad", cost: 2.00, budget: "cheap", dietary: ["vegan"], mealType: "snack", ingredients: ["mixed fruits", "orange juice", "mint"], time: "10 mins", equipment: ["bowl", "knife"], instructions: ["Chop all fruits into bite-size pieces", "Mix in bowl", "Squeeze orange juice over", "Garnish with mint", "Chill before serving"], nutrition: {calories: 180, protein: "2g", carbs: "42g", fat: "1g"}},
+            {name: "Cheese and Crackers", cost: 2.50, budget: "moderate", dietary: ["vegetarian"], mealType: "snack", ingredients: ["cheese", "crackers", "grapes"], time: "5 mins", equipment: ["plate", "knife"], instructions: ["Slice cheese", "Arrange crackers on plate", "Add cheese slices", "Add grapes", "Serve immediately"], nutrition: {calories: 320, protein: "14g", carbs: "28g", fat: "18g"}},
+            {name: "Protein Shake", cost: 3.00, budget: "moderate", dietary: ["vegetarian"], mealType: "snack", ingredients: ["protein powder", "banana", "milk", "honey"], time: "5 mins", equipment: ["blender"], instructions: ["Add all ingredients to blender", "Blend until smooth", "Pour into glass", "Drink immediately"], nutrition: {calories: 280, protein: "24g", carbs: "38g", fat: "4g"}},
+            {name: "Nuts and Dried Fruit", cost: 2.20, budget: "moderate", dietary: ["vegan"], mealType: "snack", ingredients: ["mixed nuts", "dried fruit"], time: "1 min", equipment: ["bowl"], instructions: ["Mix nuts and dried fruit", "Portion into small bags", "Great grab-and-go snack"], nutrition: {calories: 320, protein: "8g", carbs: "36g", fat: "18g"}},
+            {name: "Hummus and Veggies", cost: 2.50, budget: "moderate", dietary: ["vegan"], mealType: "snack", ingredients: ["hummus", "carrot sticks", "cucumber", "peppers"], time: "10 mins", equipment: ["knife", "plate"], instructions: ["Cut vegetables into sticks", "Arrange on plate", "Serve with hummus for dipping"], nutrition: {calories: 180, protein: "6g", carbs: "24g", fat: "8g"}},
+            {name: "Apple with Peanut Butter", cost: 1.50, budget: "cheap", dietary: ["vegan"], mealType: "snack", ingredients: ["apple", "peanut butter"], time: "5 mins", equipment: ["knife"], instructions: ["Slice apple into wedges", "Remove core", "Serve with peanut butter for dipping"], nutrition: {calories: 240, protein: "6g", carbs: "32g", fat: "12g"}},
+            {name: "Popcorn", cost: 1.20, budget: "cheap", dietary: ["vegan"], mealType: "snack", ingredients: ["popcorn kernels", "oil", "salt"], time: "10 mins", equipment: ["large pot with lid"], instructions: ["Heat oil in pot", "Add kernels", "Cover and shake over heat", "Remove when popping slows", "Season with salt"], nutrition: {calories: 220, protein: "4g", carbs: "42g", fat: "6g"}},
+            {name: "Yogurt and Granola", cost: 2.00, budget: "moderate", dietary: ["vegetarian"], mealType: "snack", ingredients: ["yogurt", "granola", "honey"], time: "5 mins", equipment: ["bowl"], instructions: ["Spoon yogurt into bowl", "Top with granola", "Drizzle with honey", "Mix or layer"], nutrition: {calories: 280, protein: "12g", carbs: "48g", fat: "6g"}},
+            {name: "Rice Cakes", cost: 1.50, budget: "cheap", dietary: ["vegan"], mealType: "snack", ingredients: ["rice cakes", "almond butter", "banana"], time: "5 mins", equipment: ["knife"], instructions: ["Spread almond butter on rice cakes", "Slice banana", "Top with banana slices"], nutrition: {calories: 220, protein: "6g", carbs: "36g", fat: "8g"}},
+            {name: "Protein Bar", cost: 2.00, budget: "moderate", dietary: ["vegetarian"], mealType: "snack", ingredients: ["protein bar"], time: "0 mins", equipment: ["none"], instructions: ["Unwrap and eat", "Perfect on-the-go snack"], nutrition: {calories: 240, protein: "20g", carbs: "24g", fat: "8g"}}
+        ];
+        
+        // Global variables
+        let currentMealForPlanner = null;
+        let selectedDay = null;
+        let currentFilters = {
+            budget: 'all',
+            dietary: [],
+            mealtype: 'all'
+        };
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadMealPlanner();
+            renderMeals();
+            renderPlanner();
+            renderFavourites();
+            setupFilterListeners();
+        });
+        
+        // Filter listeners
+        function setupFilterListeners() {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const filterType = this.dataset.filter;
+                    const value = this.dataset.value;
+                    
+                    if (filterType === 'budget' || filterType === 'mealtype') {
+                        // Single select
+                        document.querySelectorAll(`[data-filter="${filterType}"]`).forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        currentFilters[filterType] = value;
+                    } else if (filterType === 'dietary') {
+                        // Multi-select
+                        this.classList.toggle('active');
+                        if (this.classList.contains('active')) {
+                            currentFilters.dietary.push(value);
+                        } else {
+                            currentFilters.dietary = currentFilters.dietary.filter(d => d !== value);
+                        }
+                    }
+                    
+                    renderMeals();
+                });
+            });
+        }
+        
+        // Filter meals
+        function filterMeals() {
+            return meals.filter(meal => {
+                // Budget filter
+                if (currentFilters.budget !== 'all' && meal.budget !== currentFilters.budget) {
+                    return false;
+                }
+                
+                // Meal type filter
+                if (currentFilters.mealtype !== 'all' && meal.mealType !== currentFilters.mealtype) {
+                    return false;
+                }
+                
+                // Dietary filter (multi-select - meal must match ALL selected dietary requirements)
+                if (currentFilters.dietary.length > 0) {
+                    const hasDietary = currentFilters.dietary.every(diet => 
+                        meal.dietary.includes(diet)
+                    );
+                    if (!hasDietary) return false;
+                }
+                
+                return true;
+            });
+        }
+        
+        // Render meals
+        function renderMeals() {
+            const filteredMeals = filterMeals();
+            const grid = document.getElementById('meals-grid');
+            
+            if (filteredMeals.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px; color: #999;">No meals match your filters</p>';
+                return;
+            }
+            
+            grid.innerHTML = filteredMeals.map((meal, index) => {
+                const isFavourite = isMealFavourite(meal.name);
+                return `
+                    <div class="card" id="card-${index}">
+                        <h3>${meal.name}</h3>
+                        <div class="card-price">£${meal.cost.toFixed(2)}</div>
+                        <div class="card-tags">
+                            <span class="tag budget-${meal.budget}">${getBudgetSymbol(meal.budget)}</span>
+                            ${meal.dietary.map(d => `<span class="tag">${d}</span>`).join('')}
+                            <span class="tag">${meal.mealType}</span>
+                        </div>
+                        <div class="ingredient-list">
+                            <h4>Ingredients:</h4>
+                            <ul>
+                                ${meal.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                            </ul>
+                        </div>
+                        
+                        <button class="expand-btn" onclick="toggleCardExpand(${index})">
+                            <span>View Details</span>
+                            <span class="expand-icon">▼</span>
+                        </button>
+                        
+                        <div class="card-details">
+                            <div class="time-info">
+                                <h4>⏱️ Time Required</h4>
+                                <p><strong>${meal.time}</strong></p>
+                            </div>
+                            
+                            <div class="equipment-info">
+                                <h4>Equipment Needed</h4>
+                                <ul>
+                                    ${meal.equipment.map(eq => `<li>${eq}</li>`).join('')}
+                                </ul>
+                            </div>
+                            
+                            <div class="instructions">
+                                <h4>📋 Instructions</h4>
+                                <ol>
+                                    ${meal.instructions.map(step => `<li>${step}</li>`).join('')}
+                                </ol>
+                            </div>
+                            
+                            <div class="nutrition-info">
+                                <h4>🥗 Nutrition Information</h4>
+                                <div class="nutrition-grid">
+                                    <div class="nutrition-item"><strong>Calories:</strong> ${meal.nutrition.calories}</div>
+                                    <div class="nutrition-item"><strong>Protein:</strong> ${meal.nutrition.protein}</div>
+                                    <div class="nutrition-item"><strong>Carbs:</strong> ${meal.nutrition.carbs}</div>
+                                    <div class="nutrition-item"><strong>Fat:</strong> ${meal.nutrition.fat}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-actions">
+                            <button class="btn btn-primary" onclick='openMealModal(${JSON.stringify(meal).replace(/'/g, "&apos;")})'>Add to Planner</button>
+                            <button class="btn btn-favourite ${isFavourite ? 'active' : ''}" onclick='toggleFavourite(${JSON.stringify(meal).replace(/'/g, "&apos;")})'>★</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Toggle card expansion
+        function toggleCardExpand(index) {
+            const card = document.getElementById(`card-${index}`);
+            const btn = card.querySelector('.expand-btn span:first-child');
+            
+            if (card.classList.contains('expanded')) {
+                card.classList.remove('expanded');
+                btn.textContent = 'View Details';
+            } else {
+                card.classList.add('expanded');
+                btn.textContent = 'Hide Details';
+            }
+        }
+        
+        // Get budget symbol
+        function getBudgetSymbol(budget) {
+            if (budget === 'cheap') return '£ Cheap';
+            if (budget === 'moderate') return '££ Moderate';
+            if (budget === 'premium') return '£££ Premium';
+            return budget;
+        }
+        
+        // Sub-tab switching
+        function switchSubTab(tabName) {
+            document.querySelectorAll('.sub-tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.sub-tab-button').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tabName === 'favourites') {
+                renderFavourites();
+            } else if (tabName === 'meal-planner') {
+                renderPlanner();
+            }
+        }
+        
+        // Favourites
+        function toggleFavourite(meal) {
+            let favourites = JSON.parse(localStorage.getItem('favourites') || '[]');
+            const index = favourites.findIndex(f => f.name === meal.name);
+            
+            if (index > -1) {
+                favourites.splice(index, 1);
+                showBanner('Removed from Favourites');
+            } else {
+                favourites.push(meal);
+                showBanner('Added to Favourites ⭐');
+            }
+            
+            localStorage.setItem('favourites', JSON.stringify(favourites));
+            renderMeals();
+            renderFavourites();
+        }
+        
+        function isMealFavourite(mealName) {
+            const favourites = JSON.parse(localStorage.getItem('favourites') || '[]');
+            return favourites.some(f => f.name === mealName);
+        }
+        
+        function renderFavourites() {
+            const favourites = JSON.parse(localStorage.getItem('favourites') || '[]');
+            const grid = document.getElementById('favourites-grid');
+            
+            if (favourites.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px; color: #999;">No favourites yet. Star meals to add them here!</p>';
+                return;
+            }
+            
+            grid.innerHTML = favourites.map((meal, index) => `
+                <div class="card" id="fav-card-${index}">
+                    <h3>${meal.name}</h3>
+                    <div class="card-price">£${meal.cost.toFixed(2)}</div>
+                    <div class="card-tags">
+                        <span class="tag budget-${meal.budget}">${getBudgetSymbol(meal.budget)}</span>
+                        ${meal.dietary.map(d => `<span class="tag">${d}</span>`).join('')}
+                        <span class="tag">${meal.mealType}</span>
+                    </div>
+                    <div class="ingredient-list">
+                        <h4>Ingredients:</h4>
+                        <ul>
+                            ${meal.ingredients.map(ing => `<li>${ing}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    <button class="expand-btn" onclick="toggleFavCardExpand(${index})">
+                        <span>View Details</span>
+                        <span class="expand-icon">▼</span>
+                    </button>
+                    
+                    <div class="card-details">
+                        <div class="time-info">
+                            <h4>⏱️ Time Required</h4>
+                            <p><strong>${meal.time}</strong></p>
+                        </div>
+                        
+                        <div class="equipment-info">
+                            <h4>Equipment Needed</h4>
+                            <ul>
+                                ${meal.equipment.map(eq => `<li>${eq}</li>`).join('')}
+                            </ul>
+                        </div>
+                        
+                        <div class="instructions">
+                            <h4>📋 Instructions</h4>
+                            <ol>
+                                ${meal.instructions.map(step => `<li>${step}</li>`).join('')}
+                            </ol>
+                        </div>
+                        
+                        <div class="nutrition-info">
+                            <h4>🥗 Nutrition Information</h4>
+                            <div class="nutrition-grid">
+                                <div class="nutrition-item"><strong>Calories:</strong> ${meal.nutrition.calories}</div>
+                                <div class="nutrition-item"><strong>Protein:</strong> ${meal.nutrition.protein}</div>
+                                <div class="nutrition-item"><strong>Carbs:</strong> ${meal.nutrition.carbs}</div>
+                                <div class="nutrition-item"><strong>Fat:</strong> ${meal.nutrition.fat}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-actions">
+                        <button class="btn btn-primary" onclick='openMealModal(${JSON.stringify(meal).replace(/'/g, "&apos;")})'>Add to Planner</button>
+                        <button class="btn btn-favourite active" onclick='toggleFavourite(${JSON.stringify(meal).replace(/'/g, "&apos;")})'>★</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Toggle favourite card expansion
+        function toggleFavCardExpand(index) {
+            const card = document.getElementById(`fav-card-${index}`);
+            const btn = card.querySelector('.expand-btn span:first-child');
+            
+            if (card.classList.contains('expanded')) {
+                card.classList.remove('expanded');
+                btn.textContent = 'View Details';
+            } else {
+                card.classList.add('expanded');
+                btn.textContent = 'Hide Details';
+            }
+        }
+        
+        // Meal Planner Modal
+        function openMealModal(meal) {
+            currentMealForPlanner = meal;
+            document.getElementById('modal-meal-name').textContent = meal.name;
+            document.getElementById('meal-modal').classList.add('active');
+            selectedDay = null;
+            document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('selected'));
+        }
+        
+        function closeMealModal() {
+            document.getElementById('meal-modal').classList.remove('active');
+            currentMealForPlanner = null;
+            selectedDay = null;
+        }
+        
+        function selectDay(day) {
+            selectedDay = day;
+            document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+        }
+        
+        function confirmAddToPlanner() {
+            if (!selectedDay || !currentMealForPlanner) {
+                alert('Please select a day');
+                return;
+            }
+            
+            let planner = JSON.parse(localStorage.getItem('mealPlanner') || '{}');
+            if (!planner[selectedDay]) {
+                planner[selectedDay] = [];
+            }
+            planner[selectedDay].push(currentMealForPlanner);
+            
+            localStorage.setItem('mealPlanner', JSON.stringify(planner));
+            showBanner('Meal added to Planner 📅');
+            closeMealModal();
+            renderPlanner();
+        }
+        
+        // Render Planner
+        function renderPlanner() {
+            const planner = JSON.parse(localStorage.getItem('mealPlanner') || '{}');
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            const container = document.getElementById('planner-container');
+            
+            let weeklyTotal = 0;
+            
+            container.innerHTML = days.map(day => {
+                const dayMeals = planner[day] || [];
+                const dayTotal = dayMeals.reduce((sum, meal) => sum + meal.cost, 0);
+                weeklyTotal += dayTotal;
+                
+                return `
+                    <div class="day-card">
+                        <h3>${day} <span class="day-total">£${dayTotal.toFixed(2)}</span></h3>
+                        ${dayMeals.length === 0 ? 
+                            '<p style="color: #999; font-style: italic;">No meals planned</p>' :
+                            dayMeals.map((meal, index) => `
+                                <div class="planned-meal">
+                                    <div class="planned-meal-info">
+                                        <h4>${meal.name}</h4>
+                                        <p>£${meal.cost.toFixed(2)} • ${meal.mealType}</p>
+                                    </div>
+                                    <button class="remove-meal" onclick="removeMeal('${day}', ${index})">×</button>
+                                </div>
+                            `).join('')
+                        }
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('weekly-total-amount').textContent = `£${weeklyTotal.toFixed(2)}`;
+        }
+        
+        function removeMeal(day, index) {
+            let planner = JSON.parse(localStorage.getItem('mealPlanner') || '{}');
+            if (planner[day]) {
+                planner[day].splice(index, 1);
+                if (planner[day].length === 0) {
+                    delete planner[day];
+                }
+            }
+            localStorage.setItem('mealPlanner', JSON.stringify(planner));
+            renderPlanner();
+            showBanner('Meal removed');
+        }
+        
+        function clearWeek() {
+            if (confirm('Are you sure you want to clear your entire week?')) {
+                // Overwrite with blank template
+                const blankTemplate = {
+                    Monday: [],
+                    Tuesday: [],
+                    Wednesday: [],
+                    Thursday: [],
+                    Friday: [],
+                    Saturday: [],
+                    Sunday: []
+                };
+                localStorage.setItem('mealPlanner', JSON.stringify(blankTemplate));
+                renderPlanner();
+                showBanner('Week cleared');
+            }
+        }
+        
+        function loadMealPlanner() {
+            // Initialize with blank template if doesn't exist
+            if (!localStorage.getItem('mealPlanner')) {
+                const blankTemplate = {
+                    Monday: [],
+                    Tuesday: [],
+                    Wednesday: [],
+                    Thursday: [],
+                    Friday: [],
+                    Saturday: [],
+                    Sunday: []
+                };
+                localStorage.setItem('mealPlanner', JSON.stringify(blankTemplate));
+            }
+        }
+        
+        // Shopping List
+        function generateShoppingList() {
+            const planner = JSON.parse(localStorage.getItem('mealPlanner') || '{}');
+            const ingredientMap = {};
+            
+            // Collect all ingredients
+            Object.values(planner).forEach(dayMeals => {
+                dayMeals.forEach(meal => {
+                    meal.ingredients.forEach(ingredient => {
+                        if (ingredientMap[ingredient]) {
+                            ingredientMap[ingredient]++;
+                        } else {
+                            ingredientMap[ingredient] = 1;
+                        }
+                    });
+                });
+            });
+            
+            // Save shopping list
+            const shoppingList = Object.entries(ingredientMap).map(([ingredient, count]) => ({
+                ingredient,
+                quantity: count,
+                checked: false
+            }));
+            
+            localStorage.setItem('shoppingList', JSON.stringify(shoppingList));
+            renderShoppingList();
+            switchSubTab('shopping-list');
+            document.querySelector('[onclick*="shopping-list"]').classList.add('active');
+            showBanner('Shopping List Generated 🛒');
+        }
+        
+        function renderShoppingList() {
+            const shoppingList = JSON.parse(localStorage.getItem('shoppingList') || '[]');
+            const container = document.getElementById('shopping-list-items');
+            
+            if (shoppingList.length === 0) {
+                container.innerHTML = '<p style="color: #999; font-style: italic;">No items in shopping list. Generate from meal planner!</p>';
+                return;
+            }
+            
+            container.innerHTML = shoppingList.map((item, index) => `
+                <div class="shopping-list-item ${item.checked ? 'checked' : ''}">
+                    <input type="checkbox" ${item.checked ? 'checked' : ''} onchange="toggleShoppingItem(${index})">
+                    <label>${item.ingredient} ${item.quantity > 1 ? `(x${item.quantity})` : ''}</label>
+                </div>
+            `).join('');
+        }
+        
+        function toggleShoppingItem(index) {
+            const shoppingList = JSON.parse(localStorage.getItem('shoppingList') || '[]');
+            shoppingList[index].checked = !shoppingList[index].checked;
+            localStorage.setItem('shoppingList', JSON.stringify(shoppingList));
+            renderShoppingList();
+        }
+        
+        function exportShoppingList() {
+            const shoppingList = JSON.parse(localStorage.getItem('shoppingList') || '[]');
+            
+            if (shoppingList.length === 0) {
+                alert('No items in shopping list!');
+                return;
+            }
+            
+            let text = 'SHOPPING LIST\n';
+            text += '=============\n\n';
+            
+            shoppingList.forEach(item => {
+                const checkmark = item.checked ? '[✓]' : '[ ]';
+                text += `${checkmark} ${item.ingredient} ${item.quantity > 1 ? `(x${item.quantity})` : ''}\n`;
+            });
+            
+            // Create download
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'shopping-list.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showBanner('Shopping List Downloaded 📥');
+        }
+        
+        function clearShoppingList() {
+            if (confirm('Are you sure you want to clear your shopping list?')) {
+                // Overwrite with blank template
+                const blankShoppingList = [];
+                localStorage.setItem('shoppingList', JSON.stringify(blankShoppingList));
+                renderShoppingList();
+                showBanner('Shopping List cleared');
+            }
+        }
+        
+        // Banner
+        function showBanner(message) {
+            const banner = document.getElementById('banner');
+            banner.textContent = message;
+            banner.classList.add('show');
+            setTimeout(() => banner.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>
