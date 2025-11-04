@@ -505,6 +505,60 @@
                 grid-template-columns: 1fr;
             }
         }
+        /* --- Fix: make two-column .two-col boxes equal height and improve wrapping/alignment --- */
+.two-col {
+  /* ensure columns share same row height so the two boxes line up */
+  grid-auto-rows: 1fr;
+  align-items: start;
+  /* keep existing grid-template-columns and gap — this augments them */
+}
+
+.two-col > .col-box {
+  /* stretch the column children to full height so backgrounds match */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+  /* keep padding/background/border from original rules */
+}
+
+.two-col .col-box ul {
+  margin: 0;
+  padding-left: 1.1rem; /* consistent bullets */
+}
+
+.two-col .col-box li {
+  line-height: 1.6;      /* consistent spacing */
+  word-break: break-word; /* avoid overflow from long words/URLs */
+}
+
+/* tighten up header layout so emoji + title + toggle don't bump into each other */
+.topic-header {
+  align-items: center;
+  gap: 12px;
+}
+
+/* help toggle icon sit above content when rotated / expanded */
+.toggle-icon {
+  flex-shrink: 0;
+  z-index: 3;
+  transition: transform 0.25s ease;
+}
+
+/* make sure expanded content uses full box padding and doesn't cause overflow */
+.topic-body {
+  padding: 22px;
+  background: #fff;
+  border-top: 1px solid #e9eef7;
+  display: block;
+}
+
+/* small screens: keep readable and tidy */
+@media (max-width: 768px) {
+  .two-col { grid-auto-rows: auto; } /* stack naturally on small screens */
+  .two-col > .col-box { height: auto; }
+  .topic-text { font-size: 0.98rem; }
+}
     </style>
 </head>
     <header id="site-header" class="site-header" role="banner" style="display:flex;align-items:center;gap:12px;padding:12px 18px;background:#fff;border-bottom:1px solid #eef0f4;">
