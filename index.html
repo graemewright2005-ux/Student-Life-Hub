@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Student Life Hub</title>
+  <style>
+    :root{
+      --accent:#3651fc;
+      --card-bg:linear-gradient(120deg,#d1e8ff 0%,#f7faff 100%);
+      --card-bg-hover:linear-gradient(120deg,#e2eaff 0%,#d1e8ff 100%);
+      --surface:#ffffff;
+      --page-bg:linear-gradient(135deg,#f0f4ff 0%,#e2eafc 100%);
+      --radius:14px;
+      --max-width:980px;
+      --gap:24px;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,"Helvetica Neue",sans-serif;
+    }
+    html,body{height:100%;margin:0;background:var(--page-bg);color:#0b1b3a}
+    .wrap{max-width:var(--max-width);margin:40px auto;padding:20px;background:var(--surface);border-radius:18px;box-shadow:0 12px 30px rgba(3,18,70,0.08)}
+    header{text-align:center;padding:10px 6px}
+    h1{margin:.35rem 0;color:var(--accent);font-size:2.2rem;letter-spacing:1px}
+    p.lead{margin:0;color:#445177}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--gap);margin-top:28px}
+    .card{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      text-decoration:none;color:var(--accent);
+      background:var(--card-bg);padding:28px;border-radius:var(--radius);
+      box-shadow:0 6px 18px rgba(54,81,252,0.06);transition:transform .18s,box-shadow .18s,background .18s;
+      font-weight:700;font-size:1.05rem;
+    }
+    .card .icon{font-size:2.4rem;margin-bottom:12px}
+    .card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(54,81,252,0.12);background:var(--card-bg-hover)}
+    footer{margin-top:20px;text-align:center;color:#6b7489;font-size:.9rem}
+    @media (max-width:480px){h1{font-size:1.6rem}}
+  </style>
+</head>
+<body>
+  <main class="wrap" role="main">
+    <header>
+      <h1>Student Life Hub</h1>
+      <p class="lead">Quick links to study, meals, budgeting, and student support resources.</p>
+    </header>
+
+    <section class="grid" aria-label="Primary navigation">
+      <a class="card" href="study/index.html" title="Study resources">
+        <span class="icon" aria-hidden="true">📚</span>
+        Study Resources
+      </a>
+
+      <a class="card" href="meals/index.html" title="Meals and nutrition">
+        <span class="icon" aria-hidden="true">🍽️</span>
+        Meals & Nutrition
+      </a>
+
+      <a class="card" href="cleaning/index.html" title="Cleaning tips">
+        <span class="icon" aria-hidden="true">🧹</span>
+        Cleaning Tips
+      </a>
+
+      <a class="card" href="diy/index.html" title="DIY and repairs">
+        <span class="icon" aria-hidden="true">🛠️</span>
+        DIY & Repairs
+      </a>
+
+      <a class="card" href="budget/index.html" title="Budgeting help">
+        <span class="icon" aria-hidden="true">💰</span>
+        Budgeting
+      </a>
+
+      <a class="card" href="support/index.html" title="Student support">
+        <span class="icon" aria-hidden="true">🤝</span>
+        Student Support
+      </a>
+
+      <a class="card" href="legal/index.html" title="Legal advice">
+        <span class="icon" aria-hidden="true">⚖️</span>
+        Legal Advice
+      </a>
+    </section>
+
+    <footer>
+      Made for students • Hosted with GitHub Pages
+    </footer>
+  </main>
+</body>
+</html>
